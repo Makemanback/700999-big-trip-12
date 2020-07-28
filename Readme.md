@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Матвей Новиков](https://up.htmlacademy.ru/ecmascript/12/user/700999).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Шершнев](https://up.htmlacademy.ru/ecmascript/12/user/587797).
 
 ---
 
