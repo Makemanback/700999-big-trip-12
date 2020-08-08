@@ -1,4 +1,7 @@
+import {generateCity, generateRandomAdditional, generateRandomCost} from '../mock/trip-day.js';
+
 export const createPageTripEditTemplate = () => {
+
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
@@ -76,10 +79,10 @@ export const createPageTripEditTemplate = () => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
-          <option value="Saint Petersburg"></option>
+          <option value="${generateCity()}"></option>
+          <option value="${generateCity()}"></option>
+          <option value="${generateCity()}"></option>
+          <option value="${generateCity()}"></option>
         </datalist>
       </div>
 
@@ -114,45 +117,45 @@ export const createPageTripEditTemplate = () => {
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
             <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
+              <span class="event__offer-title">${generateRandomAdditional()}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">30</span>
+              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
             </label>
           </div>
 
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
             <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort class</span>
+              <span class="event__offer-title">${generateRandomAdditional()}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">100</span>
+              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
             </label>
           </div>
 
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
             <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">Add meal</span>
+              <span class="event__offer-title">${generateRandomAdditional()}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">15</span>
+              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
             </label>
           </div>
 
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
             <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">Choose seats</span>
+              <span class="event__offer-title">${generateRandomAdditional()}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">5</span>
+              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
             </label>
           </div>
 
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
             <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">Travel by train</span>
+              <span class="event__offer-title">${generateRandomAdditional()}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">40</span>
+              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
             </label>
           </div>
         </div>

@@ -7,8 +7,12 @@ import {createPageSortingTemplate} from './view/page-sorting.js';
 import {createPageTripEditTemplate} from './view/trip-edit.js';
 import {createPageTripDaysListTemplate} from './view/trip-list.js';
 import {createTripDayTemplate} from './view/trip-day.js';
+import {generateTripPoint} from './mock/trip-day.js';
+import {getRandomArrayIndex, getRandomProperty, shuffleArray} from './utils.js';
 
-const POINTS = 3;
+const POINTS_COUNT = 10;
+
+const points = new Array(POINTS_COUNT).fill().map(generateTripPoint);
 
 const pageHeader = document.querySelector(`.page-header`);
 const pageTripMain = pageHeader.querySelector(`.trip-main`);
@@ -32,6 +36,6 @@ render(pageEvents, createPageTripDaysListTemplate(), `beforeend`);
 
 const PageTripDaysList = pageEvents.querySelector(`.trip-days`);
 
-for (let i = 0; i < POINTS; i++) {
-  render(PageTripDaysList, createTripDayTemplate(), `afterbegin`);
+for (let i = 0; i < POINTS_COUNT; i++) {
+  render(PageTripDaysList, createTripDayTemplate(points[i]), `afterbegin`);
 }
