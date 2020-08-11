@@ -1,172 +1,101 @@
-import {getRandomInteger, shuffleArray, getRandomProperty} from '../utils.js';
+import {getRandomInteger, shuffleArray} from '../utils.js';
+
+const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeng`, `Restaurant`];
+export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
+const ADDITIONALS = [
+  {
+    offer: `Order Uber`,
+    cost: 20
+  },
+  {
+    offer: `Add luggage`,
+    cost: 70
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 200
+  },
+  {
+    offer: `Rent a car`,
+    cost: 150
+  },
+  {
+    offer: `Add breakfast`,
+    cost: 40
+  }
+];
+
+const DESCRIPTIONS = [
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
+  `Fusce tristique felis at fermentum pharetra.`,
+  `Aliquam id orci ut lectus varius viverra.`,
+  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
+  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
+  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
+  `Aliquam erat volutpat.`,
+  `Nunc fermentum tortor ac porta dapibus.`,
+  `In rutrum ac purus sit amet tempus.`
+];
 
 const generateType = () => {
-  const type = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeng`, `Restaurant`];
-
-  const randomType = getRandomInteger(0, type.length - 1);
-
-  return type[randomType];
+  return TYPES[getRandomInteger(0, TYPES.length - 1)];
 };
 
 export const generateCity = () => {
-  const city = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
-
-  const randomCity = getRandomInteger(0, city.length - 1);
-
-  return city[randomCity];
+  return CITIES[getRandomInteger(0, CITIES.length - 1)];
 };
 
 export const generateRandomAdditional = () => {
-  const additional = {
-    taxi: `Order Uber`,
-    luggage: `Add luggage`,
-    plane: `Switch to comfort`,
-    car: `Rent a car`,
-    restaraunt: `Add breakfast`
-  };
-
-  const randomAdditional = getRandomProperty(additional);
-
-  return randomAdditional;
+  return shuffleArray(ADDITIONALS)
+  .slice(0, Math.floor(Math.random() * ADDITIONALS.length));
 };
 
 const generateRandomDescription = () => {
-  const description = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-    `Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-    `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-    `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-    `Aliquam erat volutpat.`,
-    `Nunc fermentum tortor ac porta dapibus.`,
-    `In rutrum ac purus sit amet tempus.`
-  ];
-
-  const randomDescription = shuffleArray(description)
-                            .slice(0, 5)
-                            .slice(0, Math.random() * description.length + 1)
-                            .join(``);
-
-  return randomDescription;
+  return shuffleArray(DESCRIPTIONS)
+  .slice(0, 5)
+  .slice(0, Math.random() * DESCRIPTIONS.length + 1)
+  .join(``);
 };
 
-const getRandomSchedule = () => {
-
-  const schedule = {
-    first: {
-      start: new Date(),
-      end: new Date()
-    },
-    second: {
-      start: new Date(),
-      end: new Date()
-    },
-    third: {
-      start: new Date(),
-      end: new Date()
-    }
-  };
-
-  schedule.first.start.setHours(20, 0, 0, 0);
-  schedule.first.end.setHours(22, 0, 0, 0);
-
-  schedule.second.start.setHours(20, 0, 0, 0);
-  schedule.second.end.setHours(20, 30, 0, 0);
-
-  schedule.third.start.setHours(20, 0, 0, 0);
-  schedule.third.end.setHours(21, 30, 0, 0);
-
-  const randomSchedule = getRandomProperty(schedule);
-
-  return randomSchedule;
+const Time = {
+  DAY_GAP: 5,
+  HOUR_GAP: 20,
+  HOURS: 24,
+  MINUTES: 60,
+  SECONDS: 60,
+  MILLISECONDS: 1000
 };
 
-export const {start, end} = getRandomSchedule();
-
-const getTimeGap = () => {
-
-  const deviation = 1000 * 60 * 60;
-  const timeGap = new Date(end - start - deviation);
-
-  const stringGap = timeGap.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
-  const arrowGap = Array.from(stringGap);
-  const setTimeGap = (arr) => {
-    let colon;
-    if (arr[0] === `0` && arr[1] !== `0`) {
-      arr.shift();
-    }
-
-    if (arr[0] === `0` && arr[1] === `0`) {
-      arr.shift();
-      arr.shift();
-      if (arr[1] === `0`) {
-        arr.shift();
-        arr.shift();
-      } else {
-        colon = arr.indexOf(`:`);
-        arr[colon] = ``;
-      }
-      arr.push(`M`);
-    }
-
-    if (arr[arr.length - 1] === `0` && arr[arr.length - 2] === `0`) {
-      arr.pop();
-      arr.pop();
-      colon = arr.indexOf(`:`);
-      arr[colon] = `H`;
-    }
-
-    if (arr.length >= 4 && arr[arr.length - 1] !== `M`) {
-      colon = arr.indexOf(`:`);
-      arr[colon] = `H `;
-      arr.push(`M`);
-    }
-
-    return arr.join(``);
-  };
-
-  return setTimeGap(arrowGap);
+export const getRandomSchedule = () => {
+  const start = new Date(Date.now() - getRandomInteger(Time.HOURS * Time.MINUTES * Time.SECONDS * Time.MILLISECONDS, Time.DAY_GAP * Time.HOURS * Time.MINUTES * Time.SECONDS * Time.MILLISECONDS));
+  const end = new Date(+start + getRandomInteger(Time.MINUTES * Time.SECONDS * Time.MILLISECONDS, Time.HOUR_GAP * Time.MINUTES * Time.SECONDS * Time.MILLISECONDS));
+  return ({
+    start,
+    end
+  });
 };
 
-const startTime = start.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
-const endTime = end.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
-
-const generateRandomPrice = () => {
-  const price = [`20`, `50`, `100`];
-
-  const randomPrice = getRandomInteger(0, price.length - 1);
-
-  return price[randomPrice];
+const Price = {
+  MIN: 0,
+  MAX: 500
 };
 
-export const generateRandomCost = () => {
-  const cost = [`25`, `40`, `150`, `70`];
-
-  const randomCost = getRandomInteger(0, cost.length - 1);
-
-  return cost[randomCost];
-};
+const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
 export const generateTripPoint = () => {
   return {
     type: generateType(),
     city: generateCity(),
-    additional: {
-      description: generateRandomAdditional(),
-      cost: generateRandomCost()
-    },
+    additional: generateRandomAdditional(),
     pointInfo: {
       description: generateRandomDescription(),
       photo: `http://picsum.photos/248/152?r`
     },
-    schedule: {
-      startTime,
-      endTime,
-      timeGap: getTimeGap(),
-    },
+    schedule: getRandomSchedule(),
     price: generateRandomPrice()
   };
 };
+
+

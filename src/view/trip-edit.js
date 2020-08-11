@@ -1,6 +1,31 @@
-import {generateCity, generateRandomAdditional, generateRandomCost} from '../mock/trip-day.js';
+import {CITIES} from '../mock/trip-day.js';
 
-export const createPageTripEditTemplate = () => {
+const createAdditionals = (arr) => {
+  return arr.map((item) => {
+    return (
+      `<div class="event__available-offers">
+      <div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
+        <label class="event__offer-label" for="event-offer-luggage-1">
+          <span class="event__offer-title">${item.offer}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${item.cost}</span>
+        </label>
+      </div>`
+    );
+  }).join(``);
+};
+
+const createCities = (arr) => {
+  return arr.map((item) => {
+    return (
+      `<option value="${item}"></option>`
+    );
+  }).join(``);
+};
+
+export const createPageTripEditTemplate = (point) => {
+  const {additional, price} = point;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -79,10 +104,7 @@ export const createPageTripEditTemplate = () => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="${generateCity()}"></option>
-          <option value="${generateCity()}"></option>
-          <option value="${generateCity()}"></option>
-          <option value="${generateCity()}"></option>
+          ${createCities(CITIES)}
         </datalist>
       </div>
 
@@ -103,7 +125,7 @@ export const createPageTripEditTemplate = () => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -112,52 +134,7 @@ export const createPageTripEditTemplate = () => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">${generateRandomAdditional()}</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">${generateRandomAdditional()}</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-            <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">${generateRandomAdditional()}</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-            <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">${generateRandomAdditional()}</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-            <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">${generateRandomAdditional()}</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">${generateRandomCost()}</span>
-            </label>
-          </div>
+        ${createAdditionals(additional)}
         </div>
       </section>
     </section>
