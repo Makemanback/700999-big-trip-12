@@ -25,7 +25,7 @@ const createCities = (arr) => {
 };
 
 export const createPageTripEditTemplate = (point) => {
-  const {additional, price} = point;
+  const {additionals, price} = point;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -134,7 +134,7 @@ export const createPageTripEditTemplate = (point) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        ${createAdditionals(additional)}
+        ${createAdditionals(additionals)}
         </div>
       </section>
     </section>

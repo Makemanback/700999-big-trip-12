@@ -16,13 +16,7 @@ export const shuffleArray = (arr) => {
   return arr;
 };
 
-export const getRandomArrayIndex = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-
-export const getRandomProperty = (obj) => {
-  let keys = Object.keys(obj);
-  return obj[keys[keys.length * Math.random() << 0]];
-};
+export const getRandomArrayElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
 
 export const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -32,9 +26,9 @@ export const formatDate = (obj) => {
   const month = obj.getMonth();
   const day = obj.getDate();
 
-  return `${obj.getFullYear()}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
-}
+  return `${obj.getFullYear()}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+};
 
-export const tripStart = (obj) => obj.toLocaleString(`en-US`, {month: `short`, day: `numeric`});
-export const tripEnd = (obj) => obj.toLocaleString(`en-US`, {day: `numeric`});
+export const getTripStart = (obj) => obj.toLocaleString(`en-US`, {month: `short`, day: `numeric`});
+export const getTripEnd = (obj) => obj.toLocaleString(`en-US`, {day: `numeric`});
 

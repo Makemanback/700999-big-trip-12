@@ -24,7 +24,7 @@ const getTimeGap = (start, end) => {
 };
 
 export const createTripPointTemplate = (point) => {
-  const {type, city, price, additional} = point;
+  const {type, city, price, additionals} = point;
   const {start, end} = point.schedule;
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
 
@@ -56,7 +56,7 @@ export const createTripPointTemplate = (point) => {
           <ul class="event__selected-offers">
 
 
-          ${createAdditionals(additional)}
+          ${createAdditionals(additionals)}
 
           </ul>
 

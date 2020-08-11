@@ -1,4 +1,4 @@
-import {getRandomInteger, shuffleArray} from '../utils.js';
+import {getRandomInteger, shuffleArray, getRandomArrayElement} from '../utils.js';
 
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeng`, `Restaurant`];
 export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
@@ -39,15 +39,11 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const generateType = () => {
-  return TYPES[getRandomInteger(0, TYPES.length - 1)];
-};
+const generateType = () => getRandomArrayElement(TYPES);
 
-export const generateCity = () => {
-  return CITIES[getRandomInteger(0, CITIES.length - 1)];
-};
+export const generateCity = () => getRandomArrayElement(CITIES);
 
-export const generateRandomAdditional = () => {
+const generateRandomAdditionals = () => {
   return shuffleArray(ADDITIONALS)
   .slice(0, Math.floor(Math.random() * ADDITIONALS.length));
 };
@@ -88,7 +84,7 @@ export const generateTripPoint = () => {
   return {
     type: generateType(),
     city: generateCity(),
-    additional: generateRandomAdditional(),
+    additionals: generateRandomAdditionals(),
     pointInfo: {
       description: generateRandomDescription(),
       photo: `http://picsum.photos/248/152?r`
