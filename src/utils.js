@@ -11,6 +11,8 @@ export const renderElement = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+    default:
+      new Error (`Элемент не найден`);
   }
 };
 

@@ -1,4 +1,5 @@
 import {createElement} from '../utils.js';
+import {Time} from '../mock/trip-day.js';
 
 export const createAdditionals = (arr) => {
   return arr
@@ -16,8 +17,8 @@ export const createAdditionals = (arr) => {
 };
 
 const getTimeGap = (start, end) => {
-  const gap = Math.floor((end - start) / 1000 / 60 / 60);
-  const gapMinutes = Math.floor(((end - start) / 1000 / 60 % 60));
+  const gap = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+  const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
 
   if (gapMinutes === 0) {
 
