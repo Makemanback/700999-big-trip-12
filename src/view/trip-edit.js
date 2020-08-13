@@ -1,4 +1,5 @@
 import {CITIES} from '../mock/trip-day.js';
+import {createElement} from '../utils.js';
 
 const createAdditionals = (arr) => {
   return arr.map((item) => {
@@ -24,7 +25,7 @@ const createCities = (arr) => {
   }).join(``);
 };
 
-export const createPageTripEditTemplate = (point) => {
+const createPageTripEditTemplate = (point) => {
   const {additionals, price} = point;
 
   return (
@@ -141,3 +142,26 @@ export const createPageTripEditTemplate = (point) => {
   </form>`
   );
 };
+
+export default class TripEdit {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createPageTripEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

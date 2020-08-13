@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 export const createAdditionals = (arr) => {
   return arr
   .slice(0, 3)
@@ -15,12 +17,13 @@ export const createAdditionals = (arr) => {
 
 const getTimeGap = (start, end) => {
   const gap = Math.floor((end - start) / 1000 / 60 / 60);
-  const gapMin = ((end - start) / 1000 / 60 % 60);
+  const gapMinutes = Math.floor(((end - start) / 1000 / 60 % 60));
 
-  if (gapMin === 0) {
+  if (gapMinutes === 0) {
+
     return `${gap}H`;
   }
-  return `${gap}H ${Math.round(gapMin)}M`;
+  return `${gap}H ${Math.round(gapMinutes)}M`;
 };
 
 export const createTripPointTemplate = (point) => {
@@ -70,3 +73,25 @@ export const createTripPointTemplate = (point) => {
   );
 };
 
+export default class TripPoint {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createTripPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
