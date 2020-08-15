@@ -27,16 +27,13 @@ const getTimeGap = (start, end) => {
   return `${gap}H ${Math.round(gapMinutes)}M`;
 };
 
-export const createTripPointTemplate = (point) => {
+const createTripPointTemplate = (point) => {
   const {type, city, price, additionals} = point;
   const {start, end} = point.schedule;
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
 
   return (
-    `
-    <li class="trip-days__item  day">
-
-      <li class="trip-events__item">
+    `<li class="trip-events__item">
         <div class="event">
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
@@ -68,9 +65,7 @@ export const createTripPointTemplate = (point) => {
             <span class="visually-hidden">Open event</span>
           </button>
         </div>
-      </li>
-
-  </li>`
+      </li>`
   );
 };
 

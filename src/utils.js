@@ -3,7 +3,7 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -12,7 +12,7 @@ export const renderElement = (container, element, place) => {
       container.append(element);
       break;
     default:
-      new Error (`Элемент не найден`);
+      throw new Error(`Элемент не найден`);
   }
 };
 
@@ -47,10 +47,6 @@ export const shuffleArray = (arr) => {
 };
 
 export const getRandomArrayElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
-
-export const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 export const formatDate = (obj) => {
   const month = obj.getMonth();
