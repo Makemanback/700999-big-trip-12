@@ -1,4 +1,5 @@
-import {formatDate, createElement} from '../utils.js';
+import AbstractView from "./abstract.js";
+import {formatDate} from '../utils/date.js';
 
 const createDays = (dates, index) => {
   return (
@@ -7,33 +8,20 @@ const createDays = (dates, index) => {
         <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${formatDate(dates)}">${dates.toLocaleString(`en-US`, {month: `short`, day: `numeric`})}</time>
       </div>
-
     </li>`
   );
 };
 
 export const createTripDayTemplate = (point, index) => createDays(point, index);
 
-export default class TripDay {
+export default class TripDay extends AbstractView {
   constructor(item, index) {
-    this._element = null;
+    super();
     this._item = item;
     this._index = index;
   }
 
   getTemplate() {
     return createDays(this._item, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createPageSortingTemplate = () => {
   return (
@@ -35,24 +35,8 @@ const createPageSortingTemplate = () => {
   );
 };
 
-export default class PageSorting {
-  constructor() {
-    this._element = null;
-  }
-
+export default class PageSorting extends AbstractView {
   getTemplate() {
     return createPageSortingTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
