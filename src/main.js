@@ -14,7 +14,7 @@ import {generateTripPoint} from './mock/trip-day.js';
 import {render, RenderPosition, formatDate, getTripStart, getTripEnd} from './utils.js';
 
 
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 0;
 
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 const pointDates = points.map((point) => point.schedule.start);
@@ -51,11 +51,11 @@ const pageEvents = pageMainElement.querySelector(`.trip-events`);
 
 render(pageTripControlsMenu, new PageMenuView().getElement(), RenderPosition.BEFOREEND);
 render(pageTripControls, new PageFiltersView().getElement(), RenderPosition.BEFOREEND);
-render(pageEvents, new PageSortingView().getElement(), RenderPosition.BEFOREEND);
 
 if (POINTS_COUNT === 0) {
   render(pageEvents, new FirstPointView().getElement(), RenderPosition.BEFOREEND);
 } else {
+  render(pageEvents, new PageSortingView().getElement(), RenderPosition.BEFOREEND);
   render(pageEvents, new TripDaysListView().getElement(), RenderPosition.BEFOREEND);
   render(pageTripMain, new PageTripInfoView(arrCities, getTripStart(startDates[0]), getTripEnd(startDates[startDates.length - 1]), totalPrice).getElement(), RenderPosition.AFTERBEGIN);
 
