@@ -55,7 +55,7 @@ const generateRandomDescription = () => {
   .join(``);
 };
 
-const Time = {
+export const Time = {
   DAY_GAP: 5,
   HOUR_GAP: 20,
   HOURS: 24,

@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createPageInfoCostTemplate = (price) => {
   return (
     `<p class="trip-info__cost">
@@ -18,7 +20,7 @@ const createPageInfoTemplate = (cities, startDate, endDate) => {
 };
 
 
-export const createPageTripInfoTemplate = (cities, startDate, endDate, price) => {
+const createPageTripInfoTemplate = (cities, startDate, endDate, price) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
     ${createPageInfoTemplate(cities, startDate, endDate)}
@@ -26,3 +28,29 @@ export const createPageTripInfoTemplate = (cities, startDate, endDate, price) =>
     </section>`
   );
 };
+
+export default class PageTripInfo {
+  constructor(cities, startDate, endDate, price) {
+    this._element = null;
+    this._cities = cities;
+    this._startDate = startDate;
+    this._endDate = endDate;
+    this._price = price;
+  }
+
+  getTemplate() {
+    return createPageTripInfoTemplate(this._cities, this._startDate, this._endDate, this._price);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

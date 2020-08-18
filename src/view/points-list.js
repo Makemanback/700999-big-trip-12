@@ -1,12 +1,13 @@
-import {createElement} from "../utils.js";
 
-export default class TripDaysList {
+import {createElement} from '../utils.js';
+
+export default class PointsList {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<ul class="trip-days"></ul>`;
+    return `<ul class="trip-events__list"></ul>`;
   }
 
   getElement() {

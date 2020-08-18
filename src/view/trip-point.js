@@ -1,3 +1,6 @@
+import {createElement} from '../utils.js';
+import {Time} from '../mock/trip-day.js';
+
 export const createAdditionals = (arr) => {
   return arr
   .slice(0, 3)
@@ -14,25 +17,23 @@ export const createAdditionals = (arr) => {
 };
 
 const getTimeGap = (start, end) => {
-  const gap = Math.floor((end - start) / 1000 / 60 / 60);
-  const gapMin = ((end - start) / 1000 / 60 % 60);
+  const gap = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+  const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
 
-  if (gapMin === 0) {
+  if (gapMinutes === 0) {
+
     return `${gap}H`;
   }
-  return `${gap}H ${Math.round(gapMin)}M`;
+  return `${gap}H ${Math.round(gapMinutes)}M`;
 };
 
-export const createTripPointTemplate = (point) => {
+const createTripPointTemplate = (point) => {
   const {type, city, price, additionals} = point;
   const {start, end} = point.schedule;
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
 
   return (
-    `
-    <li class="trip-days__item  day">
-
-      <li class="trip-events__item">
+    `<li class="trip-events__item">
         <div class="event">
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
@@ -64,9 +65,29 @@ export const createTripPointTemplate = (point) => {
             <span class="visually-hidden">Open event</span>
           </button>
         </div>
-      </li>
-
-  </li>`
+      </li>`
   );
 };
 
+export default class TripPoint {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createTripPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

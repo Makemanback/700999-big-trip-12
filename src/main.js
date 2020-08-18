@@ -1,13 +1,18 @@
-import {createPageMenuTemplate} from './view/page-menu.js';
-import {createPageFiltersTemplate} from './view/page-filters.js';
-import {createPageTripInfoTemplate} from './view/page-trip-info.js';
-import {createPageSortingTemplate} from './view/page-sorting.js';
-import {createPageTripEditTemplate} from './view/trip-edit.js';
-import {createPageTripDaysListTemplate} from './view/trip-list.js';
-import {createTripDayTemplate} from './view/trip-day.js';
-import {createTripPointTemplate} from './view/trip-point.js';
+import PageMenuView from './view/page-menu.js';
+import PageFiltersView from './view/page-filters.js';
+import PageTripInfoView from './view/page-trip-info.js';
+import PageSortingView from './view/page-sorting.js';
+import TripEdit from './view/trip-edit.js';
+import TripDaysListView from './view/trip-list.js';
+
+import TripDayView from './view/trip-day.js';
+import PointsListView from './view/points-list.js';
+import TripPointView from './view/trip-point.js';
+import FirstPointView from './view/first-point.js';
+
 import {generateTripPoint} from './mock/trip-day.js';
-import {render, formatDate, getTripStart, getTripEnd} from './utils.js';
+import {render, RenderPosition, formatDate, getTripStart, getTripEnd} from './utils.js';
+
 
 const POINTS_COUNT = 10;
 
@@ -44,26 +49,69 @@ const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls > h2`);
 const pageMainElement = document.querySelector(`.page-main`);
 const pageEvents = pageMainElement.querySelector(`.trip-events`);
 
-render(pageTripControlsMenu, createPageMenuTemplate(), `afterend`);
-render(pageTripControls, createPageFiltersTemplate(), `beforeend`);
-render(pageTripMain, createPageTripInfoTemplate(arrCities, getTripStart(startDates[0]), getTripEnd(startDates[startDates.length - 1]), totalPrice), `afterbegin`);
-render(pageEvents, createPageSortingTemplate(), `beforeend`);
-render(pageEvents, createPageTripEditTemplate(points[0]), `beforeend`);
-render(pageEvents, createPageTripDaysListTemplate(), `beforeend`);
+render(pageTripControlsMenu, new PageMenuView().getElement(), RenderPosition.BEFOREEND);
+render(pageTripControls, new PageFiltersView().getElement(), RenderPosition.BEFOREEND);
+render(pageEvents, new PageSortingView().getElement(), RenderPosition.BEFOREEND);
 
-const PageTripDaysList = pageEvents.querySelector(`.trip-days`);
+if (POINTS_COUNT === 0) {
+  render(pageEvents, new FirstPointView().getElement(), RenderPosition.BEFOREEND);
+} else {
+  render(pageEvents, new TripDaysListView().getElement(), RenderPosition.BEFOREEND);
+  render(pageTripMain, new PageTripInfoView(arrCities, getTripStart(startDates[0]), getTripEnd(startDates[startDates.length - 1]), totalPrice).getElement(), RenderPosition.AFTERBEGIN);
 
-startDates.forEach((item, index) => {
-  render(PageTripDaysList, createTripDayTemplate(item, index + 1), `beforeend`);
-});
+  const pageTripDaysListView = pageEvents.querySelector(`.trip-days`);
 
-const pageTripDays = PageTripDaysList.querySelectorAll(`.trip-days__item`);
-
-for (let i = 0; i < POINTS_COUNT; i++) {
-  pageTripDays.forEach((item) => {
-    if (formatDate(points[i].schedule.start) === item.querySelector(`.day__date`).getAttribute(`datetime`)) {
-      render(item.querySelector(`.trip-events__list`), createTripPointTemplate(points[i]), `beforeend`);
-    }
+  startDates.forEach((item, index) => {
+    render(pageTripDaysListView, new TripDayView(item, index + 1).getElement(), RenderPosition.BEFOREEND);
   });
+
+  const pageTripDayViews = pageTripDaysListView.querySelectorAll(`.trip-days__item`);
+
+  for (let i = 0; i < pageTripDayViews.length; i++) {
+    render(pageTripDayViews[i], new PointsListView().getElement(), RenderPosition.BEFOREEND);
+  }
+
+  const renderPoints = (tripDay, point) => {
+    const pointComponent = new TripPointView(point);
+    const pointEditComponent = new TripEdit(point);
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    const replacePointToForm = () => {
+      tripDay.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
+      document.addEventListener(`keydown`, onEscKeyDown);
+    };
+
+    const replaceFormToPoint = () => {
+      tripDay.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
+    };
+
+    pointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      replacePointToForm();
+    });
+
+    pointEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    render(tripDay, pointComponent.getElement(), RenderPosition.BEFOREEND);
+  };
+
+  for (let i = 0; i < POINTS_COUNT; i++) {
+    pageTripDayViews.forEach((pageTripDayView) => {
+      if (formatDate(points[i].schedule.start) === pageTripDayView.querySelector(`.day__date`).getAttribute(`datetime`)) {
+        renderPoints(pageTripDayView.querySelector(`.trip-events__list`), points[i]);
+      }
+    });
+  }
 }
+
 
