@@ -5,7 +5,7 @@ import TripPointView from '../view/trip-point.js';
 import TripEditView from '../view/trip-edit.js';
 
 import TripInfoView from '../view/page-trip-info';
-import FirstPointView from '../view/first-point.js';
+import NoPointsView from '../view/no-points.js';
 import EmptyTripInfoView from '../view/empty-trip-info.js';
 
 import {render, RenderPosition, replace} from '../utils/render.js';
@@ -26,7 +26,7 @@ export default class Trip {
     this._pointEditComponent = new TripEditView();
 
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
-    this._firstPointComponent = new FirstPointView();
+    this._firstPointComponent = new NoPointsView();
     this._emptyTripInfoComponent = new EmptyTripInfoView();
   }
 

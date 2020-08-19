@@ -38,7 +38,7 @@ const arrCities = points.slice().sort((a, b) => a.schedule.start - b.schedule.st
 const pageHeader = document.querySelector(`.page-header`);
 const pageTripMain = pageHeader.querySelector(`.trip-main`);
 const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
-const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls > h2`);
+const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 const pageMainElement = document.querySelector(`.page-main`);
 const pageEvents = pageMainElement.querySelector(`.trip-events`);
 
