@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createPageInfoCostTemplate = (price) => {
   return (
@@ -29,9 +29,9 @@ const createPageTripInfoTemplate = (cities, startDate, endDate, price) => {
   );
 };
 
-export default class PageTripInfo {
+export default class PageTripInfo extends AbstractView {
   constructor(cities, startDate, endDate, price) {
-    this._element = null;
+    super();
     this._cities = cities;
     this._startDate = startDate;
     this._endDate = endDate;
@@ -40,17 +40,5 @@ export default class PageTripInfo {
 
   getTemplate() {
     return createPageTripInfoTemplate(this._cities, this._startDate, this._endDate, this._price);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,5 @@
+import AbstractView from "./abstract.js";
 import {CITIES} from '../mock/trip-day.js';
-import {createElement} from '../utils.js';
 
 const createAdditionals = (additionals) => {
   return additionals.map((item) => {
@@ -145,25 +145,24 @@ const createPageTripEditTemplate = (point) => {
   );
 };
 
-export default class TripEdit {
+export default class TripEdit extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createPageTripEditTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }

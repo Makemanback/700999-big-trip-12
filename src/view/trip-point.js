@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from "./abstract.js";
 import {Time} from '../mock/trip-day.js';
 
 export const createAdditionals = (arr) => {
@@ -69,25 +69,24 @@ const createTripPointTemplate = (point) => {
   );
 };
 
-export default class TripPoint {
+export default class TripPoint extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createTripPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 }
