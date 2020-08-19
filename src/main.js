@@ -9,12 +9,13 @@ import TripDayView from './view/trip-day.js';
 import PointsListView from './view/points-list.js';
 import TripPointView from './view/trip-point.js';
 import FirstPointView from './view/first-point.js';
+import EmptyTripInfoView from './view/empty-trip-info.js';
 
 import {generateTripPoint} from './mock/trip-day.js';
 import {render, RenderPosition, formatDate, getTripStart, getTripEnd} from './utils.js';
 
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 10;
 
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 const pointDates = points.map((point) => point.schedule.start);
@@ -54,6 +55,7 @@ render(pageTripControls, new PageFiltersView().getElement(), RenderPosition.BEFO
 
 if (POINTS_COUNT === 0) {
   render(pageEvents, new FirstPointView().getElement(), RenderPosition.BEFOREEND);
+  render(pageTripMain, new EmptyTripInfoView().getElement(), RenderPosition.AFTERBEGIN);
 } else {
   render(pageEvents, new PageSortingView().getElement(), RenderPosition.BEFOREEND);
   render(pageEvents, new TripDaysListView().getElement(), RenderPosition.BEFOREEND);
