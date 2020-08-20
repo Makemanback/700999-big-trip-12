@@ -25,8 +25,7 @@ const createCities = (cities) => {
   }).join(``);
 };
 
-const createPageTripEditTemplate = (point) => {
-  const {additionals, price} = point;
+const createPageTripEditTemplate = ({additionals, price, city, type}) => {
 
   return (
     `<div>
@@ -102,7 +101,7 @@ const createPageTripEditTemplate = (point) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Flight to
+            ${type} to ${city}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
           <datalist id="destination-list-1">

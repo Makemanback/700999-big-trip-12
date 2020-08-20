@@ -16,7 +16,7 @@ export const createAdditionals = (arr) => {
 
 };
 
-const getTimeGap = (start, end) => {
+export const getTimeGap = (start, end) => {
   const gap = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
 
