@@ -8,6 +8,7 @@ const createDays = (dates, index) => {
         <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${formatDate(dates)}">${dates.toLocaleString(`en-US`, {month: `short`, day: `numeric`})}</time>
       </div>
+      <ul class="trip-events__list"></ul>
     </li>`
   );
 };
