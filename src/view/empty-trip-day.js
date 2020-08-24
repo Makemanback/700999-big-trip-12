@@ -14,8 +14,4 @@ export default class TripDay extends AbstractView {
   getTemplate() {
     return createDay();
   }
-
-  clearContent() {
-    this.getElement().querySelector(`.trip-events__list`).innerHTML = ``;
-  }
 }

@@ -1,6 +1,6 @@
 import {getRandomInteger, shuffleArray, getRandomArrayElement} from '../utils/common.js';
 
-const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeng`, `Restaurant`];
+const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
 const ADDITIONALS = [
   {
@@ -80,8 +80,11 @@ const Price = {
 
 const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 export const generateTripPoint = () => {
   return {
+    id: generateId(),
     type: generateType(),
     city: generateCity(),
     additionals: generateRandomAdditionals(),
@@ -90,7 +93,8 @@ export const generateTripPoint = () => {
       photo: `http://picsum.photos/248/152?r`
     },
     schedule: getRandomSchedule(),
-    price: generateRandomPrice()
+    price: generateRandomPrice(),
+    isFavorite: false,
   };
 };
 

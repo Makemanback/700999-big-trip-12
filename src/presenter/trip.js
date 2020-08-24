@@ -8,9 +8,9 @@ import EmptyDayView from '../view/empty-trip-day.js';
 
 import PageSortingView from '../view/page-sorting.js';
 
-import {render, RenderPosition, replace} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
-import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
+import {sortPointsByPrice, sortPointsByDuration, updateItem} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
 
 import PointPresenter from "./point.js";
@@ -25,6 +25,7 @@ export default class Trip {
     this._startDates = startDates;
     this._arrCities = arrCities;
     this._totalPrice = totalPrice;
+    this._pointPresenter = {};
 
     this._daysListComponent = new TripDaysListView();
 
@@ -33,16 +34,22 @@ export default class Trip {
     this._emptyTripInfoComponent = new EmptyTripInfoView();
     this._emptyDayComponent = new EmptyDayView();
 
+    this._handlePointChange = this._handlePointChange.bind(this);
+
     this._pageSortingComponent = new PageSortingView();
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripPoints) {
-    this._tripPoints = tripPoints;
+    this._tripPoints = tripPoints.slice();
     this._sourcedTripPoints = tripPoints.slice();
-
     this._renderTrip();
+  }
 
+  _handlePointChange(updatedPoint) {
+    this._tripPoints = updateItem(this._tripPoints, updatedPoint);
+    this._sourcedTripPoints = updateItem(this._sourcedTripPoints, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(this._daysList, updatedPoint);
   }
 
   _renderDaysList() {
@@ -58,8 +65,17 @@ export default class Trip {
   }
 
   _renderPoint(daysList, point) {
-    const pointPresenter = new PointPresenter(this._daysListComponent);
-    pointPresenter.init(daysList, point);
+    // debugger
+    this._daysList = daysList;
+    this._point = point;
+
+    const pointPresenter = new PointPresenter(this._daysListComponent
+
+      , this._handlePointChange
+
+      );
+    pointPresenter.init(this._daysList, this._point);
+    this._pointPresenter[this._point.id] = pointPresenter;
   }
 
   _renderTripInfo() {
@@ -104,8 +120,6 @@ export default class Trip {
       this._renderAllPoints();
     } else {
       const daysContainer = this._datesContainer.querySelector(`.trip-days`);
-
-      this._emptyDayComponent.clearContent();
       render(daysContainer, this._emptyDayComponent, RenderPosition.BEFOREEND);
 
       const pointContainers = this._datesContainer.querySelector(`.trip-events__list`);
@@ -130,6 +144,11 @@ export default class Trip {
 
   _clearPointsList() {
     this._daysListComponent.getElement().innerHTML = ``;
+
+    Object
+    .values(this._pointPresenter)
+    .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
   }
 
   _renderTrip() {
