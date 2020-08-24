@@ -19,7 +19,7 @@ export const shuffleArray = (arr) => {
 export const getRandomArrayElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
 
 export const sortPointsByPrice = (arr) => {
-  return arr.slice().sort((firstElement, secondElement) => firstElement.price > secondElement.price ? -1 : 1);
+  return arr.slice().sort((firstElement, secondElement) => secondElement.price - firstElement.price);
 };
 
 export const sortPointsByDuration = (arr) => {
