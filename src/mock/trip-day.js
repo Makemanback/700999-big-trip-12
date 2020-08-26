@@ -43,12 +43,12 @@ const generateType = () => getRandomArrayElement(TYPES);
 
 export const generateCity = () => getRandomArrayElement(CITIES);
 
-const generateRandomAdditionals = () => {
+export const generateRandomAdditionals = () => {
   return shuffleArray(ADDITIONALS)
   .slice(0, Math.floor(Math.random() * ADDITIONALS.length));
 };
 
-const generateRandomDescription = () => {
+export const generateRandomDescription = () => {
   return shuffleArray(DESCRIPTIONS)
   .slice(0, 5)
   .slice(0, Math.random() * DESCRIPTIONS.length + 1)
@@ -95,6 +95,17 @@ export const generateTripPoint = () => {
     schedule: getRandomSchedule(),
     price: generateRandomPrice(),
     isFavorite: false,
+
+    isTaxi: false,
+    isBus: false,
+    isTrain: false,
+    isShip: false,
+    isTransport: false,
+    isDrive: false,
+    isFlight: false,
+    isCheckin: false,
+    isSightseeing: false,
+    isRestaurant: false
   };
 };
 

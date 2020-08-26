@@ -15,8 +15,6 @@ import {SortType} from '../view/page-sorting.js';
 
 import PointPresenter from "./point.js";
 
-const POINTS_COUNT = 10;
-
 export default class Trip {
   constructor(tripContainer, startDates, arrCities, totalPrice) {
     this._tripContainer = tripContainer;
@@ -35,6 +33,7 @@ export default class Trip {
     this._emptyDayComponent = new EmptyDayView();
 
     this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
 
     this._pageSortingComponent = new PageSortingView();
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -44,6 +43,12 @@ export default class Trip {
     this._tripPoints = tripPoints.slice();
     this._sourcedTripPoints = tripPoints.slice();
     this._renderTrip();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handlePointChange(updatedPoint) {
@@ -65,17 +70,12 @@ export default class Trip {
   }
 
   _renderPoint(daysList, point) {
-    // debugger
     this._daysList = daysList;
     this._point = point;
 
-    const pointPresenter = new PointPresenter(this._daysListComponent
-
-      , this._handlePointChange
-
-      );
-    pointPresenter.init(this._daysList, this._point);
-    this._pointPresenter[this._point.id] = pointPresenter;
+    const pointPresenter = new PointPresenter(this._daysListComponent, this._handlePointChange, this._handleModeChange);
+    pointPresenter.init(this._daysList, point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
 
   _renderTripInfo() {
@@ -152,7 +152,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (POINTS_COUNT === 0) {
+    if (this._tripPoints === 0) {
       this._renderNoPoint();
       this._renderEmptyTripInfo();
       return;
