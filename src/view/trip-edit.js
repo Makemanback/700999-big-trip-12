@@ -189,13 +189,12 @@ export default class TripEdit extends SmartView {
     this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
 
     this._eventTypeHandler = this._eventTypeHandler.bind(this);
     this._eventDestinationHandler = this._eventDestinationHandler.bind(this);
     this._eventPriceHandler = this._eventPriceHandler.bind(this);
-    this._eventDurationHandlerStart = this._eventDurationHandlerStart.bind(this);
-    this._eventDurationHandlerEnd = this._eventDurationHandlerEnd.bind(this);
+    this._eventDurationStartHandler = this._eventDurationStartHandler.bind(this);
+    this._eventDurationEndHandler = this._eventDurationEndHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
 
     this._dueDateChangeHandler = this._dueDateChangeHandler.bind(this);
@@ -278,14 +277,14 @@ export default class TripEdit extends SmartView {
     }, true);
   }
 
-  _eventDurationHandlerStart(evt) {
+  _eventDurationStartHandler(evt) {
     evt.preventDefault();
     this.updateData({
       start: evt.target.value,
     });
   }
 
-  _eventDurationHandlerEnd(evt) {
+  _eventDurationEndHandler(evt) {
     evt.preventDefault();
     this.updateData({
       end: evt.target.value,
@@ -308,8 +307,8 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
-    this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._eventDurationHandlerStart);
-    this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._eventDurationHandlerEnd);
+    this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._eventDurationStartHandler);
+    this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._eventDurationEndHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
