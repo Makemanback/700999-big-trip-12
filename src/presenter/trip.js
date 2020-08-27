@@ -15,8 +15,6 @@ import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
 import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
 
-const POINTS_COUNT = 10;
-
 export default class Trip {
   constructor(tripContainer, startDates, arrCities, totalPrice) {
     this._tripContainer = tripContainer;
