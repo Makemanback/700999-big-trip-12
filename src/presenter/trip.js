@@ -156,7 +156,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripPoints === 0) {
+    if (this._tripPoints.length === 0) {
       this._renderNoPoint();
       this._renderEmptyTripInfo();
       return;
