@@ -4,8 +4,8 @@ import TripPointView from '../view/trip-point.js';
 import TripEditView from '../view/trip-edit.js';
 
 import TripInfoView from '../view/page-trip-info';
-import NoPointsView from '../view/no-points.js';
-import EmptyTripInfoView from '../view/empty-trip-info.js';
+// import NoPointsView from '../view/no-points.js';
+// import EmptyTripInfoView from '../view/empty-trip-info.js';
 import EmptyDayView from '../view/empty-trip-day.js';
 
 import PageSortingView from '../view/page-sorting.js';
@@ -27,8 +27,8 @@ export default class Trip {
     this._daysListComponent = new TripDaysListView();
 
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
-    this._noPointComponent = new NoPointsView();
-    this._emptyTripInfoComponent = new EmptyTripInfoView();
+    // this._noPointComponent = new NoPointsView();
+    // this._emptyTripInfoComponent = new EmptyTripInfoView();
     this._emptyDayComponent = new EmptyDayView();
 
     this._pageSortingComponent = new PageSortingView();
@@ -156,11 +156,11 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripPoints.length === 0) {
-      this._renderNoPoint();
-      this._renderEmptyTripInfo();
-      return;
-    }
+    // if (this._tripPoints.length === 0 || POINTS_COUNT === 0) {
+    //   this._renderNoPoint();
+    //   this._renderEmptyTripInfo();
+    //   return;
+    // }
 
     this._renderPageSorting();
     this._renderDaysList();
