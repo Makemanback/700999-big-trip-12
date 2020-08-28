@@ -135,7 +135,7 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start.toLocaleString(`EN-gb`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`})}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
@@ -197,7 +197,6 @@ export default class TripEdit extends SmartView {
     this._eventDurationEndHandler = this._eventDurationEndHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
 
-    this._dueDateChangeHandler = this._dueDateChangeHandler.bind(this);
     this._setDatepicker();
 
     this._setInnerHandlers();
@@ -232,14 +231,16 @@ export default class TripEdit extends SmartView {
       this._datepicker.destroy();
       this._datepicker = null;
     }
-    // изменить формат как-минимум
+
     if (this._data.start) {
       this._datepicker = flatpickr(
           this.getElement().querySelectorAll(`#event-start-time-1`),
           {
-            dateFormat: `j F`,
+            dateFormat: `y/m/d H:i`,
+            time_24hr: true,
+            enableTime: true,
             defaultDate: this._data.start,
-            onChange: this._dueDateChangeHandler
+            onChange: this._eventDurationStartHandler
           }
       );
     }
@@ -248,18 +249,14 @@ export default class TripEdit extends SmartView {
       this._datepicker = flatpickr(
           this.getElement().querySelectorAll(`#event-end-time-1`),
           {
-            dateFormat: `j F`,
+            dateFormat: `y/m/d H:i`,
+            time_24hr: true,
+            enableTime: true,
             defaultDate: this._data.end,
-            onChange: this._dueDateChangeHandler
+            onChange: this._eventDurationEndHandler
           }
       );
     }
-  }
-
-  _dueDateChangeHandler(selectedDates) {
-    this.updateData({
-      start: selectedDates[0]
-    });
   }
 
 
@@ -277,18 +274,25 @@ export default class TripEdit extends SmartView {
     }, true);
   }
 
-  _eventDurationStartHandler(evt) {
-    evt.preventDefault();
+  _eventDurationStartHandler(selectedDates) {
+    // debugger
+    // evt.preventDefault();
+    // this.updateData({
+    //   start: evt.target.value,
+    // });
     this.updateData({
-      start: evt.target.value,
-    });
+      start: selectedDates[0]
+    }, true);
   }
 
-  _eventDurationEndHandler(evt) {
-    evt.preventDefault();
+  _eventDurationEndHandler(selectedDates) {
+    // evt.preventDefault();
+    // this.updateData({
+    //   end: evt.target.value,
+    // });
     this.updateData({
-      end: evt.target.value,
-    });
+      end: selectedDates[0]
+    }, true);
   }
 
   _favoriteClickHandler() {
