@@ -17,3 +17,18 @@ export const shuffleArray = (arr) => {
 };
 
 export const getRandomArrayElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
+
+export const sortPointsByPrice = (arr) => {
+  return arr.slice().sort((firstElement, secondElement) => secondElement.price - firstElement.price);
+};
+
+export const sortPointsByDuration = (arr) => {
+  return (
+    arr.slice().sort((firstPoint, secondPoint) => {
+      if (firstPoint.schedule.end - firstPoint.schedule.start > secondPoint.schedule.end - secondPoint.schedule.start) {
+        return -1;
+      }
+      return 1;
+    })
+  );
+};

@@ -25,8 +25,7 @@ const createCities = (cities) => {
   }).join(``);
 };
 
-const createPageTripEditTemplate = (point) => {
-  const {additionals, price, city, type} = point;
+const createPageTripEditTemplate = ({additionals, price, city, type}) => {
 
   return (
     `<div>

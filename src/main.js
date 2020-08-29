@@ -1,11 +1,25 @@
 import PageMenuView from './view/page-menu.js';
 import PageFiltersView from './view/page-filters.js';
-import PageSortingView from './view/page-sorting.js';
+
 
 import {generateTripPoint} from './mock/trip-day.js';
 
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
+
+import NoPointsView from './view/no-points.js';
+import EmptyTripInfoView from './view/empty-trip-info.js';
+
+const pageBodyElement = document.querySelector(`.page-body`);
+const pageHeader = document.querySelector(`.page-header`);
+const pageTripEvents = document.querySelector(`.trip-events`);
+const pageTripMain = pageHeader.querySelector(`.trip-main`);
+const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
+const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
+
+render(pageTripControlsMenu, new PageMenuView(), RenderPosition.BEFOREEND);
+render(pageTripControls, new PageFiltersView(), RenderPosition.BEFOREEND);
+
 
 const POINTS_COUNT = 10;
 
@@ -35,18 +49,11 @@ const totalPrice = points.reduce((accumulator, value) => {
 
 const arrCities = points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
 
-const pageHeader = document.querySelector(`.page-header`);
-const pageTripMain = pageHeader.querySelector(`.trip-main`);
-const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
-const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
-const pageMainElement = document.querySelector(`.page-main`);
-const pageEvents = pageMainElement.querySelector(`.trip-events`);
-
-render(pageTripControlsMenu, new PageMenuView(), RenderPosition.BEFOREEND);
-render(pageTripControls, new PageFiltersView(), RenderPosition.BEFOREEND);
-render(pageEvents, new PageSortingView(), RenderPosition.BEFOREEND);
-
-const tripPresenter = new TripPresenter(pageEvents, pageTripMain, startDates, arrCities, totalPrice);
-
-tripPresenter.init(points);
+if (POINTS_COUNT === 0) {
+  render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
+  render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
+} else {
+  const tripPresenter = new TripPresenter(pageBodyElement, startDates, arrCities, totalPrice);
+  tripPresenter.init(points);
+}
 
