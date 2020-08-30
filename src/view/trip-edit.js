@@ -237,7 +237,6 @@ export default class TripEdit extends SmartView {
           this.getElement().querySelectorAll(`#event-start-time-1`),
           {
             dateFormat: `y/m/d H:i`,
-            time_24hr: true,
             enableTime: true,
             defaultDate: this._data.start,
             onChange: this._eventDurationStartHandler
@@ -250,7 +249,6 @@ export default class TripEdit extends SmartView {
           this.getElement().querySelectorAll(`#event-end-time-1`),
           {
             dateFormat: `y/m/d H:i`,
-            time_24hr: true,
             enableTime: true,
             defaultDate: this._data.end,
             onChange: this._eventDurationEndHandler

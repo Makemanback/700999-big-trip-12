@@ -2,8 +2,6 @@ import TripDaysListView from '../view/trip-list.js';
 import TripDayView from '../view/trip-day.js';
 
 import TripInfoView from '../view/page-trip-info';
-import NoPointsView from '../view/no-points.js';
-import EmptyTripInfoView from '../view/empty-trip-info.js';
 import EmptyDayView from '../view/empty-trip-day.js';
 
 import PageSortingView from '../view/page-sorting.js';
@@ -28,8 +26,6 @@ export default class Trip {
     this._daysListComponent = new TripDaysListView();
 
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
-    this._noPointComponent = new NoPointsView();
-    this._emptyTripInfoComponent = new EmptyTripInfoView();
     this._emptyDayComponent = new EmptyDayView();
 
     this._handlePointChange = this._handlePointChange.bind(this);
@@ -152,12 +148,6 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripPoints === 0) {
-      this._renderNoPoint();
-      this._renderEmptyTripInfo();
-      return;
-    }
-
     this._renderPageSorting();
     this._renderDaysList();
     this._renderTripInfo();
