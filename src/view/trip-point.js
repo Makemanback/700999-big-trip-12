@@ -1,4 +1,4 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {Time} from '../mock/trip-day.js';
 
 export const createAdditionals = (arr) => {
@@ -27,9 +27,7 @@ export const getTimeGap = (start, end) => {
   return `${gap}H ${Math.round(gapMinutes)}M`;
 };
 
-const createTripPointTemplate = (point) => {
-  const {type, city, price, additionals} = point;
-  const {start, end} = point.schedule;
+const createTripPointTemplate = ({type, city, price, additionals, start, end}) => {
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
 
   return (
@@ -68,15 +66,16 @@ const createTripPointTemplate = (point) => {
   );
 };
 
-export default class TripPoint extends AbstractView {
+export default class TripPoint extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    this._data = TripPoint.parseDataToPoint(point);
+
     this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
-    return createTripPointTemplate(this._point);
+    return createTripPointTemplate(this._data);
   }
 
   _clickHandler(evt) {
@@ -88,4 +87,21 @@ export default class TripPoint extends AbstractView {
     this._callback.click = callback;
     this.getElement().addEventListener(`click`, this._clickHandler);
   }
+
+  static parseDataToPoint(point) {
+    return Object.assign(
+      {},
+      point,
+      {
+        type: point.type,
+        additionals: point.additionals,
+        city: point.city,
+
+        price: point.price,
+        start: point.schedule.start,
+        end: point.schedule.end,
+      }
+    );
+  }
+
 }

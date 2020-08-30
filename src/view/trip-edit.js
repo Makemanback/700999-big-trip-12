@@ -140,7 +140,7 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end.toLocaleString(`EN-gb`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`})}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -234,7 +234,7 @@ export default class TripEdit extends SmartView {
 
     if (this._data.start) {
       this._datepicker = flatpickr(
-          this.getElement().querySelectorAll(`#event-start-time-1`),
+          this.getElement().querySelector(`#event-start-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
@@ -246,7 +246,7 @@ export default class TripEdit extends SmartView {
 
     if (this._data.end) {
       this._datepicker = flatpickr(
-          this.getElement().querySelectorAll(`#event-end-time-1`),
+          this.getElement().querySelector(`#event-end-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
@@ -273,24 +273,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationStartHandler(selectedDates) {
-    // debugger
-    // evt.preventDefault();
-    // this.updateData({
-    //   start: evt.target.value,
-    // });
     this.updateData({
       start: selectedDates[0]
-    }, true);
+    });
   }
 
   _eventDurationEndHandler(selectedDates) {
-    // evt.preventDefault();
-    // this.updateData({
-    //   end: evt.target.value,
-    // });
     this.updateData({
       end: selectedDates[0]
-    }, true);
+    });
   }
 
   _favoriteClickHandler() {
@@ -309,8 +300,6 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
-    this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._eventDurationStartHandler);
-    this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._eventDurationEndHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
@@ -358,12 +347,13 @@ export default class TripEdit extends SmartView {
           photo: point.pointInfo.photo,
           price: point.price,
           start: point.schedule.start,
-          end: point.schedule.end
+          end: point.schedule.end,
         }
     );
   }
 
   static parseDataToPoint(data) {
+    debugger
     data = Object.assign({}, data);
 
     return data;
