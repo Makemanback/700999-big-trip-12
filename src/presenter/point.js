@@ -1,6 +1,7 @@
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import TripPointView from '../view/trip-point.js';
 import TripEditView from '../view/trip-edit.js';
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -91,7 +92,10 @@ export default class Point {
   }
 
   _handleFormSubmit(point) {
-    this._changeData(point);
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point);
     this._replaceFormToPoint();
   }
 }

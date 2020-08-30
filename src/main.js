@@ -1,14 +1,14 @@
 import PageMenuView from './view/page-menu.js';
 import PageFiltersView from './view/page-filters.js';
-
-
 import {generateTripPoint} from './mock/trip-day.js';
-
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 
 import NoPointsView from './view/no-points.js';
 import EmptyTripInfoView from './view/empty-trip-info.js';
+
+
+import PointsModel from "./model/points.js";
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
@@ -49,11 +49,14 @@ const totalPrice = points.reduce((accumulator, value) => {
 
 const arrCities = points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
 
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
 if (POINTS_COUNT === 0) {
   render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
-  const tripPresenter = new TripPresenter(pageBodyElement, startDates, arrCities, totalPrice);
-  tripPresenter.init(points);
+  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, startDates, arrCities, totalPrice);
+  tripPresenter.init();
 }
 

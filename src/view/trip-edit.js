@@ -1,6 +1,7 @@
 import SmartView from "./smart.js";
 import {CITIES, generateRandomAdditionals, generateRandomDescription} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
+import {UserAction, UpdateType} from "../const.js";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -273,24 +274,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationStartHandler(selectedDates) {
-    // debugger
-    // evt.preventDefault();
-    // this.updateData({
-    //   start: evt.target.value,
-    // });
     this.updateData({
       start: selectedDates[0]
-    }, true);
+    });
   }
 
   _eventDurationEndHandler(selectedDates) {
-    // evt.preventDefault();
-    // this.updateData({
-    //   end: evt.target.value,
-    // });
     this.updateData({
       end: selectedDates[0]
-    }, true);
+    });
   }
 
   _favoriteClickHandler() {
@@ -309,8 +301,6 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
-    this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._eventDurationStartHandler);
-    this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._eventDurationEndHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 

@@ -8,13 +8,15 @@ import PageSortingView from '../view/page-sorting.js';
 
 import {render, RenderPosition} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
-import {sortPointsByPrice, sortPointsByDuration, updateItem} from '../utils/common.js';
+import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
+import {UpdateType, UserAction} from "../const.js";
 
 import PointPresenter from "./point.js";
 
 export default class Trip {
-  constructor(tripContainer, startDates, arrCities, totalPrice) {
+  constructor(tripContainer, pointsModel, startDates, arrCities, totalPrice) {
+    this._pointsModel = pointsModel;
     this._tripContainer = tripContainer;
     this._datesContainer = tripContainer.querySelector(`.trip-events`);
     this._tripInfoContainer = tripContainer.querySelector(`.trip-main`);
@@ -28,17 +30,30 @@ export default class Trip {
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
     this._emptyDayComponent = new EmptyDayView();
 
-    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._pageSortingComponent = new PageSortingView();
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
-  init(tripPoints) {
-    this._tripPoints = tripPoints.slice();
-    this._sourcedTripPoints = tripPoints.slice();
+  init() {
     this._renderTrip();
+  }
+
+  _getPoints() {
+    switch (this._currentSortType) {
+      case SortType.DURATION:
+        return sortPointsByDuration(this._pointsModel.getPoints().slice());
+      case SortType.PRICE:
+        return sortPointsByPrice(this._pointsModel.getPoints().slice());
+    }
+
+    return this._pointsModel.getPoints();
   }
 
   _handleModeChange() {
@@ -47,10 +62,39 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handlePointChange(updatedPoint) {
-    this._tripPoints = updateItem(this._tripPoints, updatedPoint);
-    this._sourcedTripPoints = updateItem(this._sourcedTripPoints, updatedPoint);
-    this._pointPresenter[updatedPoint.id].init(this._daysList, updatedPoint);
+  // _handlePointChange(updatedPoint) {
+  //   this._tripPoints = updateItem(this._tripPoints, updatedPoint);
+  //   this._sourcedTripPoints = updateItem(this._sourcedTripPoints, updatedPoint);
+  //   this._pointPresenter[updatedPoint.id].init(this._daysList, updatedPoint);
+  // }
+
+  _handleViewAction(actionType, updateType, update) {
+
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointsModel.updatePoint(updateType, update);
+      break;
+    case UserAction.ADD_POINT:
+      this._pointsModel.addPoint(updateType, update);
+      break;
+    case UserAction.DELETE_POINT:
+      this._pointsModel.deletePoint(updateType, update);
+      break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._pointPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+
+        break;
+      case UpdateType.MAJOR:
+
+        break;
+    }
   }
 
   _renderDaysList() {
@@ -66,11 +110,9 @@ export default class Trip {
   }
 
   _renderPoint(daysList, point) {
-    this._daysList = daysList;
-    this._point = point;
 
-    const pointPresenter = new PointPresenter(this._daysListComponent, this._handlePointChange, this._handleModeChange);
-    pointPresenter.init(this._daysList, point);
+    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange);
+    pointPresenter.init(daysList, point);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
@@ -78,18 +120,10 @@ export default class Trip {
     render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
-  _renderEmptyTripInfo() {
-    render(this._tripInfoContainer, this._emptyTripInfoComponent, RenderPosition.AFTERBEGIN);
-  }
-
-  _renderNoPoint() {
-    render(this._datesContainer, this._noPointComponent, RenderPosition.BEFOREEND);
-  }
-
   _renderAllPoints() {
     let pageTripDayViews = this._datesContainer.querySelectorAll(`.trip-days__item`);
 
-    this._tripPoints.forEach((point) => {
+    this._getPoints().forEach((point) => {
       pageTripDayViews.forEach((pageTripDayView) => {
         if (formatDate(point.schedule.start) === pageTripDayView.querySelector(`.day__date`).getAttribute(`datetime`)) {
           this._renderPoint(pageTripDayView.querySelector(`.trip-events__list`), point);
@@ -109,7 +143,7 @@ export default class Trip {
     }
 
     this._clearPointsList();
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
 
     if (SortType.DEFAULT === sortType) {
       this._renderDay();
@@ -119,24 +153,10 @@ export default class Trip {
       render(daysContainer, this._emptyDayComponent, RenderPosition.BEFOREEND);
 
       const pointContainers = this._datesContainer.querySelector(`.trip-events__list`);
-      this._tripPoints.forEach((point) => this._renderPoint(pointContainers, point));
+      this._getPoints().forEach((point) => this._renderPoint(pointContainers, point));
     }
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DURATION:
-        this._tripPoints = sortPointsByDuration(this._tripPoints);
-        break;
-      case SortType.PRICE:
-        this._tripPoints = sortPointsByPrice(this._tripPoints);
-        break;
-      default:
-        this._tripPoints = this._sourcedTripPoints.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
 
   _clearPointsList() {
     this._daysListComponent.getElement().innerHTML = ``;
