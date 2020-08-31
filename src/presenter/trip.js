@@ -6,7 +6,7 @@ import EmptyDayView from '../view/empty-trip-day.js';
 
 import PageSortingView from '../view/page-sorting.js';
 
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
 import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
@@ -35,7 +35,9 @@ export default class Trip {
     // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._pageSortingComponent = new PageSortingView();
+    // this._pageSortingComponent = new PageSortingView();
+    this._pageSortingComponent = null;
+
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
@@ -89,10 +91,10 @@ export default class Trip {
         this._pointPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
-
+        // this._pointPresenter[data.id].init(data);
         break;
       case UpdateType.MAJOR:
-
+        // this._pointPresenter[data.id].init(data);
         break;
     }
   }
@@ -133,8 +135,12 @@ export default class Trip {
   }
 
   _renderPageSorting() {
-    render(this._datesContainer, this._pageSortingComponent, RenderPosition.BEFOREEND);
+    if (this._pageSortingComponent !== null) {
+      this._pageSortingComponent = null;
+    }
+    this._pageSortingComponent = new PageSortingView(this._currentSortType);
     this._pageSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._datesContainer, this._pageSortingComponent, RenderPosition.BEFOREEND);
   }
 
   _handleSortTypeChange(sortType) {
@@ -144,7 +150,6 @@ export default class Trip {
 
     this._clearPointsList();
     this._currentSortType = sortType;
-
     if (SortType.DEFAULT === sortType) {
       this._renderDay();
       this._renderAllPoints();
