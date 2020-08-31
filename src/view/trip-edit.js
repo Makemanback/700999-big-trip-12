@@ -353,7 +353,6 @@ export default class TripEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
-    debugger
     data = Object.assign({}, data);
 
     return data;
