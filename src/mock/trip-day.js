@@ -1,29 +1,46 @@
-import {getRandomInteger, shuffleArray, getRandomArrayElement} from '../utils/common.js';
+import {getRandomInteger, shuffleArray, getRandomArrayElement, generateRandomBoolean} from '../utils/common.js';
 
 const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
-const ADDITIONALS = [
+
+// расширить объект до всех типов
+export const ADDITIONALS = [
   {
     offer: `Order Uber`,
-    cost: 20
+    cost: 20,
+    type: `Taxi`,
+    isChecked: false
   },
   {
     offer: `Add luggage`,
-    cost: 70
+    cost: 70,
+    type: `Flight`,
+    isChecked: false
   },
   {
     offer: `Switch to comfort`,
-    cost: 200
+    cost: 200,
+    type: `Train`,
+    isChecked: false
   },
   {
     offer: `Rent a car`,
-    cost: 150
+    cost: 150,
+    type: `Bus`,
+    isChecked: false
   },
   {
     offer: `Add breakfast`,
-    cost: 40
+    cost: 40,
+    type: `Restaraunt`,
+    isChecked: false
   }
 ];
+
+// перенести все типы точек в перечисление
+// const Types  = {
+//   BUS: `Bus`,
+// }
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -82,12 +99,22 @@ const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
+
+
 export const generateTripPoint = () => {
+  const generateTypes = generateType();
+
   return {
     id: generateId(),
-    type: generateType(),
+    type: generateTypes,
     city: generateCity(),
-    additionals: generateRandomAdditionals(),
+    // перенести код в отдельную функцию
+    additionals: ADDITIONALS.filter((item) => item.type === generateTypes)
+                            .map((item) => {
+      item.isChecked = generateRandomBoolean();
+      return item;
+    }),
+    //
     pointInfo: {
       description: generateRandomDescription(),
       photo: `http://picsum.photos/248/152?r`
@@ -96,17 +123,6 @@ export const generateTripPoint = () => {
     price: generateRandomPrice(),
     isFavorite: false,
 
-    isTaxi: false,
-    isBus: false,
-    isTrain: false,
-    isShip: false,
-    isTransport: false,
-    isDrive: false,
-    isFlight: false,
-    isCheckin: false,
-    isSightseeing: false,
-    isRestaurant: false
   };
 };
-
 
