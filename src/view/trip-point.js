@@ -17,9 +17,9 @@ export const createAdditionals = (arr) => {
 };
 
 export const getTimeGap = (start, end) => {
+  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   if (gapMinutes === 0) {
     return `${gapHours}H`;
   }

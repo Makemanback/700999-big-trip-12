@@ -32,8 +32,6 @@ export const sortPointsByDuration = (arr) => {
     })
   );
 };
-<<<<<<< HEAD
-=======
 
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
@@ -50,4 +48,3 @@ export const updateItem = (items, update) => {
 };
 
 export const generateRandomBoolean = () => Boolean(getRandomInteger(0, 1));
->>>>>>> 6af11b9

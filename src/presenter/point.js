@@ -2,7 +2,7 @@ import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import TripPointView from '../view/trip-point.js';
 import TripEditView from '../view/trip-edit.js';
 import {UserAction, UpdateType} from "../const.js";
-import { SortType } from "../view/page-sorting.js";
+// import {SortType} from "../view/page-sorting.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -22,7 +22,7 @@ export default class Point {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(daysList, point) {
@@ -37,6 +37,7 @@ export default class Point {
 
     this._pointComponent.setClickHandler(this._handleEditClick);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
@@ -97,9 +98,17 @@ export default class Point {
   _handleFormSubmit(point) {
 
     this._changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point);
+        UserAction.UPDATE_POINT,
+        UpdateType.MINOR,
+        point);
     this._replaceFormToPoint();
+  }
+
+  _handleDeleteClick(point) {
+    this._changeData(
+        UserAction.DELETE_POINT,
+        UpdateType.MINOR,
+        point
+    );
   }
 }

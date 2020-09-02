@@ -6,7 +6,7 @@ import EmptyDayView from '../view/empty-trip-day.js';
 
 import PageSortingView from '../view/page-sorting.js';
 
-import {render, RenderPosition, remove} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
 import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
@@ -24,6 +24,7 @@ export default class Trip {
     this._arrCities = arrCities;
     this._totalPrice = totalPrice;
     this._pointPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._daysListComponent = new TripDaysListView();
 
@@ -32,17 +33,13 @@ export default class Trip {
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    // this._pageSortingComponent = new PageSortingView();
     this._pageSortingComponent = null;
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
-
-    this._currentSortType = SortType.DEFAULT;
   }
 
   init() {
@@ -77,13 +74,13 @@ export default class Trip {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointsModel.updatePoint(updateType, update);
-      break;
-    case UserAction.ADD_POINT:
-      this._pointsModel.addPoint(updateType, update);
-      break;
-    case UserAction.DELETE_POINT:
-      this._pointsModel.deletePoint(updateType, update);
-      break;
+        break;
+      case UserAction.ADD_POINT:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
     }
   }
 
@@ -93,14 +90,12 @@ export default class Trip {
         this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MINOR:
-          // this._clearPointsList();
-          // this._renderSortedPoints();
-          this._clearAll();
-          this._pointPresenter[data.id].init(this._daysList, data);
+
+        this._updatePointsList();
+        // this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MAJOR:
 
-        // this._renderTrip();
         break;
     }
   }
@@ -110,7 +105,7 @@ export default class Trip {
   }
 
   _renderDay() {
-    const daysContainer = this._datesContainer.querySelector(`.trip-days`);
+    const daysContainer = this._daysListComponent.getElement();
 
     this._startDates.forEach((item, index) => {
       render(daysContainer, new TripDayView(item, index + 1), RenderPosition.BEFOREEND);
@@ -156,28 +151,20 @@ export default class Trip {
     }
     this._currentSortType = sortType;
 
-    this._clearAll();
+    this._updatePointsList();
   }
 
   _renderSortedPoints() {
-    const daysContainer = this._datesContainer.querySelector(`.trip-days`);
+    const daysContainer = this._daysListComponent.getElement();
+
     render(daysContainer, this._emptyDayComponent, RenderPosition.BEFOREEND);
 
     const pointContainers = this._datesContainer.querySelector(`.trip-events__list`);
     this._getPoints().forEach((point) => this._renderPoint(pointContainers, point));
   }
 
-  // переименовать потом
-  _clearAll() {
-    this._clearPointsList();
-    if (SortType.DEFAULT === this._currentSortType) {
-      this._renderDay();
-      this._renderAllPoints();
-    } else {
-      this._renderSortedPoints();
-    }
-  }
-  _clearPointsList() {
+
+  _updatePointsList() {
     this._daysListComponent.getElement().innerHTML = ``;
 
     Object
@@ -185,10 +172,12 @@ export default class Trip {
     .forEach((presenter) => presenter.destroy());
     this._pointPresenter = {};
 
-    // remove(this._pageSortingComponent)
-    // if (resetSortType) {
-    //   this._currentSortType = SortType.DEFAULT;
-    // }
+    if (SortType.DEFAULT === this._currentSortType) {
+      this._renderDay();
+      this._renderAllPoints();
+    } else {
+      this._renderSortedPoints();
+    }
   }
 
   _renderTrip() {

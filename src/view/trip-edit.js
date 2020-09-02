@@ -1,7 +1,7 @@
 import SmartView from "./smart.js";
 import {CITIES, ADDITIONALS, generateRandomDescription} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
-import {UserAction, UpdateType} from "../const.js";
+// import {UserAction, UpdateType} from "../const.js";
 import {generateRandomBoolean} from '../utils/common.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -198,10 +198,10 @@ export default class TripEdit extends SmartView {
     this._eventDurationStartHandler = this._eventDurationStartHandler.bind(this);
     this._eventDurationEndHandler = this._eventDurationEndHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-
-    this._setDatepicker();
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   getTemplate() {
@@ -290,6 +290,7 @@ export default class TripEdit extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandlers() {
@@ -297,6 +298,15 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(point) {
@@ -317,6 +327,16 @@ export default class TripEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(TripEdit.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   static parsePointToData(point) {
