@@ -3,7 +3,7 @@ import PageFiltersView from './view/page-filters.js';
 import {generateTripPoint} from './mock/trip-day.js';
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
-
+import FilterModel from "./model/filter.js";
 import NoPointsView from './view/no-points.js';
 import EmptyTripInfoView from './view/empty-trip-info.js';
 
@@ -18,8 +18,15 @@ const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 
 render(pageTripControlsMenu, new PageMenuView(), RenderPosition.BEFOREEND);
-render(pageTripControls, new PageFiltersView(), RenderPosition.BEFOREEND);
 
+const filterModel = new FilterModel();
+const filters = [
+  {
+    type: `everything`,
+  }
+];
+
+render(pageTripControls, new PageFiltersView(filters, `everything`), RenderPosition.BEFOREEND);
 
 const POINTS_COUNT = 10;
 
