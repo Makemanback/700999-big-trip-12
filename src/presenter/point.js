@@ -96,13 +96,9 @@ export default class Point {
 
   _handleFormSubmit(point) {
 
-debugger
-    const isMinorUpdate = !document.querySelector(`#sort-event`).checked;
-
     this._changeData(
       UserAction.UPDATE_POINT,
-      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-      // UpdateType.MINOR,
+      UpdateType.MINOR,
       point);
     this._replaceFormToPoint();
   }

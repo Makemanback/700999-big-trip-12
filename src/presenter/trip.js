@@ -41,6 +41,8 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+
+    this._currentSortType = SortType.DEFAULT;
   }
 
   init() {
@@ -91,8 +93,9 @@ export default class Trip {
         this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MINOR:
-          this._clearPointsList();
-          this._renderSortedPoints();
+          // this._clearPointsList();
+          // this._renderSortedPoints();
+          this._clearAll();
           this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MAJOR:
@@ -153,13 +156,7 @@ export default class Trip {
     }
     this._currentSortType = sortType;
 
-    this._clearPointsList();
-    if (SortType.DEFAULT === sortType) {
-      this._renderDay();
-      this._renderAllPoints();
-    } else {
-      this._renderSortedPoints();
-    }
+    this._clearAll();
   }
 
   _renderSortedPoints() {
@@ -170,6 +167,16 @@ export default class Trip {
     this._getPoints().forEach((point) => this._renderPoint(pointContainers, point));
   }
 
+  // переименовать потом
+  _clearAll() {
+    this._clearPointsList();
+    if (SortType.DEFAULT === this._currentSortType) {
+      this._renderDay();
+      this._renderAllPoints();
+    } else {
+      this._renderSortedPoints();
+    }
+  }
   _clearPointsList() {
     this._daysListComponent.getElement().innerHTML = ``;
 
