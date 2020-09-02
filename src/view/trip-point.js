@@ -17,16 +17,15 @@ export const createAdditionals = (arr) => {
 };
 
 export const getTimeGap = (start, end) => {
-  // 24 в константу
   const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / 24);
+  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   if (gapMinutes === 0) {
     return `${gapHours}H`;
   }
 
-  if (gapHours >= 24) {
-    return `${gapDays}D ${gapHours % 24}H ${Math.round(gapMinutes)}M`;
+  if (gapHours >= Time.HOURS) {
+    return `${gapDays}D ${gapHours % Time.HOURS}H ${Math.round(gapMinutes)}M`;
   } else {
     return `${gapHours}H ${Math.round(gapMinutes)}M`;
   }
@@ -97,18 +96,15 @@ export default class TripPoint extends SmartView {
 
   static parseDataToPoint(point) {
     return Object.assign(
-      {},
-      point,
-      {
-        type: point.type,
-        additionals: point.additionals,
-        city: point.city,
-
-        price: point.price,
-        // start: point.schedule.start,
-        // end: point.schedule.end,
-        schedule: point.schedule
-      }
+        {},
+        point,
+        {
+          type: point.type,
+          additionals: point.additionals,
+          city: point.city,
+          price: point.price,
+          schedule: point.schedule
+        }
     );
   }
 

@@ -91,7 +91,6 @@ export default class Point {
   }
 
   _handleFormSubmit(point) {
-    // debugger
     this._changeData(point);
     this._replaceFormToPoint();
   }

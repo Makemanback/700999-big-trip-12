@@ -1,6 +1,7 @@
 import SmartView from "./smart.js";
-import {CITIES, generateRandomAdditionals, generateRandomDescription} from '../mock/trip-day.js';
+import {CITIES, ADDITIONALS, generateRandomDescription} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
+import {generateRandomBoolean} from '../utils/common.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -8,7 +9,7 @@ const createAdditionals = (additionals) => {
   return additionals.map((item, index) => {
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" checked>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${item.isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
           <span class="event__offer-title">${item.offer}</span>
           &plus;
@@ -48,9 +49,7 @@ const createDescription = (city, description) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, schedule, description, photo, isBus, isTaxi, isTrain, isShip, isTransport, isDrive, isFlight, isCheckin, isSightseeing, isRestaurant}) => {
-  const {start, end} = schedule;
-
+const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, start, end, description, photo}) => {
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -67,37 +66,37 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
               <legend class="visually-hidden">Transfer</legend>
 
               <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${isTaxi}>
+                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" >
                 <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" ${isBus}>
+                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" >
                 <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train" ${isTrain}>
+                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train" >
                 <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship" ${isShip}>
+                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship" >
                 <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport" ${isTransport}>
+                <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
                 <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive" ${isDrive}>
+                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive" >
                 <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" ${isFlight}>
+                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" >
                 <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
               </div>
             </fieldset>
@@ -106,17 +105,17 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
               <legend class="visually-hidden">Activity</legend>
 
               <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in" ${isCheckin}>
+                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in" >
                 <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing" ${isSightseeing}>
+                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing" >
                 <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" ${isRestaurant}>
+                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" >
                 <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
               </div>
             </fieldset>
@@ -209,21 +208,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventTypeHandler(evt) {
+
+    const type = evt.target.innerText;
     this.updateData({
       type: evt.target.innerText,
-
-      isTaxi: evt.target.innerText === `Taxi` ? `checked` : ``,
-      isBus: evt.target.innerText === `Bus` ? `checked` : ``,
-      isTrain: evt.target.innerText === `Train` ? `checked` : ``,
-      isShip: evt.target.innerText === `Ship` ? `checked` : ``,
-      isTransport: evt.target.innerText === `Transport` ? `checked` : ``,
-      isDrive: evt.target.innerText === `Drive` ? `checked` : ``,
-      isFlight: evt.target.innerText === `Flight` ? `checked` : ``,
-      isCheckin: evt.target.innerText === `Check-in` ? `checked` : ``,
-      isSightseeing: evt.target.innerText === `Sightseeing` ? `checked` : ``,
-      isRestaurant: evt.target.innerText === `Restaurant` ? `checked` : ``,
-
-      additionals: generateRandomAdditionals()
+      additionals: ADDITIONALS.filter((item) => item.type === type)
+                            .map((item) => {
+                              item.isChecked = generateRandomBoolean();
+                              return item;
+                            }),
     });
   }
 
@@ -330,17 +323,6 @@ export default class TripEdit extends SmartView {
         {},
         point,
         {
-          isTaxi: point.isTaxi,
-          isBus: point.isBus,
-          isTrain: point.isTrain,
-          isShip: point.isShip,
-          isTransport: point.isTransport,
-          isDrive: point.isDrive,
-          isFlight: point.isFlight,
-          isCheckin: point.isCheckin,
-          isSightseeing: point.isSightseeing,
-          isRestaurant: point.isRestaurant,
-
           isFavorite: point.isFavorite ? `checked` : ``,
           type: point.type,
           additionals: point.additionals,
@@ -348,8 +330,6 @@ export default class TripEdit extends SmartView {
           description: point.pointInfo.description,
           photo: point.pointInfo.photo,
           price: point.price,
-          // start: point.schedule.start,
-          // end: point.schedule.end,
           schedule: point.schedule
         }
     );
