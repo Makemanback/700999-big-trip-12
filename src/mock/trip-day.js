@@ -1,46 +1,196 @@
 import {getRandomInteger, shuffleArray, getRandomArrayElement, generateRandomBoolean} from '../utils/common.js';
 
-const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
 
-// расширить объект до всех типов
+export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
+const Type = {
+  TAXI: `Taxi`,
+  BUS: `Bus`,
+  TRAIN: `Train`,
+  SHIP: `Ship`,
+  TRANSPORT: `Transport`,
+  DRIVE: `Drive`,
+  FLIGHT: `Flight`,
+  CHECK_IN: `Check-in`,
+  SIGHTSEEING: `Sightseeing`,
+  RESTARAUNT: `Restaurant`
+};
+const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const ADDITIONALS = [
   {
     offer: `Order Uber`,
     cost: 20,
-    type: `Taxi`,
+    type: Type.TAXI,
     isChecked: false
   },
   {
-    offer: `Add luggage`,
-    cost: 70,
-    type: `Flight`,
+    offer: `Turn off music`,
+    cost: 10,
+    type: Type.TAXI,
     isChecked: false
   },
   {
     offer: `Switch to comfort`,
-    cost: 200,
-    type: `Train`,
+    cost: 40,
+    type: Type.TAXI,
+    isChecked: false
+  },
+  {
+    offer: `Add luggage`,
+    cost: 20,
+    type: Type.BUS,
+    isChecked: false
+  },
+  {
+    offer: `Switch on conditioner`,
+    cost: 55,
+    type: Type.BUS,
+    isChecked: false
+  },
+  {
+    offer: `Open the window`,
+    cost: 7,
+    type: Type.BUS,
+    isChecked: false
+  },
+  {
+    offer: `Add breakfast`,
+    cost: 70,
+    type: Type.TRAIN,
+    isChecked: false
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 45,
+    type: Type.TRAIN,
+    isChecked: false
+  },
+  {
+    offer: `Pass the station`,
+    cost: 15,
+    type: Type.BUS,
+    isChecked: false
+  },
+  {
+    offer: `Add luggage`,
+    cost: 40,
+    type: Type.SHIP,
+    isChecked: false
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 30,
+    type: Type.SHIP,
+    isChecked: false
+  },
+  {
+    offer: `Turn off internet`,
+    cost: 1,
+    type: Type.SHIP,
+    isChecked: false
+  },
+  {
+    offer: `Use the horn`,
+    cost: 430,
+    type: Type.SHIP,
+    isChecked: false
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 40,
+    type: Type.TRANSPORT,
+    isChecked: false
+  },
+  {
+    offer: `Use helicopter`,
+    cost: 500,
+    type: Type.TRANSPORT,
     isChecked: false
   },
   {
     offer: `Rent a car`,
-    cost: 150,
-    type: `Bus`,
+    cost: 140,
+    type: Type.DRIVE,
+    isChecked: false
+  },
+  {
+    offer: `Add luggage`,
+    cost: 50,
+    type: Type.FLIGHT,
+    isChecked: false
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 80,
+    type: Type.FLIGHT,
+    isChecked: false
+  },
+  {
+    offer: `Add meal`,
+    cost: 15,
+    type: Type.FLIGHT,
+    isChecked: false
+  },
+  {
+    offer: `Choose seats`,
+    cost: 5,
+    type: Type.FLIGHT,
+    isChecked: false
+  },
+  {
+    offer: `Travel by train`,
+    cost: 40,
+    type: Type.FLIGHT,
+    isChecked: false
+  },
+  {
+    offer: `Add breakfast`,
+    cost: 50,
+    type: Type.CHECK_IN,
+    isChecked: false
+  },
+  {
+    offer: `Switch to comfort`,
+    cost: 80,
+    type: Type.CHECK_IN,
+    isChecked: false
+  },
+  {
+    offer: `Breakfast to the bed`,
+    cost: 60,
+    type: Type.CHECK_IN,
+    isChecked: false
+  },
+  {
+    offer: `Book tickets`,
+    cost: 40,
+    type: Type.SIGHTSEEING,
+    isChecked: false
+  },
+  {
+    offer: `Lunch in city`,
+    cost: 30,
+    type: Type.SIGHTSEEING,
     isChecked: false
   },
   {
     offer: `Add breakfast`,
     cost: 40,
-    type: `Restaraunt`,
+    type: Type.RESTARAUNT,
     isChecked: false
-  }
+  },
+  {
+    offer: `Taste the best dish`,
+    cost: 250,
+    type: Type.RESTARAUNT,
+    isChecked: false
+  },
+  {
+    offer: `Add dinner`,
+    cost: 77,
+    type: Type.RESTARAUNT,
+    isChecked: false
+  },
 ];
-
-// перенести все типы точек в перечисление
-// const Types  = {
-//   BUS: `Bus`,
-// }
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -99,22 +249,17 @@ const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
-
-
 export const generateTripPoint = () => {
   const generateTypes = generateType();
-
   return {
     id: generateId(),
     type: generateTypes,
     city: generateCity(),
-    // перенести код в отдельную функцию
     additionals: ADDITIONALS.filter((item) => item.type === generateTypes)
                             .map((item) => {
-      item.isChecked = generateRandomBoolean();
-      return item;
-    }),
-    //
+                              item.isChecked = generateRandomBoolean();
+                              return item;
+                            }),
     pointInfo: {
       description: generateRandomDescription(),
       photo: `http://picsum.photos/248/152?r`

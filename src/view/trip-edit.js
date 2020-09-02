@@ -208,15 +208,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventTypeHandler(evt) {
+
     const type = evt.target.innerText;
     this.updateData({
       type: evt.target.innerText,
-
       additionals: ADDITIONALS.filter((item) => item.type === type)
                             .map((item) => {
-      item.isChecked = generateRandomBoolean();
-      return item;
-    }),
+                              item.isChecked = generateRandomBoolean();
+                              return item;
+                            }),
     });
   }
 
@@ -268,21 +268,12 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationStartHandler(selectedDates) {
-    // debugger
-    // evt.preventDefault();
-    // this.updateData({
-    //   start: evt.target.value,
-    // });
     this.updateData({
       start: selectedDates[0]
     }, true);
   }
 
   _eventDurationEndHandler(selectedDates) {
-    // evt.preventDefault();
-    // this.updateData({
-    //   end: evt.target.value,
-    // });
     this.updateData({
       end: selectedDates[0]
     }, true);
