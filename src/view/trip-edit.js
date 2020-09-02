@@ -48,7 +48,9 @@ const createDescription = (city, description) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, start, end, description, photo, isBus, isTaxi, isTrain, isShip, isTransport, isDrive, isFlight, isCheckin, isSightseeing, isRestaurant}) => {
+const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, schedule, description, photo, isBus, isTaxi, isTrain, isShip, isTransport, isDrive, isFlight, isCheckin, isSightseeing, isRestaurant}) => {
+  const {start, end} = schedule;
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -232,25 +234,25 @@ export default class TripEdit extends SmartView {
       this._datepicker = null;
     }
 
-    if (this._data.start) {
+    if (this._data.schedule.start) {
       this._datepicker = flatpickr(
           this.getElement().querySelector(`#event-start-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
-            defaultDate: this._data.start,
+            defaultDate: this._data.schedule.start,
             onChange: this._eventDurationStartHandler
           }
       );
     }
 
-    if (this._data.end) {
+    if (this._data.schedule.end) {
       this._datepicker = flatpickr(
           this.getElement().querySelector(`#event-end-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
-            defaultDate: this._data.end,
+            defaultDate: this._data.schedule.end,
             onChange: this._eventDurationEndHandler
           }
       );
@@ -274,13 +276,13 @@ export default class TripEdit extends SmartView {
 
   _eventDurationStartHandler(selectedDates) {
     this.updateData({
-      start: selectedDates[0]
+      schedule: Object.assign({}, this._data.schedule, {start: selectedDates[0]})
     });
   }
 
   _eventDurationEndHandler(selectedDates) {
     this.updateData({
-      end: selectedDates[0]
+      schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
     });
   }
 
@@ -346,8 +348,9 @@ export default class TripEdit extends SmartView {
           description: point.pointInfo.description,
           photo: point.pointInfo.photo,
           price: point.price,
-          start: point.schedule.start,
-          end: point.schedule.end,
+          // start: point.schedule.start,
+          // end: point.schedule.end,
+          schedule: point.schedule
         }
     );
   }

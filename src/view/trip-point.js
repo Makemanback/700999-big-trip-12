@@ -17,19 +17,26 @@ export const createAdditionals = (arr) => {
 };
 
 export const getTimeGap = (start, end) => {
-  const gap = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+  // 24 в константу
+  const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-
+  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / 24);
   if (gapMinutes === 0) {
-
-    return `${gap}H`;
+    return `${gapHours}H`;
   }
-  return `${gap}H ${Math.round(gapMinutes)}M`;
+
+  if (gapHours >= 24) {
+    return `${gapDays}D ${gapHours % 24}H ${Math.round(gapMinutes)}M`;
+  } else {
+    return `${gapHours}H ${Math.round(gapMinutes)}M`;
+  }
+
 };
 
-const createTripPointTemplate = ({type, city, price, additionals, start, end}) => {
-  const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
+const createTripPointTemplate = ({type, city, price, additionals, schedule}) => {
 
+  const {start, end} = schedule;
+  const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
   return (
     `<li class="trip-events__item">
         <div class="event">
@@ -98,8 +105,9 @@ export default class TripPoint extends SmartView {
         city: point.city,
 
         price: point.price,
-        start: point.schedule.start,
-        end: point.schedule.end,
+        // start: point.schedule.start,
+        // end: point.schedule.end,
+        schedule: point.schedule
       }
     );
   }
