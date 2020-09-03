@@ -139,7 +139,7 @@ export default class Trip {
   }
 
   _clearPointsList() {
-    this._daysListComponent.getElement().innerHTML = ``;
+    this._daysListComponent.clearContent();
 
     Object
     .values(this._pointPresenter)

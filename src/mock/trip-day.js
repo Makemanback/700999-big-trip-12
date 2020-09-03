@@ -12,9 +12,8 @@ const Type = {
   FLIGHT: `Flight`,
   CHECK_IN: `Check-in`,
   SIGHTSEEING: `Sightseeing`,
-  RESTARAUNT: `Restaurant`
+  RESTAURANT: `Restaurant`
 };
-const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const ADDITIONALS = [
   {
     offer: `Order Uber`,
@@ -175,19 +174,19 @@ export const ADDITIONALS = [
   {
     offer: `Add breakfast`,
     cost: 40,
-    type: Type.RESTARAUNT,
+    type: Type.RESTAURANT,
     isChecked: false
   },
   {
     offer: `Taste the best dish`,
     cost: 250,
-    type: Type.RESTARAUNT,
+    type: Type.RESTAURANT,
     isChecked: false
   },
   {
     offer: `Add dinner`,
     cost: 77,
-    type: Type.RESTARAUNT,
+    type: Type.RESTAURANT,
     isChecked: false
   },
 ];
@@ -206,14 +205,9 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const generateType = () => getRandomArrayElement(TYPES);
+const generateType = () => getRandomArrayElement(Object.values(Type));
 
 export const generateCity = () => getRandomArrayElement(CITIES);
-
-export const generateRandomAdditionals = () => {
-  return shuffleArray(ADDITIONALS)
-  .slice(0, Math.floor(Math.random() * ADDITIONALS.length));
-};
 
 export const generateRandomDescription = () => {
   return shuffleArray(DESCRIPTIONS)
@@ -249,17 +243,21 @@ const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
+export const getAdditionalsByType = (type) => {
+  return ADDITIONALS.filter((item) => item.type === type)
+    .map((item) => {
+      item.isChecked = generateRandomBoolean();
+      return item;
+    });
+};
+
 export const generateTripPoint = () => {
   const generateTypes = generateType();
   return {
     id: generateId(),
     type: generateTypes,
     city: generateCity(),
-    additionals: ADDITIONALS.filter((item) => item.type === generateTypes)
-                            .map((item) => {
-                              item.isChecked = generateRandomBoolean();
-                              return item;
-                            }),
+    additionals: getAdditionalsByType(generateTypes),
     pointInfo: {
       description: generateRandomDescription(),
       photo: `http://picsum.photos/248/152?r`

@@ -1,19 +1,18 @@
 import SmartView from "./smart.js";
-import {CITIES, ADDITIONALS, generateRandomDescription} from '../mock/trip-day.js';
+import {CITIES, generateRandomDescription, getAdditionalsByType} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
-import {generateRandomBoolean} from '../utils/common.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const createAdditionals = (additionals) => {
-  return additionals.map((item, index) => {
+  return additionals.map(({isChecked, offer, cost}, index) => {
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${item.isChecked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
-          <span class="event__offer-title">${item.offer}</span>
+          <span class="event__offer-title">${offer}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${item.cost}</span>
+          &euro;&nbsp;<span class="event__offer-price">${cost}</span>
         </label>
       </div>`
     );
@@ -212,11 +211,7 @@ export default class TripEdit extends SmartView {
     const type = evt.target.innerText;
     this.updateData({
       type: evt.target.innerText,
-      additionals: ADDITIONALS.filter((item) => item.type === type)
-                            .map((item) => {
-                              item.isChecked = generateRandomBoolean();
-                              return item;
-                            }),
+      additionals: getAdditionalsByType(type),
     });
   }
 
@@ -336,9 +331,7 @@ export default class TripEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
-    data = Object.assign({}, data);
-
-    return data;
+    return Object.assign({}, data);
   }
 
 }
