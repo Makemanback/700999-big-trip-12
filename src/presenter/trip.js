@@ -10,13 +10,18 @@ import {render, RenderPosition} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
 import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
-import {UpdateType, UserAction} from "../const.js";
+import {UpdateType, UserAction, FilterType} from '../const.js';
 
-import PointPresenter from "./point.js";
+import PointPresenter from './point.js';
+import {filter} from '../utils/filter.js';
+import {isPointExpired} from '../utils/date.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, startDates, arrCities, totalPrice) {
+  constructor(tripContainer, pointsModel, filterModel, startDates, arrCities, totalPrice) {
     this._pointsModel = pointsModel;
+
+    this._filterModel = filterModel;
+
     this._tripContainer = tripContainer;
     this._datesContainer = tripContainer.querySelector(`.trip-events`);
     this._tripInfoContainer = tripContainer.querySelector(`.trip-main`);
@@ -25,11 +30,13 @@ export default class Trip {
     this._totalPrice = totalPrice;
     this._pointPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._currentFilter = FilterType.EVERYTHING;
 
     this._daysListComponent = new TripDaysListView();
 
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
     this._emptyDayComponent = new EmptyDayView();
+
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -40,6 +47,8 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -47,14 +56,18 @@ export default class Trip {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filtredPoints = filter[filterType](points);
+
     switch (this._currentSortType) {
       case SortType.DURATION:
-        return sortPointsByDuration(this._pointsModel.getPoints().slice());
+        return sortPointsByDuration(filtredPoints);
       case SortType.PRICE:
-        return sortPointsByPrice(this._pointsModel.getPoints().slice());
+        return sortPointsByPrice(filtredPoints);
     }
 
-    return this._pointsModel.getPoints();
+    return filtredPoints;
   }
 
   _handleModeChange() {
@@ -62,12 +75,6 @@ export default class Trip {
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.resetView());
   }
-
-  // _handlePointChange(updatedPoint) {
-  //   this._tripPoints = updateItem(this._tripPoints, updatedPoint);
-  //   this._sourcedTripPoints = updateItem(this._sourcedTripPoints, updatedPoint);
-  //   this._pointPresenter[updatedPoint.id].init(this._daysList, updatedPoint);
-  // }
 
   _handleViewAction(actionType, updateType, update) {
 
@@ -90,13 +97,11 @@ export default class Trip {
         this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MINOR:
-
         this._updatePointsList();
-        // this._pointPresenter[data.id].init(this._daysList, data);
         break;
       case UpdateType.MAJOR:
-
-        break;
+        // this._updatePointsList();
+        // break;
     }
   }
 
@@ -104,11 +109,26 @@ export default class Trip {
     render(this._datesContainer, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderDay() {
+  _renderDays() {
     const daysContainer = this._daysListComponent.getElement();
+    const filterType = this._filterModel.getFilter();
 
-    this._startDates.forEach((item, index) => {
-      render(daysContainer, new TripDayView(item, index + 1), RenderPosition.BEFOREEND);
+    this._startDates.forEach((date, index) => {
+      switch (filterType) {
+        case FilterType.FUTURE:
+          if (isPointExpired(date)) {
+            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
+          }
+          break;
+        case FilterType.PAST:
+          if (!isPointExpired(date)) {
+            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
+          }
+          break;
+        default:
+          render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
+          break;
+      }
     });
   }
 
@@ -163,28 +183,59 @@ export default class Trip {
     this._getPoints().forEach((point) => this._renderPoint(pointContainers, point));
   }
 
-
   _updatePointsList() {
-    this._daysListComponent.getElement().innerHTML = ``;
+    this._daysListComponent.clearContent();
 
     Object
     .values(this._pointPresenter)
     .forEach((presenter) => presenter.destroy());
     this._pointPresenter = {};
-
     if (SortType.DEFAULT === this._currentSortType) {
-      this._renderDay();
+      this._renderDays();
       this._renderAllPoints();
     } else {
       this._renderSortedPoints();
     }
   }
 
+  _updateFuturePointsList() {
+    this._daysListComponent.clearContent();
+
+    Object
+    .values(this._pointPresenter)
+    .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+    if (SortType.DEFAULT === this._currentSortType) {
+      this._renderFutureDays();
+      this._renderAllPoints();
+
+    } else {
+      this._renderSortedPoints();
+    }
+  }
+
+  _updatePastPointsList() {
+    this._daysListComponent.clearContent();
+
+    Object
+    .values(this._pointPresenter)
+    .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+    if (SortType.DEFAULT === this._currentSortType) {
+      this._renderPastDays();
+      this._renderAllPoints();
+
+    } else {
+      this._renderSortedPoints();
+    }
+  }
+
+
   _renderTrip() {
     this._renderPageSorting();
     this._renderDaysList();
     this._renderTripInfo();
-    this._renderDay();
+    this._renderDays();
     this._renderAllPoints();
   }
 }

@@ -13,10 +13,10 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
         value="${type}"
         ${type === currentFilterType ? `checked` : ``}
       />
-      <label class="trip-filters__filter-label" for="filter-future">Future</label>
+      <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
     </div>`
-  )
-}
+  );
+};
 const createPageFiltersTemplate = (filterItems, currentFilterType) => {
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))

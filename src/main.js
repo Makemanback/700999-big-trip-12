@@ -1,14 +1,14 @@
 import PageMenuView from './view/page-menu.js';
-import PageFiltersView from './view/page-filters.js';
 import {generateTripPoint} from './mock/trip-day.js';
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
-import FilterModel from "./model/filter.js";
+import FilterModel from './model/filter.js';
 import NoPointsView from './view/no-points.js';
 import EmptyTripInfoView from './view/empty-trip-info.js';
 
+import PointsModel from './model/points.js';
 
-import PointsModel from "./model/points.js";
+import FilterPresenter from './presenter/filter.js';
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
@@ -20,13 +20,6 @@ const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 render(pageTripControlsMenu, new PageMenuView(), RenderPosition.BEFOREEND);
 
 const filterModel = new FilterModel();
-const filters = [
-  {
-    type: `everything`,
-  }
-];
-
-render(pageTripControls, new PageFiltersView(filters, `everything`), RenderPosition.BEFOREEND);
 
 const POINTS_COUNT = 10;
 
@@ -59,11 +52,14 @@ const arrCities = points.slice().sort((a, b) => a.schedule.start - b.schedule.st
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
+const filterPresenter = new FilterPresenter(pageTripControls, filterModel, pointsModel);
+
+filterPresenter.init();
+
 if (POINTS_COUNT === 0) {
   render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
-  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, startDates, arrCities, totalPrice);
+  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
   tripPresenter.init();
 }
-

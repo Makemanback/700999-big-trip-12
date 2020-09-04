@@ -2,7 +2,6 @@ import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import TripPointView from '../view/trip-point.js';
 import TripEditView from '../view/trip-edit.js';
 import {UserAction, UpdateType} from "../const.js";
-// import {SortType} from "../view/page-sorting.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
