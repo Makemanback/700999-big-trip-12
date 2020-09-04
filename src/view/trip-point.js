@@ -1,4 +1,4 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {Time} from '../mock/trip-day.js';
 
 export const createAdditionals = (arr) => {
@@ -17,21 +17,25 @@ export const createAdditionals = (arr) => {
 };
 
 export const getTimeGap = (start, end) => {
-  const gap = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+  const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-
+  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   if (gapMinutes === 0) {
-
-    return `${gap}H`;
+    return `${gapHours}H`;
   }
-  return `${gap}H ${Math.round(gapMinutes)}M`;
+
+  if (gapHours >= Time.HOURS) {
+    return `${gapDays}D ${gapHours % Time.HOURS}H ${Math.round(gapMinutes)}M`;
+  } else {
+    return `${gapHours}H ${Math.round(gapMinutes)}M`;
+  }
+
 };
 
-const createTripPointTemplate = (point) => {
-  const {type, city, price, additionals} = point;
-  const {start, end} = point.schedule;
-  const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
+const createTripPointTemplate = ({type, city, price, additionals, schedule}) => {
 
+  const {start, end} = schedule;
+  const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
   return (
     `<li class="trip-events__item">
         <div class="event">
@@ -68,15 +72,16 @@ const createTripPointTemplate = (point) => {
   );
 };
 
-export default class TripPoint extends AbstractView {
+export default class TripPoint extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    this._data = TripPoint.parseDataToPoint(point);
+
     this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
-    return createTripPointTemplate(this._point);
+    return createTripPointTemplate(this._data);
   }
 
   _clickHandler(evt) {
@@ -88,4 +93,19 @@ export default class TripPoint extends AbstractView {
     this._callback.click = callback;
     this.getElement().addEventListener(`click`, this._clickHandler);
   }
+
+  static parseDataToPoint(point) {
+    return Object.assign(
+        {},
+        point,
+        {
+          type: point.type,
+          additionals: point.additionals,
+          city: point.city,
+          price: point.price,
+          schedule: point.schedule
+        }
+    );
+  }
+
 }

@@ -1,19 +1,18 @@
 import SmartView from "./smart.js";
-import {CITIES, ADDITIONALS, generateRandomDescription} from '../mock/trip-day.js';
+import {CITIES, generateRandomDescription, getAdditionalsByType} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
-import {generateRandomBoolean} from '../utils/common.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const createAdditionals = (additionals) => {
-  return additionals.map((item, index) => {
+  return additionals.map(({isChecked, offer, cost}, index) => {
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${item.isChecked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
-          <span class="event__offer-title">${item.offer}</span>
+          <span class="event__offer-title">${offer}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${item.cost}</span>
+          &euro;&nbsp;<span class="event__offer-price">${cost}</span>
         </label>
       </div>`
     );
@@ -141,7 +140,7 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end.toLocaleString(`EN-gb`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`})}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -212,11 +211,7 @@ export default class TripEdit extends SmartView {
     const type = evt.target.innerText;
     this.updateData({
       type: evt.target.innerText,
-      additionals: ADDITIONALS.filter((item) => item.type === type)
-                            .map((item) => {
-                              item.isChecked = generateRandomBoolean();
-                              return item;
-                            }),
+      additionals: getAdditionalsByType(type),
     });
   }
 
@@ -227,25 +222,25 @@ export default class TripEdit extends SmartView {
       this._datepicker = null;
     }
 
-    if (this._data.start) {
+    if (this._data.schedule.start) {
       this._datepicker = flatpickr(
-          this.getElement().querySelectorAll(`#event-start-time-1`),
+          this.getElement().querySelector(`#event-start-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
-            defaultDate: this._data.start,
+            defaultDate: this._data.schedule.start,
             onChange: this._eventDurationStartHandler
           }
       );
     }
 
-    if (this._data.end) {
+    if (this._data.schedule.end) {
       this._datepicker = flatpickr(
-          this.getElement().querySelectorAll(`#event-end-time-1`),
+          this.getElement().querySelector(`#event-end-time-1`),
           {
             dateFormat: `y/m/d H:i`,
             enableTime: true,
-            defaultDate: this._data.end,
+            defaultDate: this._data.schedule.end,
             onChange: this._eventDurationEndHandler
           }
       );
@@ -269,14 +264,14 @@ export default class TripEdit extends SmartView {
 
   _eventDurationStartHandler(selectedDates) {
     this.updateData({
-      start: selectedDates[0]
-    }, true);
+      schedule: Object.assign({}, this._data.schedule, {start: selectedDates[0]})
+    });
   }
 
   _eventDurationEndHandler(selectedDates) {
     this.updateData({
-      end: selectedDates[0]
-    }, true);
+      schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
+    });
   }
 
   _favoriteClickHandler() {
@@ -295,8 +290,6 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
-    this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._eventDurationStartHandler);
-    this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._eventDurationEndHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
@@ -332,16 +325,13 @@ export default class TripEdit extends SmartView {
           description: point.pointInfo.description,
           photo: point.pointInfo.photo,
           price: point.price,
-          start: point.schedule.start,
-          end: point.schedule.end
+          schedule: point.schedule
         }
     );
   }
 
   static parseDataToPoint(data) {
-    data = Object.assign({}, data);
-
-    return data;
+    return Object.assign({}, data);
   }
 
 }
