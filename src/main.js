@@ -1,15 +1,16 @@
-import PageMenuView from './view/page-menu.js';
-import {generateTripPoint} from './mock/trip-day.js';
-import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
-import FilterModel from './model/filter.js';
-import NoPointsView from './view/no-points.js';
-import EmptyTripInfoView from './view/empty-trip-info.js';
-import PointsModel from './model/points.js';
 import FilterPresenter from './presenter/filter.js';
 
-import NewPointView, { BLANK_POINT } from './view/point-new.js';
-import PointNew from './presenter/point-new-presenter.js';
+import FilterModel from './model/filter.js';
+import PointsModel from './model/points.js';
+
+import PageMenuView from './view/page-menu.js';
+import NoPointsView from './view/no-points.js';
+import EmptyTripInfoView from './view/empty-trip-info.js';
+
+import {generateTripPoint} from './mock/trip-day.js';
+
+import {render, RenderPosition} from './utils/render.js';
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
@@ -69,8 +70,3 @@ if (POINTS_COUNT === 0) {
     tripPresenter.createPoint();
   });
 }
-
-
-// const newPointPresenter = new PointNew(pageTripEvents, BLANK_POINT);
-// newPointPresenter.init()
-// render(pageTripMain, new NewPointView(BLANK_POINT), RenderPosition.BEFOREEND)

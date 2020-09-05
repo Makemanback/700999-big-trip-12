@@ -1,23 +1,13 @@
+/*
 import SmartView from "./smart.js";
 import {createAdditionals, createDescription, createCities, createTypeItemsTemplate} from './trip-edit.js';
 import {Type, CITIES, getAdditionalsByType, generateRandomDescription, getRandomSchedule} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
 
-export const BLANK_POINT = {
-  type: `Taxi`,
-  city: `Amsterdam`,
-  additionals: getAdditionalsByType(`Taxi`),
-  pointInfo: {
-    description: generateRandomDescription(),
-    photo: `http://picsum.photos/248/152?r`
-  },
-  schedule: getRandomSchedule(),
-  price: ``,
-}
 
 const createNewPointTemplate = (BLANK_POINT) => {
-const {additionals, pointInfo, price, type, city, start, end} = BLANK_POINT;
-const {description, photo} = pointInfo;
+  const {additionals, pointInfo, price, type, city, start, end} = BLANK_POINT;
+  const {description, photo} = pointInfo;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -89,8 +79,8 @@ const {description, photo} = pointInfo;
           ${createDescription(city, description, photo)}
     </section>
   </form>`
-  )
-}
+  );
+};
 
 
 export default class NewPoint extends SmartView {
@@ -254,3 +244,4 @@ export default class NewPoint extends SmartView {
   }
 
 }
+*/

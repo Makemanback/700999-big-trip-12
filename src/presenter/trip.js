@@ -3,18 +3,16 @@ import TripDayView from '../view/trip-day.js';
 import TripInfoView from '../view/page-trip-info';
 import EmptyDayView from '../view/empty-trip-day.js';
 import PageSortingView from '../view/page-sorting.js';
-
-import {render, RenderPosition, remove} from '../utils/render.js';
-import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
-import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
+
 import {UpdateType, UserAction, FilterType} from '../const.js';
 
-import PointPresenter from './point.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
+import {formatDate, getTripStart, getTripEnd, isPointExpired} from '../utils/date.js';
+import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {filter} from '../utils/filter.js';
-import {isPointExpired} from '../utils/date.js';
 
-
+import PointPresenter from './point.js';
 import PointNewPresenter from "./point-new-presenter.js";
 
 export default class Trip {
@@ -89,7 +87,6 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) {
-
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointsModel.updatePoint(updateType, update);
@@ -113,9 +110,6 @@ export default class Trip {
         break;
       case UpdateType.MAJOR:
 
-
-
-
         break;
     }
   }
@@ -125,16 +119,22 @@ export default class Trip {
   }
 
   _renderDays() {
+
     const daysContainer = this._daysListComponent.getElement();
     const filterType = this._filterModel.getFilter();
 
-    this._startDates.forEach((date, index) => {
+    this._startDates
+    .forEach((date, index) => {
       switch (filterType) {
         case FilterType.FUTURE:
-          isPointExpired(date) ? render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND) : ``;
+          if (isPointExpired(date)) {
+            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
+          }
           break;
         case FilterType.PAST:
-          !isPointExpired(date) ? render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND) : ``;
+          if (!isPointExpired(date)) {
+            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
+          }
           break;
         default:
           render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);

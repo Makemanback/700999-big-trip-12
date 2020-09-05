@@ -4,16 +4,28 @@ import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
+export const BLANK_POINT = {
+  type: `Taxi`,
+  city: `Amsterdam`,
+  additionals: getAdditionalsByType(`Taxi`),
+  pointInfo: {
+    description: generateRandomDescription(),
+    photo: `http://picsum.photos/248/152?r`
+  },
+  schedule: getRandomSchedule(),
+  price: ``,
+};
+
 export const createTypeItemsTemplate = (type) => {
-  return type.map((type) => {
+  return type.map((pointType) => {
     return (
       `<div class="event__type-item">
-        <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-1">${type}</label>
+        <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+        <label class="event__type-label  event__type-label--${pointType.toLowerCase()}" for="event-type-${pointType}-1">${pointType}</label>
       </div>`
     );
   }).join(``);
-}
+};
 
 export const createAdditionals = (additionals) => {
   return additionals.map(({isChecked, offer, cost}, index) => {
@@ -61,8 +73,8 @@ export const createDescription = (city, description) => {
 
 const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, start, end, description, photo}) => {
   return (
-    `<li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
+    `<div>
+    <form class="trip-events__item event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -144,12 +156,12 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
       </section>
 
     </form>
-  </li>`
+    </div>`
   );
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = TripEdit.parsePointToData(point);
     this._datepicker = null;
@@ -215,6 +227,8 @@ export default class TripEdit extends SmartView {
 
 
   _eventDestinationHandler(evt) {
+
+
     this.updateData({
       city: evt.target.value,
       description: generateRandomDescription()
@@ -222,6 +236,7 @@ export default class TripEdit extends SmartView {
   }
 
   _eventPriceHandler(evt) {
+
     evt.preventDefault();
     this.updateData({
       price: evt.target.value
@@ -256,6 +271,7 @@ export default class TripEdit extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
+    this._setDestinationCheck();
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
@@ -283,7 +299,7 @@ export default class TripEdit extends SmartView {
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement().querySelector(`.trip-events__item`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   setFavoriteClickHandler(callback) {
@@ -298,6 +314,16 @@ export default class TripEdit extends SmartView {
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  _setDestinationCheck() {
+
+    const cityInput = this.getElement().querySelector(`.event__input--destination`);
+    if (CITIES.some((item) => item === cityInput.value)) {
+      cityInput.setCustomValidity(``);
+    } else {
+      cityInput.setCustomValidity(`Please choose city from the list`);
+    }
   }
 
   static parsePointToData(point) {
@@ -318,6 +344,7 @@ export default class TripEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
+
     return Object.assign({}, data);
   }
 
