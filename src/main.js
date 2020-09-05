@@ -5,10 +5,11 @@ import TripPresenter from './presenter/trip.js';
 import FilterModel from './model/filter.js';
 import NoPointsView from './view/no-points.js';
 import EmptyTripInfoView from './view/empty-trip-info.js';
-
 import PointsModel from './model/points.js';
-
 import FilterPresenter from './presenter/filter.js';
+
+import NewPointView, { BLANK_POINT } from './view/point-new.js';
+import PointNew from './presenter/point-new-presenter.js';
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
@@ -62,4 +63,14 @@ if (POINTS_COUNT === 0) {
 } else {
   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
   tripPresenter.init();
+
+  document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    tripPresenter.createPoint();
+  });
 }
+
+
+// const newPointPresenter = new PointNew(pageTripEvents, BLANK_POINT);
+// newPointPresenter.init()
+// render(pageTripMain, new NewPointView(BLANK_POINT), RenderPosition.BEFOREEND)

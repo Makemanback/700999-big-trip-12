@@ -16,6 +16,8 @@ export default class Point {
 
     this._pointComponent = null;
     this._pointEditComponent = null;
+
+
     this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);

@@ -2,7 +2,7 @@ import {getRandomInteger, shuffleArray, getRandomArrayElement, generateRandomBoo
 
 
 export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
-const Type = {
+export const Type = {
   TAXI: `Taxi`,
   BUS: `Bus`,
   TRAIN: `Train`,
@@ -239,9 +239,8 @@ const Price = {
   MAX: 500
 };
 
-const generateRandomPrice = () => getRandomInteger(Price.MIN, Price.MAX);
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const getAdditionalsByType = (type) => {
   return ADDITIONALS.filter((item) => item.type === type)
@@ -263,7 +262,7 @@ export const generateTripPoint = () => {
       photo: `http://picsum.photos/248/152?r`
     },
     schedule: getRandomSchedule(),
-    price: generateRandomPrice(),
+    price: getRandomInteger(Price.MIN, Price.MAX),
     isFavorite: false,
 
   };

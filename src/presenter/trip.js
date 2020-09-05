@@ -1,12 +1,10 @@
 import TripDaysListView from '../view/trip-list.js';
 import TripDayView from '../view/trip-day.js';
-
 import TripInfoView from '../view/page-trip-info';
 import EmptyDayView from '../view/empty-trip-day.js';
-
 import PageSortingView from '../view/page-sorting.js';
 
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd} from '../utils/date.js';
 import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {SortType} from '../view/page-sorting.js';
@@ -15,6 +13,9 @@ import {UpdateType, UserAction, FilterType} from '../const.js';
 import PointPresenter from './point.js';
 import {filter} from '../utils/filter.js';
 import {isPointExpired} from '../utils/date.js';
+
+
+import PointNewPresenter from "./point-new-presenter.js";
 
 export default class Trip {
   constructor(tripContainer, pointsModel, filterModel, startDates, arrCities, totalPrice) {
@@ -43,16 +44,25 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._pageSortingComponent = null;
-
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
-
     this._filterModel.addObserver(this._handleModelEvent);
+
+
+    this._pointNewPresenter = new PointNewPresenter(this._datesContainer, this._handleViewAction);
   }
 
   init() {
     this._renderTrip();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
+    this._renderPageSorting();
+    this._updatePointsList();
   }
 
   _getPoints() {
@@ -71,6 +81,8 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
+
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -100,8 +112,11 @@ export default class Trip {
         this._updatePointsList();
         break;
       case UpdateType.MAJOR:
-        // this._updatePointsList();
-        // break;
+
+
+
+
+        break;
     }
   }
 
@@ -116,14 +131,10 @@ export default class Trip {
     this._startDates.forEach((date, index) => {
       switch (filterType) {
         case FilterType.FUTURE:
-          if (isPointExpired(date)) {
-            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
-          }
+          isPointExpired(date) ? render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND) : ``;
           break;
         case FilterType.PAST:
-          if (!isPointExpired(date)) {
-            render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
-          }
+          !isPointExpired(date) ? render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND) : ``;
           break;
         default:
           render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
@@ -157,12 +168,12 @@ export default class Trip {
 
   _renderPageSorting() {
     if (this._pageSortingComponent !== null) {
-      this._pageSortingComponent = null;
+      remove(this._pageSortingComponent);
     }
 
     this._pageSortingComponent = new PageSortingView(this._currentSortType);
     this._pageSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    render(this._datesContainer, this._pageSortingComponent, RenderPosition.BEFOREEND);
+    render(this._datesContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _handleSortTypeChange(sortType) {
@@ -197,39 +208,6 @@ export default class Trip {
       this._renderSortedPoints();
     }
   }
-
-  _updateFuturePointsList() {
-    this._daysListComponent.clearContent();
-
-    Object
-    .values(this._pointPresenter)
-    .forEach((presenter) => presenter.destroy());
-    this._pointPresenter = {};
-    if (SortType.DEFAULT === this._currentSortType) {
-      this._renderFutureDays();
-      this._renderAllPoints();
-
-    } else {
-      this._renderSortedPoints();
-    }
-  }
-
-  _updatePastPointsList() {
-    this._daysListComponent.clearContent();
-
-    Object
-    .values(this._pointPresenter)
-    .forEach((presenter) => presenter.destroy());
-    this._pointPresenter = {};
-    if (SortType.DEFAULT === this._currentSortType) {
-      this._renderPastDays();
-      this._renderAllPoints();
-
-    } else {
-      this._renderSortedPoints();
-    }
-  }
-
 
   _renderTrip() {
     this._renderPageSorting();
