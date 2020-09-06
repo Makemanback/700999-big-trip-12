@@ -7,7 +7,7 @@ const createStatsItem = (type) => {
       `<div class="statistics__item statistics__item--${statsType}">
         <canvas class="statistics__chart  statistics__chart--${statsType}" width="900"></canvas>
       </div>`
-    )
+    );
   }).join(``);
 };
 
@@ -20,8 +20,8 @@ const createStatisticsTemplate = () => {
         ${createStatsItem(Object.values(StatsType))}
 
     </section>`
-  )
-}
+  );
+};
 
 export default class Stats extends AbstractView {
 

@@ -18,43 +18,57 @@ import PointNewPresenter from "./point-new-presenter.js";
 
 export default class Trip {
   constructor(tripContainer, pointsModel, filterModel, startDates, arrCities, totalPrice) {
-    this._pointsModel = pointsModel;
 
+    this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
     this._tripInfoContainer = tripContainer.querySelector(`.trip-main`);
     this._tripContainer = tripContainer.querySelector(`.trip-events`);
+
     this._startDates = startDates;
     this._arrCities = arrCities;
     this._totalPrice = totalPrice;
+
     this._pointPresenter = {};
+    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
+
     this._currentSortType = SortType.DEFAULT;
     this._currentFilter = FilterType.EVERYTHING;
 
     this._daysListComponent = new TripDaysListView();
-
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
     this._emptyDayComponent = new EmptyDayView();
-
+    this._statsComponent = new StatsView();
+    this._pageSortingComponent = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-
-    this._pageSortingComponent = null;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
-
-    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
-
-    this._statsComponent = new StatsView();
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderTrip();
+  }
+
+  destroy() {
+    this._clearTrip();
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  _clearTrip() {
+    this._pointNewPresenter.destroy();
+
+    remove(this._daysListComponent);
+  }
+
+  clearStats() {
+    remove(this._statsComponent);
   }
 
   createPoint(callback) {
@@ -212,14 +226,11 @@ export default class Trip {
   }
 
   _renderStats() {
-    // const tripContainer = this._daysListComponent.getElement();
-
-    render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND)
+    render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {
     this._renderPageSorting();
-    this._renderStats();
     this._renderDaysList();
     this._renderTripInfo();
     this._renderDays();

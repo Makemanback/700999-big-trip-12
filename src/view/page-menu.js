@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {MenuItem} from '../const.js'
+import {MenuItem} from '../const.js';
 
 const createPageMenuTemplate = () => {
   return (
@@ -23,34 +23,33 @@ export default class PageMenu extends AbstractView {
 
   _menuClickHandler(evt) {
     evt.preventDefault();
-    this._callback.menuClick(evt.target);
+    this._callback.menuClick(evt.target.innerText);
+  }
+
+  setMenuClickHandler(callback) {
+
+    this._callback.menuClick = callback;
+
+    this.getElement().querySelectorAll(`.trip-tabs__btn`).forEach((item) =>
+      item.addEventListener(`click`, this._menuClickHandler));
+  }
+
+  setMenuItem(menuItem) {
     const tableItem = this.getElement().querySelector(`[value=${MenuItem.TABLE}]`);
     const statsItem = this.getElement().querySelector(`[value=${MenuItem.STATS}]`);
     const activeClass = `trip-tabs__btn--active`;
 
+    const item = this.getElement().querySelector(`[value="${menuItem}"]`);
 
-    switch (evt.target.innerText) {
-      case MenuItem.STATS:
-        evt.target.classList.add(activeClass);
-        tableItem.classList.remove(activeClass);
-        break;
-      case MenuItem.TABLE:
-        evt.target.classList.add(activeClass);
+    switch (item) {
+      case tableItem:
+        item.classList.add(activeClass);
         statsItem.classList.remove(activeClass);
         break;
+      case statsItem:
+        item.classList.add(activeClass);
+        tableItem.classList.remove(activeClass);
     }
-  }
 
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().addEventListener(`click`, this._menuClickHandler);
-  }
-
-  setMenuItem(menuItem) {
-    const item = this.getElement().querySelector(`[value=${menuItem}]`);
-
-    if (item !== null) {
-
-    }
   }
 }

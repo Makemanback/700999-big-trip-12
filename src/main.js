@@ -63,40 +63,39 @@ const filterPresenter = new FilterPresenter(pageTripControls, filterModel, point
 
 filterPresenter.init();
 
+const handlePointNewFormClose = (presenter) => {
+  newEvent.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    presenter.createPoint();
+    newEvent.disabled = true;
+  });
+};
+
 if (POINTS_COUNT === 0) {
   render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
 
-  const handlePointNewFormClose = () => {
-    newEvent.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      tripPresenter.createPoint();
-      newEvent.disabled = true;
-    });
-  };
-
 
   const handlePageMenuClick = (menuItem) => {
 
     switch (menuItem) {
       case MenuItem.TABLE:
-
-        // Скрыть статистику
-        // Показать доску
-        // Убрать выделение с ADD NEW TASK после сохранения
-        MenuItem.STATS.classList.remove(`trip-tabs__btn--active`)
+        pageMenuComponent.setMenuItem(menuItem);
+        tripPresenter.clearStats();
+        tripPresenter.init();
         break;
       case MenuItem.STATS:
-        // Скрыть доску
-        // Показать статистику
-        MenuItem.TABLE.classList.remove(`trip-tabs__btn--active`)
+        pageMenuComponent.setMenuItem(menuItem);
+        tripPresenter.destroy();
+        tripPresenter._renderStats();
         break;
     }
   };
 
   pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
-  handlePointNewFormClose();
+
+  handlePointNewFormClose(tripPresenter);
   tripPresenter.init();
 }

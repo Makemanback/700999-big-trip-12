@@ -32,6 +32,7 @@ export default class PointNew {
   }
 
   destroy() {
+
     if (this._tripEditComponent === null) {
       return;
     }
