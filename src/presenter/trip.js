@@ -6,7 +6,7 @@ import PageSortingView from '../view/page-sorting.js';
 import StatsView from '../view/statistics.js';
 import {SortType} from '../view/page-sorting.js';
 
-import {UpdateType, UserAction, FilterType} from '../const.js';
+import {UpdateType, UserAction, FilterType, StatsType} from '../const.js';
 
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd, isPointExpired} from '../utils/date.js';
@@ -38,7 +38,7 @@ export default class Trip {
     this._daysListComponent = new TripDaysListView();
     this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
     this._emptyDayComponent = new EmptyDayView();
-    this._statsComponent = new StatsView();
+    this._statsComponent = new StatsView(this._pointsModel.getPoints(), StatsType);
     this._pageSortingComponent = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -51,6 +51,7 @@ export default class Trip {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
+    this._restoreSortType();
     this._renderTrip();
   }
 
@@ -62,6 +63,7 @@ export default class Trip {
   }
 
   _clearTrip() {
+    this._restoreSortType();
     this._pointNewPresenter.destroy();
 
     remove(this._daysListComponent);
@@ -72,13 +74,16 @@ export default class Trip {
   }
 
   createPoint(callback) {
-    this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._restoreSortType();
     this._pointNewPresenter.init(callback);
     this._renderPageSorting();
     this._updatePointsList();
   }
 
+  _restoreSortType() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  }
   _getPoints() {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
@@ -225,12 +230,15 @@ export default class Trip {
     }
   }
 
-  _renderStats() {
+  renderStats() {
     render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {
     this._renderPageSorting();
+
+    this.renderStats();
+
     this._renderDaysList();
     this._renderTripInfo();
     this._renderDays();

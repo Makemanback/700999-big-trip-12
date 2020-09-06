@@ -27,3 +27,9 @@ export const StatsType = {
   TRANSPORT: `transport`,
   TIME_SPEND: `time-spend`
 };
+
+export const NonTravelPoint = {
+  CHECK_IN: `Check-in`,
+  SIGHTSEEING: `Sightseeing`,
+  RESTAURANT: `Restaurant`
+};

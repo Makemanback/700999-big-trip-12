@@ -89,7 +89,7 @@ if (POINTS_COUNT === 0) {
       case MenuItem.STATS:
         pageMenuComponent.setMenuItem(menuItem);
         tripPresenter.destroy();
-        tripPresenter._renderStats();
+        tripPresenter.renderStats();
         break;
     }
   };
