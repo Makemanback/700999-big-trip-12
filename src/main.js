@@ -12,6 +12,8 @@ import {generateTripPoint} from './mock/trip-day.js';
 
 import {render, RenderPosition} from './utils/render.js';
 
+import {MenuItem} from "./const.js";
+
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
 const pageTripEvents = document.querySelector(`.trip-events`);
@@ -19,7 +21,9 @@ const pageTripMain = pageHeader.querySelector(`.trip-main`);
 const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 
-render(pageTripControlsMenu, new PageMenuView(), RenderPosition.BEFOREEND);
+const pageMenuComponent = new PageMenuView();
+
+render(pageTripControlsMenu, pageMenuComponent, RenderPosition.BEFOREEND);
 
 const filterModel = new FilterModel();
 
@@ -63,6 +67,24 @@ if (POINTS_COUNT === 0) {
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
+
+  const handlePageMenuClick = (menuItem) => {
+    switch (menuItem) {
+      case MenuItem.TABLE:
+        // Скрыть статистику
+        // Показать доску
+        // Показать форму добавления новой задачи
+        // Убрать выделение с ADD NEW TASK после сохранения
+        break;
+      case MenuItem.STATS:
+        // Скрыть доску
+        // Показать статистику
+        break;
+    }
+  };
+
+  pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
+
   tripPresenter.init();
 
   document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
