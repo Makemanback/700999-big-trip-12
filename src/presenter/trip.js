@@ -3,6 +3,7 @@ import TripDayView from '../view/trip-day.js';
 import TripInfoView from '../view/page-trip-info';
 import EmptyDayView from '../view/empty-trip-day.js';
 import PageSortingView from '../view/page-sorting.js';
+import StatsView from '../view/statistics.js';
 import {SortType} from '../view/page-sorting.js';
 
 import {UpdateType, UserAction, FilterType} from '../const.js';
@@ -21,9 +22,8 @@ export default class Trip {
 
     this._filterModel = filterModel;
 
-    this._tripContainer = tripContainer;
-    this._datesContainer = tripContainer.querySelector(`.trip-events`);
     this._tripInfoContainer = tripContainer.querySelector(`.trip-main`);
+    this._tripContainer = tripContainer.querySelector(`.trip-events`);
     this._startDates = startDates;
     this._arrCities = arrCities;
     this._totalPrice = totalPrice;
@@ -48,17 +48,19 @@ export default class Trip {
     this._filterModel.addObserver(this._handleModelEvent);
 
 
-    this._pointNewPresenter = new PointNewPresenter(this._datesContainer, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
+
+    this._statsComponent = new StatsView();
   }
 
   init() {
     this._renderTrip();
   }
 
-  createPoint() {
+  createPoint(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._pointNewPresenter.init();
+    this._pointNewPresenter.init(callback);
     this._renderPageSorting();
     this._updatePointsList();
   }
@@ -115,7 +117,7 @@ export default class Trip {
   }
 
   _renderDaysList() {
-    render(this._datesContainer, this._daysListComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
   _renderDays() {
@@ -155,7 +157,7 @@ export default class Trip {
   }
 
   _renderAllPoints() {
-    let pageTripDayViews = this._datesContainer.querySelectorAll(`.trip-days__item`);
+    let pageTripDayViews = this._tripContainer.querySelectorAll(`.trip-days__item`);
 
     this._getPoints().forEach((point) => {
       pageTripDayViews.forEach((pageTripDayView) => {
@@ -173,7 +175,7 @@ export default class Trip {
 
     this._pageSortingComponent = new PageSortingView(this._currentSortType);
     this._pageSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    render(this._datesContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
+    render(this._tripContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _handleSortTypeChange(sortType) {
@@ -190,7 +192,7 @@ export default class Trip {
 
     render(daysContainer, this._emptyDayComponent, RenderPosition.BEFOREEND);
 
-    const pointContainers = this._datesContainer.querySelector(`.trip-events__list`);
+    const pointContainers = this._tripContainer.querySelector(`.trip-events__list`);
     this._getPoints().forEach((point) => this._renderPoint(pointContainers, point));
   }
 
@@ -209,8 +211,15 @@ export default class Trip {
     }
   }
 
+  _renderStats() {
+    // const tripContainer = this._daysListComponent.getElement();
+
+    render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND)
+  }
+
   _renderTrip() {
     this._renderPageSorting();
+    this._renderStats();
     this._renderDaysList();
     this._renderTripInfo();
     this._renderDays();

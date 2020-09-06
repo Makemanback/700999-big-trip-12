@@ -20,6 +20,7 @@ const pageTripEvents = document.querySelector(`.trip-events`);
 const pageTripMain = pageHeader.querySelector(`.trip-main`);
 const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
+const newEvent = pageHeader.querySelector(`.trip-main__event-add-btn`);
 
 const pageMenuComponent = new PageMenuView();
 
@@ -68,27 +69,34 @@ if (POINTS_COUNT === 0) {
 } else {
   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
 
+  const handlePointNewFormClose = () => {
+    newEvent.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      tripPresenter.createPoint();
+      newEvent.disabled = true;
+    });
+  };
+
+
   const handlePageMenuClick = (menuItem) => {
+
     switch (menuItem) {
       case MenuItem.TABLE:
+
         // Скрыть статистику
         // Показать доску
-        // Показать форму добавления новой задачи
         // Убрать выделение с ADD NEW TASK после сохранения
+        MenuItem.STATS.classList.remove(`trip-tabs__btn--active`)
         break;
       case MenuItem.STATS:
         // Скрыть доску
         // Показать статистику
+        MenuItem.TABLE.classList.remove(`trip-tabs__btn--active`)
         break;
     }
   };
 
   pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
-
+  handlePointNewFormClose();
   tripPresenter.init();
-
-  document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    tripPresenter.createPoint();
-  });
 }

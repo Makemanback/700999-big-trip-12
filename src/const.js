@@ -18,5 +18,12 @@ export const FilterType = {
 
 export const MenuItem = {
   TABLE: `Table`,
-  STATS: `Stats`
+  STATS: `Stats`,
+  NEW_EVENT: document.querySelector(`.trip-main__event-add-btn`)
+}
+
+export const StatsType = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPEND: `time-spend`
 }

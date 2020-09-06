@@ -1,7 +1,7 @@
 import TripEditView from '../view/trip-edit.js';
 import {generateId} from "../mock/trip-day.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
-import {UserAction, UpdateType} from "../const.js";
+import {UserAction, UpdateType, MenuItem} from "../const.js";
 
 export default class PointNew {
   constructor(tripContainer, changeData) {
@@ -9,6 +9,7 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._tripEditComponent = null;
+    this._destroyCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
@@ -16,6 +17,7 @@ export default class PointNew {
   }
 
   init() {
+
     if (this._tripEditComponent !== null) {
       return;
     }
@@ -38,6 +40,7 @@ export default class PointNew {
     this._tripEditComponent = null;
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    MenuItem.NEW_EVENT.disabled = false;
   }
 
   _handleFormSubmit(point) {
@@ -60,4 +63,5 @@ export default class PointNew {
       this.destroy();
     }
   }
+
 }
