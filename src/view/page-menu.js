@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {MenuItem} from '../const.js'
+import {MenuItem} from '../const.js';
 
 const createPageMenuTemplate = () => {
   return (

@@ -19,4 +19,4 @@ export const FilterType = {
 export const MenuItem = {
   TABLE: `Table`,
   STATS: `Stats`
-}
+};
