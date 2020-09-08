@@ -1,11 +1,7 @@
 import TripDaysListView from '../view/trip-list.js';
 import TripDayView from '../view/trip-day.js';
 import TripInfoView from '../view/page-trip-info';
-
 import EmptyDayView from '../view/empty-trip-day.js';
-import EmptyTripInfoView from '../view/empty-trip-info.js';
-import NoPointsView from '../view/no-points.js';
-
 import PageSortingView from '../view/page-sorting.js';
 import StatsView from '../view/statistics.js';
 import {SortType} from '../view/page-sorting.js';
@@ -18,17 +14,20 @@ import {sortPointsByPrice, sortPointsByDuration} from '../utils/common.js';
 import {filter} from '../utils/filter.js';
 
 import PointPresenter from './point.js';
-import PointNewPresenter from "./point-new.js";
-
+import PointNewPresenter from "./point-new-presenter.js";
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel) {
-    this._pointsModel = pointsModel;
+  constructor(tripContainer, pointsModel, filterModel, startDates, arrCities, totalPrice) {
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
     this._tripInfoContainer = tripContainer.querySelector(`.trip-main`);
+    this._tripContainer = tripContainer.querySelector(`.trip-events`);
+
+    this._startDates = startDates;
+    this._arrCities = arrCities;
+    this._totalPrice = totalPrice;
 
     this._pointPresenter = {};
     this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
@@ -37,14 +36,10 @@ export default class Trip {
     this._currentFilter = FilterType.EVERYTHING;
 
     this._daysListComponent = new TripDaysListView();
-
-    this._startDate = getTripStart(this._pointsModel.getStartDates()[0]);
-    this._endDate = getTripEnd(this._pointsModel.getStartDates()[this._pointsModel.getStartDates().length - 1]);
-    this._tripInfoComponent = new TripInfoView(this._pointsModel.getCities(), this._startDate, this._endDate, this._pointsModel.getPrice());
-
+    this._tripInfoComponent = new TripInfoView(this._arrCities, getTripStart(this._startDates[0]), getTripEnd(this._startDates[this._startDates.length - 1]), this._totalPrice);
     this._emptyDayComponent = new EmptyDayView();
-    this._emptyTripInfoComponent = new EmptyTripInfoView();
-    this._noPointsComponent = new NoPointsView();
+    this._statsComponent = new StatsView(this._pointsModel.getPoints(), StatsType);
+    this._pageSortingComponent = null;
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -122,11 +117,6 @@ export default class Trip {
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.deletePoint(updateType, update);
-        if (this._pointsModel._points.length > 0) {
-          this._renderTripInfo();
-        } else {
-          this._renderEmptyTripInfo();
-        }
         break;
     }
   }
@@ -154,7 +144,7 @@ export default class Trip {
     const daysContainer = this._daysListComponent.getElement();
     const filterType = this._filterModel.getFilter();
 
-    this._pointsModel.getStartDates()
+    this._startDates
     .forEach((date, index) => {
       switch (filterType) {
         case FilterType.FUTURE:
@@ -182,28 +172,7 @@ export default class Trip {
   }
 
   _renderTripInfo() {
-    this._startDate = getTripStart(this._pointsModel.getStartDates()[0]);
-    this._endDate = getTripEnd(this._pointsModel.getStartDates()[this._pointsModel.getStartDates().length - 1]);
-
-
-    if (this._tripInfoComponent !== null) {
-      remove(this._tripInfoComponent);
-    }
-
-    this._tripInfoComponent = new TripInfoView(this._pointsModel.getCities(), this._startDate, this._endDate, this._pointsModel.getPrice());
-    if (this._pointsModel._points.length >= 1) {
-      render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
-    }
-
-  }
-
-  _renderEmptyTripInfo() {
-    if (this._tripInfoComponent !== null) {
-      remove(this._tripInfoComponent);
-    }
-
-    render(this._tripInfoContainer, this._emptyTripInfoComponent, RenderPosition.AFTERBEGIN);
-    render(this._datesContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
+    render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderAllPoints() {
