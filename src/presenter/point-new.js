@@ -1,7 +1,7 @@
 import TripEditView from '../view/trip-edit.js';
 import {generateId} from "../mock/trip-day.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
-import {UserAction, UpdateType, MenuItem} from "../const.js";
+import {UserAction, UpdateType} from "../const.js";
 
 export default class PointNew {
   constructor(tripContainer, changeData) {
@@ -41,7 +41,7 @@ export default class PointNew {
     this._tripEditComponent = null;
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    MenuItem.NEW_EVENT.disabled = false;
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   _handleFormSubmit(point) {

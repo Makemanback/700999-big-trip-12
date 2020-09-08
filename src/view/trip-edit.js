@@ -5,9 +5,9 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export const BLANK_POINT = {
-  type: `Taxi`,
+  type: Type.TAXI,
   city: `Amsterdam`,
-  additionals: getAdditionalsByType(`Taxi`),
+  additionals: getAdditionalsByType(Type.TAXI),
   pointInfo: {
     description: generateRandomDescription(),
     photo: `http://picsum.photos/248/152?r`
@@ -319,11 +319,8 @@ export default class TripEdit extends SmartView {
   _setDestinationCheck() {
 
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
-    if (CITIES.some((item) => item === cityInput.value)) {
-      cityInput.setCustomValidity(``);
-    } else {
-      cityInput.setCustomValidity(`Please choose city from the list`);
-    }
+    const validationValue = CITIES.some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
+    cityInput.setCustomValidity(validationValue);
   }
 
   static parsePointToData(point) {

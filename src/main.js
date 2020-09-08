@@ -34,37 +34,11 @@ const filterModel = new FilterModel();
 const POINTS_COUNT = 10;
 
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
-const pointDates = points.map((point) => point.schedule.start);
-const startDates = [];
-pointDates.forEach((start) => {
-  let isExist = false;
-  for (let i = 0; i < startDates.length; i++) {
-    if (startDates[i].getDate() === start.getDate()) {
-      isExist = true;
-    }
-  }
-  if (!isExist) {
-    startDates.push(start);
-  }
-});
-
-startDates.sort((a, b) => a - b);
-
-const totalPrice = points.reduce((accumulator, value) => {
-  const offerPrice = value.additionals.reduce((accumulatorInner, item) => {
-    return item.cost + accumulatorInner;
-  }, 0);
-  return offerPrice + accumulator + value.price;
-}, 0);
-
-const arrCities = points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
-const filterPresenter = new FilterPresenter(pageTripControls, filterModel, pointsModel);
-
-filterPresenter.init();
+new FilterPresenter(pageTripControls, filterModel, pointsModel).init();
 
 const handlePointNewFormClose = (presenter) => {
   newEventComponent.getElement().addEventListener(`click`, (evt) => {
@@ -74,12 +48,11 @@ const handlePointNewFormClose = (presenter) => {
   });
 };
 
-if (POINTS_COUNT === 0) {
+if (pointsModel.checkPoints() === 0) {
   render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
-  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, startDates, arrCities, totalPrice);
-
+  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel);
 
   const handlePageMenuClick = (menuItem) => {
 

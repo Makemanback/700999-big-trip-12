@@ -14,6 +14,46 @@ export default class Points extends Observer {
     return this._points;
   }
 
+
+  checkPoints() {
+    return this._points.length === 0 ? 0 : this._points;
+  }
+
+  getStartDates() {
+
+    const startDates = [];
+    const pointDates = this._points.map((point) => point.schedule.start);
+    pointDates.forEach((start) => {
+      let isExist = false;
+      for (let i = 0; i < startDates.length; i++) {
+        if (startDates[i].getDate() === start.getDate()) {
+          isExist = true;
+        }
+      }
+      if (!isExist) {
+        startDates.push(start);
+      }
+    });
+
+    return startDates.sort((a, b) => a - b);
+
+  }
+
+  getCities() {
+    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
+  }
+
+  getPrice() {
+
+    return this._points.reduce((accumulator, value) => {
+      const offerPrice = value.additionals.reduce((accumulatorInner, item) => {
+        return item.cost + accumulatorInner;
+      }, 0);
+
+      return offerPrice + accumulator + value.price;
+    }, 0);
+  }
+
   updatePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
