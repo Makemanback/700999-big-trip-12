@@ -70,7 +70,16 @@ export const countTypeRepeat = (point, typeName) => {
   return createTravelTypes(point).filter((item) => item === typeName).length;
 };
 
+export const createAllTypes = (points) => {
+  const arr = [];
+  getPointsArray(points).forEach((item) => arr.push(item.type));
 
+  return arr;
+}
+
+export const getPointByTypeDuration = (points) => {
+
+}
 /*
 
   осталось разобраться только со временем в транспорте
@@ -78,17 +87,18 @@ export const countTypeRepeat = (point, typeName) => {
 */
 export const countTimeSpend = (points) => {
   const durations = [];
-  points.forEach((item) => durations.push(getTime(item.schedule.start, item.schedule.end)));
+  getPointsArray(points).forEach((item) => durations.push(getTime(item.schedule.start, item.schedule.end)));
 
   return durations;
 };
 
 export const getTime = (start, end) => {
   // const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
-  const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
-  return gapHours;
+  const gapHours = Math.round((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+  return (gapHours)
 
 };
+
 
 // export const getTimeGap = (start, end) => {
 //   const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);

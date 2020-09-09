@@ -28,7 +28,7 @@ export default class Trip {
     this._tripContainer = tripContainer.querySelector(`.trip-events`);
 
     this._pointPresenter = {};
-    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
+
 
     this._currentSortType = SortType.DEFAULT;
     this._currentFilter = FilterType.EVERYTHING;
@@ -50,6 +50,8 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
   }
 
   init() {
@@ -180,10 +182,6 @@ export default class Trip {
     pointPresenter.init(daysList, point);
     this._pointPresenter[point.id] = pointPresenter;
   }
-
-  // _renderTripInfo() {
-  //   render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
-  // }
 
 
   _renderTripInfo() {

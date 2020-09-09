@@ -2,7 +2,7 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart.js";
 import {StatsType} from '../const.js';
-import {createUniqeTypes, getPointsArray, getPointByTypePrice, createTravelTypes, getUniqueMeanings, countTravelType, countTimeSpend} from '../utils/statistics.js';
+import {createUniqeTypes, getPointsArray, getPointByTypePrice, createTravelTypes, getUniqueMeanings, countTravelType, countTimeSpend, getPointsTitles, createAllTypes, getPointByTypeDuration} from '../utils/statistics.js';
 
 const renderMoneyChart = (moneyCtx, points) => {
   const uniqueTypes = createUniqeTypes(points);
@@ -146,19 +146,20 @@ const renderTransportChart = (transportCtx, points) => {
 };
 
 const renderSpendChart = (timeSpendCtx, points) => {
-  const uniqueTypes = createUniqeTypes(points);
-  const arr = getPointsArray(points);
-  const duration = countTimeSpend(arr);
-  // console.log(countTimeSpend(arr[0]))
-  // console.log(allTimeSpend(arr))
+
+
+// console.log(getPointByTypeDuration(points))
+  const allPoints = createAllTypes(points);
+  const uniquePoints = getUniqueMeanings(allPoints);
   return new Chart(timeSpendCtx, {
+
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: uniqueTypes,
+      labels: uniquePoints,
       datasets: [{
-        // data: [4, 3, 2, 1],
-        data: duration,
+        data: [4, 3, 2, 1],
+        // data: duration,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -173,7 +174,7 @@ const renderSpendChart = (timeSpendCtx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}x`
+          formatter: (val) => `${val}H`
         }
       },
       title: {
