@@ -8,11 +8,4 @@ export const formatDate = (obj) => {
 export const getTripStart = (obj) => obj.toLocaleString(`en-US`, {month: `short`, day: `numeric`});
 export const getTripEnd = (obj) => obj.toLocaleString(`en-US`, {day: `numeric`});
 
-export const isPointExpired = (date) => {
-
-  if (date.getTime() < Date.now()) {
-    return false;
-  }
-
-  return date;
-};
+export const isPointExpired = (date) => date.getTime() < Date.now();

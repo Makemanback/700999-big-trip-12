@@ -6,17 +6,16 @@ export default class Points extends Observer {
     this._points = [];
   }
 
-  setPoints(points) {
+  set(points) {
     this._points = points.slice();
   }
 
-  getPoints() {
+  get() {
     return this._points;
   }
 
-
-  checkPoints() {
-    return this._points.length === 0 ? 0 : this._points;
+  areExist() {
+    return this._points.length === 0;
   }
 
   getStartDates() {
@@ -44,17 +43,16 @@ export default class Points extends Observer {
   }
 
   getPrice() {
-
-    return this._points.reduce((accumulator, value) => {
-      const offerPrice = value.additionals.reduce((accumulatorInner, item) => {
-        return item.cost + accumulatorInner;
+    return this._points.reduce((accumulator, {additionals, price}) => {
+      const offersTotalPrice = additionals.reduce((accumulatorInner, {cost, isChecked}) => {
+        return isChecked ? cost + accumulatorInner : accumulatorInner;
       }, 0);
 
-      return offerPrice + accumulator + value.price;
+      return offersTotalPrice + accumulator + price;
     }, 0);
   }
 
-  updatePoint(updateType, update) {
+  update(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -70,7 +68,7 @@ export default class Points extends Observer {
     this._notify(updateType, update);
   }
 
-  addPoint(updateType, update) {
+  add(updateType, update) {
     this._points = [
       update,
       ...this._points
@@ -79,7 +77,7 @@ export default class Points extends Observer {
     this._notify(updateType, update);
   }
 
-  deletePoint(updateType, update) {
+  delete(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {

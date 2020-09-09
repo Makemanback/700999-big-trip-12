@@ -4,12 +4,13 @@ import {Time} from '../mock/trip-day.js';
 export const createAdditionals = (arr) => {
   return arr
   .slice(0, 3)
-  .map((item) => {
+  .filter(({isChecked}) => isChecked === true)
+  .map(({offer, cost}) => {
     return (
       `<li class="event__offer">
-        <span class="event__offer-title">${item.offer}</span>
+        <span class="event__offer-title">${offer}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${item.cost}</span>
+        &euro;&nbsp;<span class="event__offer-price">${cost}</span>
       </li>`
     );
   }).join(``);

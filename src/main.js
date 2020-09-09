@@ -36,7 +36,7 @@ const POINTS_COUNT = 10;
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
+pointsModel.set(points);
 
 new FilterPresenter(pageTripControls, filterModel, pointsModel).init();
 
@@ -48,7 +48,7 @@ const handlePointNewFormClose = (presenter) => {
   });
 };
 
-if (pointsModel.checkPoints() === 0) {
+if (pointsModel.areExist()) {
   render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
   render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
 } else {
