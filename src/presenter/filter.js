@@ -51,7 +51,7 @@ export default class Filter {
 
   _getFilters() {
 
-    const points = this._pointsModel.getPoints();
+    const points = this._pointsModel.get();
     return [
       {
         type: FilterType.EVERYTHING,
