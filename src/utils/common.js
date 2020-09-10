@@ -47,4 +47,10 @@ export const updateItem = (items, update) => {
   ];
 };
 
-export const generateRandomBoolean = () => Boolean(getRandomInteger(0, 1));
+export const generateRandomBoolean = () => Boolean(Math.round(Math.random()));
+
+export const getAnyRandomInteger = (a = 0, b = 1) => {
+  const value = getRandomInteger(a, b);
+
+  return generateRandomBoolean() ? value : -value;
+};
