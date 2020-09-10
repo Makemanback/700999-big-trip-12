@@ -87,6 +87,7 @@ export const getPointByTypeDuration = (points) => {
 */
 export const countTimeSpend = (points) => {
   const durations = [];
+
   getPointsArray(points).forEach((item) => durations.push(getTime(item.schedule.start, item.schedule.end)));
 
   return durations;

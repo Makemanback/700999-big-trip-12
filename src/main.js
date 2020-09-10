@@ -8,12 +8,13 @@ import PageMenuView from './view/page-menu.js';
 import NoPointsView from './view/no-points.js';
 import EmptyTripInfoView from './view/empty-trip-info.js';
 import NewEventView from './view/new-event-button.js';
+import StatsView from './view/statistics.js';
 
 import {generateTripPoint} from './mock/trip-day.js';
 
-import {render, RenderPosition} from './utils/render.js';
+import {render, RenderPosition, remove} from './utils/render.js';
 
-import {MenuItem} from "./const.js";
+import {MenuItem, StatsType} from "./const.js";
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
@@ -38,7 +39,10 @@ const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 const pointsModel = new PointsModel();
 pointsModel.set(points);
 
+
 new FilterPresenter(pageTripControls, filterModel, pointsModel).init();
+
+let statsComponent = null;
 
 const handlePointNewFormClose = (presenter) => {
   newEventComponent.getElement().addEventListener(`click`, (evt) => {
@@ -58,6 +62,7 @@ if (pointsModel.areExist()) {
 
     switch (menuItem) {
       case MenuItem.TABLE:
+        remove(statsComponent)
         pageMenuComponent.setMenuItem(menuItem);
         tripPresenter.clearStats();
         tripPresenter.init();
@@ -66,6 +71,7 @@ if (pointsModel.areExist()) {
         pageMenuComponent.setMenuItem(menuItem);
         tripPresenter.destroy();
         tripPresenter.renderStats();
+
         break;
     }
   };

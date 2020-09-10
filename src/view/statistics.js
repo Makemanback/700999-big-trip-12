@@ -75,6 +75,7 @@ const renderMoneyChart = (moneyCtx, points) => {
 };
 
 const renderTransportChart = (transportCtx, points) => {
+
   const uniqueTravelTypes = getUniqueMeanings(createTravelTypes(points));
 
   const countedTypes = countTravelType(points);
@@ -149,6 +150,7 @@ const renderSpendChart = (timeSpendCtx, points) => {
 
 
 // console.log(getPointByTypeDuration(points))
+countTimeSpend(points)
   const allPoints = createAllTypes(points);
   const uniquePoints = getUniqueMeanings(allPoints);
   return new Chart(timeSpendCtx, {
@@ -219,8 +221,8 @@ const renderSpendChart = (timeSpendCtx, points) => {
   });
 };
 
-const createStatisticsTemplate = (points, stats) => {
-  const {MONEY, TRANSPORT, TIME_SPEND} = stats;
+const createStatisticsTemplate = ({MONEY, TRANSPORT, TIME_SPEND}) => {
+
   return (
     `<section class="statistics">
     <h2 class="visually-hidden">Trip statistics</h2>

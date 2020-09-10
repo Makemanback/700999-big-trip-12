@@ -273,7 +273,7 @@ export default class Trip {
   _renderTrip() {
     this._renderPageSorting();
 
-    this.renderStats();
+    // this.renderStats();
 
     this._renderDaysList();
     this._renderTripInfo();
