@@ -2,19 +2,19 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart.js";
 import {StatsType} from '../const.js';
-import {createUniqeTypes, getPointsArray, getPointByTypePrice, createTravelTypes, getUniqueMeanings, countTravelType, countTimeSpend, getPointsTitles, createAllTypes, getPointByTypeDuration} from '../utils/statistics.js';
+import {getPointByTypePrice, createTravelTypes, getUniqueMeanings, countTravelType, countTimeSpend} from '../utils/statistics.js';
 
 const renderMoneyChart = (moneyCtx, points) => {
-  const uniqueTypes = createUniqeTypes(points);
   const typesPrices = getPointByTypePrice(points);
+
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: uniqueTypes,
+      labels: Object.keys(typesPrices),
       datasets: [{
-        data: typesPrices,
+        data: Object.values(typesPrices),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#158deb`,
         anchor: `start`
@@ -147,21 +147,16 @@ const renderTransportChart = (transportCtx, points) => {
 };
 
 const renderSpendChart = (timeSpendCtx, points) => {
+  const durationsByType = countTimeSpend(points);
 
-
-// console.log(getPointByTypeDuration(points))
-countTimeSpend(points)
-  const allPoints = createAllTypes(points);
-  const uniquePoints = getUniqueMeanings(allPoints);
   return new Chart(timeSpendCtx, {
 
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: uniquePoints,
+      labels: Object.keys(durationsByType),
       datasets: [{
-        data: [4, 3, 2, 1],
-        // data: duration,
+        data: Object.values(durationsByType),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -176,7 +171,7 @@ countTimeSpend(points)
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}H`
+          formatter: (duration) => duration >= 24 ? `${Math.floor(duration / 24)}D ${Math.floor(duration % 24)}H` : `${duration}H`
         }
       },
       title: {
@@ -246,9 +241,8 @@ export default class Stats extends SmartView {
   constructor(points) {
     super();
 
-    this._data = {
-      points
-    };
+    // убрать объектный литерал
+    this._data = points;
 
     this._moneyCart = null;
     this._transportCart = null;
