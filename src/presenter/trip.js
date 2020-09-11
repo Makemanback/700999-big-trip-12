@@ -19,7 +19,7 @@ import PointPresenter from './point.js';
 import PointNewPresenter from "./point-new.js";
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel) {
+  constructor(tripContainer, pointsModel, filterModel, newEventButton) {
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
@@ -46,12 +46,12 @@ export default class Trip {
     this._emptyTripInfoComponent = new EmptyTripInfoView();
     this._noPointsComponent = new NoPointsView();
 
-    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._tripContainer, this._handleViewAction, newEventButton);
   }
 
   init() {

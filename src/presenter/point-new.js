@@ -4,10 +4,10 @@ import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class PointNew {
-  constructor(tripContainer, changeData) {
+  constructor(tripContainer, changeData, newEventButton) {
     this._tripContainer = tripContainer;
     this._changeData = changeData;
-
+    this._newEventButton = newEventButton;
     this._tripEditComponent = null;
     this._destroyCallback = null;
 
@@ -38,10 +38,10 @@ export default class PointNew {
     }
 
     remove(this._tripEditComponent);
-    this._tripEditComponent = null;
 
+    this._tripEditComponent = null;
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
+    this._newEventButton.getElement().disabled = false;
   }
 
   _handleFormSubmit(point) {

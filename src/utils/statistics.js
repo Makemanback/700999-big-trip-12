@@ -1,55 +1,32 @@
 import {NonTravelPoint} from '../const.js';
 import {Time} from '../mock/trip-day.js';
 
-export const getPointsArray = (points) => Array.from(Object.values(points)[0]);
+
 export const getUniqueMeanings = (array) => [...new Set(array)];
 
-export const createUniqeTypes = (points) => {
-  const pointsArray = () => {
-    const arr = [];
-    getPointsArray(points).forEach((point) => arr.push(point.type));
-    return arr;
-  };
-
-  return getUniqueMeanings(pointsArray());
-};
+export const createUniqeTypes = (points) => getUniqueMeanings(points.map((item) => item.type));
 
 
 export const getPointByTypePrice = (points) => {
   const getAllPrices = () => {
-    const arr = [];
-    createUniqeTypes(points).forEach((item) => {
-      arr.push(typePrice(points, item));
+    const obj = {};
+    createUniqeTypes(points).forEach((typeName) => {
+      const price = points
+      .filter((point) => point.type === typeName)
+      .reduce((accumulator, value) => {
+        return accumulator + value.price;
+      }, 0);
+      obj[typeName] = price;
     });
-    return arr;
+    return obj;
   };
-
-  const getAllPricesArr = () => {
-    const arr = [];
-    getAllPrices().forEach((item) => {
-      arr.push(item.price);
-    });
-    return arr;
-  };
-
-  return getAllPricesArr();
+  return getAllPrices();
 };
 
-export const typePrice = (points, typeName) => {
-  const price = getPointsArray(points)
-  .filter((item) => item.type === typeName)
-  .reduce((accumulator, value) => {
-    return accumulator + value.price;
-  }, 0);
-
-  return (
-    {typeName, price}
-  );
-};
 
 export const createTravelTypes = (points) => {
   const arr = [];
-  getPointsArray(points).forEach((item) => {
+  points.forEach((item) => {
     if (item.type !== NonTravelPoint.SIGHTSEEING && item.type !== NonTravelPoint.CHECK_IN && item.type !== NonTravelPoint.RESTAURANT) {
       arr.push(item.type);
     }
@@ -57,6 +34,24 @@ export const createTravelTypes = (points) => {
 
   return arr;
 };
+
+
+export const countTimeSpend = (points) => {
+  const obj = {};
+  const types = createUniqeTypes(points);
+  types.forEach((type) => {
+    const duration = points.filter((point) => point.type === type)
+    .reduce((accumulator, point) => {
+      return accumulator + getTime(point.schedule.start, point.schedule.end);
+    }, 0);
+    obj[type] = duration;
+  });
+
+  return obj;
+};
+
+export const getTime = (start, end) => Math.round((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+
 
 export const countTravelType = (points) => {
   const countedTypes = [];
@@ -67,52 +62,32 @@ export const countTravelType = (points) => {
 };
 
 export const countTypeRepeat = (point, typeName) => {
-  return createTravelTypes(point).filter((item) => item === typeName).length;
-};
 
-export const createAllTypes = (points) => {
-  const arr = [];
-  getPointsArray(points).forEach((item) => arr.push(item.type));
-
-  return arr;
-}
-
-export const getPointByTypeDuration = (points) => {
-
-}
-/*
-
-  осталось разобраться только со временем в транспорте
-
-*/
-export const countTimeSpend = (points) => {
-  const durations = [];
-
-  getPointsArray(points).forEach((item) => durations.push(getTime(item.schedule.start, item.schedule.end)));
-
-  return durations;
-};
-
-export const getTime = (start, end) => {
-  // const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
-  const gapHours = Math.round((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
-  return (gapHours)
-
+  return createTravel(point).filter((item) => item === typeName).length;
 };
 
 
-// export const getTimeGap = (start, end) => {
-//   const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
-//   const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
-//   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-//   if (gapMinutes === 0) {
-//     return `${gapHours}H`;
-//   }
+const createTravel = (points) => points.filter((point) => point.type !== NonTravelPoint.SIGHTSEEING && point.type !== NonTravelPoint.CHECK_IN && point.type !== NonTravelPoint.RESTAURANT).map((point) => point.type);
 
-//   if (gapHours >= Time.HOURS) {
-//     return `${gapDays}D ${gapHours % Time.HOURS}H ${Math.round(gapMinutes)}M`;
-//   } else {
-//     return `${gapHours}H ${Math.round(gapMinutes)}M`;
-//   }
+export const travelRepeats = (point, typeName) => {
+  return (point).filter((item) => item === typeName).length;
+};
 
-// };
+
+export const getTravelTypeByRepeats = (points) => {
+  const travelTypes = points.filter((point) => point.type !== NonTravelPoint.SIGHTSEEING && point.type !== NonTravelPoint.CHECK_IN && point.type !== NonTravelPoint.RESTAURANT).map((point) => point.type);
+  const obj = {};
+  const uniqueTravelTypes = getUniqueMeanings(travelTypes);
+
+  uniqueTravelTypes.forEach((type) => {
+    const repeation = points.filter((point) => point.type === type)
+    .reduce((accumulator, point) => {
+      // вот в этой функции так и не понял что плюсовать к аккумулятору, чтобы получить количество повторов
+      return accumulator + point.type;
+
+    }, 0);
+    obj[type] = repeation;
+  });
+
+  return obj;
+};
