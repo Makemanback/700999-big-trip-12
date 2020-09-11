@@ -4,12 +4,13 @@ import {Time} from '../mock/trip-day.js';
 export const createAdditionals = (arr) => {
   return arr
   .slice(0, 3)
-  .map((item) => {
+  .filter(({isChecked}) => isChecked === true)
+  .map(({offer, cost}) => {
     return (
       `<li class="event__offer">
-        <span class="event__offer-title">${item.offer}</span>
+        <span class="event__offer-title">${offer}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${item.cost}</span>
+        &euro;&nbsp;<span class="event__offer-price">${cost}</span>
       </li>`
     );
   }).join(``);
@@ -17,9 +18,9 @@ export const createAdditionals = (arr) => {
 };
 
 export const getTimeGap = (start, end) => {
+  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   const gapHours = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
   const gapMinutes = Math.floor(((end - start) / Time.MILLISECONDS / Time.SECONDS % Time.MINUTES));
-  const gapDays = Math.floor((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES / Time.HOURS);
   if (gapMinutes === 0) {
     return `${gapHours}H`;
   }
