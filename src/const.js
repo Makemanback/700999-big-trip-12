@@ -33,3 +33,20 @@ export const NonTravelPoint = {
   SIGHTSEEING: `Sightseeing`,
   RESTAURANT: `Restaurant`
 };
+
+export const Stat = {
+  BAR_HEIGHT: 55
+};
+
+export const pointTypeToEmoji = {
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🛳`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈️`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛`,
+  'restaurant': `🍴`,
+};

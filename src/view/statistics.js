@@ -1,20 +1,18 @@
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart.js";
-import {StatsType} from '../const.js';
-import {getPointByTypePrice, createTravelTypes, getUniqueMeanings, countTravelType, countTimeSpend} from '../utils/statistics.js';
+import {getPointByTypePrice, getTravelTypeByRepeats, countTimeSpend} from '../utils/statistics.js';
+import {Stat} from '../const.js';
 
 const renderMoneyChart = (moneyCtx, points) => {
-  const typesPrices = getPointByTypePrice(points);
-
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(typesPrices),
+      labels: Object.keys(points).map((point) => `${point.toUpperCase()}`),
       datasets: [{
-        data: Object.values(typesPrices),
+        data: Object.values(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#158deb`,
         anchor: `start`
@@ -76,17 +74,13 @@ const renderMoneyChart = (moneyCtx, points) => {
 
 const renderTransportChart = (transportCtx, points) => {
 
-  const uniqueTravelTypes = getUniqueMeanings(createTravelTypes(points));
-
-  const countedTypes = countTravelType(points);
-
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: uniqueTravelTypes,
+      labels: Object.keys(points).map((point) => point.toUpperCase()),
       datasets: [{
-        data: countedTypes,
+        data: Object.values(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#158deb`,
         anchor: `start`
@@ -147,16 +141,13 @@ const renderTransportChart = (transportCtx, points) => {
 };
 
 const renderSpendChart = (timeSpendCtx, points) => {
-  const durationsByType = countTimeSpend(points);
-
   return new Chart(timeSpendCtx, {
-
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(durationsByType),
+      labels: Object.keys(points).map((point) => point.toUpperCase()),
       datasets: [{
-        data: Object.values(durationsByType),
+        data: Object.values(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -171,7 +162,7 @@ const renderSpendChart = (timeSpendCtx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (duration) => duration >= 24 ? `${Math.floor(duration / 24)}D ${Math.floor(duration % 24)}H` : `${duration}H`
+          formatter: (duration) => duration > 24 ? `${Math.floor(duration / 24)}D ${Math.floor(duration % 24)}H` : `${duration}H`
         }
       },
       title: {
@@ -241,7 +232,6 @@ export default class Stats extends SmartView {
   constructor(points) {
     super();
 
-    // убрать объектный литерал
     this._data = points;
 
     this._moneyCart = null;
@@ -253,7 +243,7 @@ export default class Stats extends SmartView {
 
   getTemplate() {
 
-    return createStatisticsTemplate(this._data, StatsType);
+    return createStatisticsTemplate(this._data);
   }
 
   _setCharts() {
@@ -267,14 +257,13 @@ export default class Stats extends SmartView {
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
 
-    const BAR_HEIGHT = 55;
 
-    moneyCtx.height = BAR_HEIGHT * 6;
-    transportCtx.height = BAR_HEIGHT * 4;
-    timeSpendCtx.height = BAR_HEIGHT * 4;
+    moneyCtx.height = Stat.BAR_HEIGHT * 6;
+    transportCtx.height = Stat.BAR_HEIGHT * 4;
+    timeSpendCtx.height = Stat.BAR_HEIGHT * 4;
 
-    this._moneyCart = renderMoneyChart(moneyCtx, this._data);
-    this._transportCart = renderTransportChart(transportCtx, this._data);
-    this._spendCart = renderSpendChart(timeSpendCtx, this._data);
+    this._moneyCart = renderMoneyChart(moneyCtx, getPointByTypePrice(this._data));
+    this._transportCart = renderTransportChart(transportCtx, getTravelTypeByRepeats(this._data));
+    this._spendCart = renderSpendChart(timeSpendCtx, countTimeSpend(this._data));
   }
 }

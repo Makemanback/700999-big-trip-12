@@ -8,7 +8,7 @@ import PageSortingView from '../view/page-sorting.js';
 import StatsView from '../view/statistics.js';
 import {SortType} from '../view/page-sorting.js';
 
-import {UpdateType, UserAction, FilterType, StatsType} from '../const.js';
+import {UpdateType, UserAction, FilterType} from '../const.js';
 
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {formatDate, getTripStart, getTripEnd, isPointExpired} from '../utils/date.js';
@@ -35,7 +35,7 @@ export default class Trip {
     this._daysListComponent = new TripDaysListView();
     this._emptyDayComponent = new EmptyDayView();
 
-    this._statsComponent = new StatsView(this._pointsModel.get(), StatsType);
+    this._statsComponent = new StatsView(this._pointsModel.get());
     this._pageSortingComponent = null;
 
 
@@ -71,6 +71,7 @@ export default class Trip {
 
   _clearTrip() {
     this._restoreSortType();
+    this._deletePageSorting();
     this._pointNewPresenter.destroy();
 
     remove(this._daysListComponent);
@@ -91,6 +92,7 @@ export default class Trip {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
+
   _getPoints() {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.get();
@@ -233,6 +235,10 @@ export default class Trip {
     render(this._tripContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
   }
 
+  _deletePageSorting() {
+    remove(this._pageSortingComponent);
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -272,9 +278,6 @@ export default class Trip {
 
   _renderTrip() {
     this._renderPageSorting();
-
-    // this.renderStats();
-
     this._renderDaysList();
     this._renderTripInfo();
     this._renderDays();
