@@ -123,7 +123,11 @@ export default class Trip {
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.delete(updateType, update);
-        this._pointsModel.get().length > 0 ? this._renderTripInfo() : this._renderEmptyTripInfo();
+        if (this._pointsModel.get().length > 0) {
+          this._renderTripInfo();
+        } else {
+          this._renderEmptyTripInfo();
+        }
         break;
     }
   }
