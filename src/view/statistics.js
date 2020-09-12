@@ -10,7 +10,7 @@ const renderMoneyChart = (moneyCtx, points) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points).map((point) => `${point.toUpperCase()}`),
+      labels: Object.keys(points),
       datasets: [{
         data: Object.values(points),
         backgroundColor: `#ffffff`,
@@ -78,7 +78,7 @@ const renderTransportChart = (transportCtx, points) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points).map((point) => point.toUpperCase()),
+      labels: Object.keys(points),
       datasets: [{
         data: Object.values(points),
         backgroundColor: `#ffffff`,
@@ -145,7 +145,7 @@ const renderSpendChart = (timeSpendCtx, points) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points).map((point) => point.toUpperCase()),
+      labels: Object.keys(points),
       datasets: [{
         data: Object.values(points),
         backgroundColor: `#ffffff`,

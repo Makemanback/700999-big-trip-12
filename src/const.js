@@ -38,15 +38,15 @@ export const Stat = {
   BAR_HEIGHT: 55
 };
 
-export const pointTypeToEmoji = {
-  'taxi': `🚕`,
-  'bus': `🚌`,
-  'train': `🚂`,
-  'ship': `🛳`,
-  'transport': `🚊`,
-  'drive': `🚗`,
-  'flight': `✈️`,
-  'check-in': `🏨`,
-  'sightseeing': `🏛`,
-  'restaurant': `🍴`,
+export const ActionIcon = {
+  'Taxi': `🚕 TAXI`,
+  'Bus': `🚌 BUS`,
+  'Train': `🚂 TRAIN`,
+  'Ship': `🚢 SHIP`,
+  'Transport': `🚙 TRANSPORT`,
+  'Drive': `🚗 DRIVE`,
+  'Flight': `✈️ FLIGHT`,
+  'Check-in': `🏨 CHECK-IN`,
+  'Sightseeing': `🏛 SIGHTSEEING`,
+  'Restaurant': `🍴 RESTAURANT`
 };

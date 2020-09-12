@@ -81,3 +81,4 @@ if (pointsModel.areExist()) {
   handlePointNewFormClose(tripPresenter);
   tripPresenter.init();
 }
+

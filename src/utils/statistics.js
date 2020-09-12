@@ -1,19 +1,20 @@
-import {NonTravelPoint} from '../const.js';
+import {NonTravelPoint, ActionIcon} from '../const.js';
 import {Time} from '../mock/trip-day.js';
 
-
 const getUniqueMeanings = (array) => [...new Set(array)];
+
+
 // const createUniqeTypes = (points) => getUniqueMeanings(points.map((item) => item.type));
 const getTime = (start, end) => Math.round((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
+// console.log(ActionIcon[`Taxi`])
 
 export const getPointByTypePrice = (points) => {
   const obj = {};
-
   points.forEach(({type, price}) => {
     if (obj[type]) {
-      obj[type] += price;
+      obj[ActionIcon[type]] += price;
     } else {
-      obj[type] = price;
+      obj[ActionIcon[type]] = price;
     }
   });
 
@@ -26,9 +27,9 @@ export const countTimeSpend = (points) => {
   points.forEach(({type, schedule}) => {
 
     if (obj[type]) {
-      obj[type] += getTime(schedule.start, schedule.end);
+      obj[ActionIcon[type]] += getTime(schedule.start, schedule.end);
     } else {
-      obj[type] = getTime(schedule.start, schedule.end);
+      obj[ActionIcon[type]] = getTime(schedule.start, schedule.end);
     }
   });
   return obj;
@@ -44,7 +45,7 @@ export const getTravelTypeByRepeats = (points) => {
     .reduce((accumulator) => {
       return ++accumulator;
     }, 0);
-    obj[type] = repeation;
+    obj[ActionIcon[type]] = repeation;
   });
 
   return obj;
