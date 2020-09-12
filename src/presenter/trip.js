@@ -2,7 +2,7 @@ import TripDaysListView from '../view/trip-list.js';
 import TripDayView from '../view/trip-day.js';
 import TripInfoView from '../view/page-trip-info';
 import EmptyDayView from '../view/empty-trip-day.js';
-import EmptyTripInfoView from '../view/empty-trip-day.js';
+import EmptyTripInfoView from '../view/empty-trip-info.js';
 import NoPointsView from '../view/no-points.js';
 import PageSortingView from '../view/page-sorting.js';
 import StatsView from '../view/statistics.js';
@@ -34,10 +34,7 @@ export default class Trip {
 
     this._daysListComponent = new TripDaysListView();
     this._emptyDayComponent = new EmptyDayView();
-
-    this._statsComponent = new StatsView(this._pointsModel.get());
     this._pageSortingComponent = null;
-
 
     this._getStartDates = this._pointsModel.getStartDates();
 
@@ -126,11 +123,7 @@ export default class Trip {
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.delete(updateType, update);
-        if (this._pointsModel.get().length > 0) {
-          this._renderTripInfo();
-        } else {
-          this._renderEmptyTripInfo();
-        }
+        this._pointsModel.get().length > 0 ? this._renderTripInfo() : this._renderEmptyTripInfo();
         break;
     }
   }
@@ -208,9 +201,8 @@ export default class Trip {
     if (this._tripInfoComponent !== null) {
       remove(this._tripInfoComponent);
     }
-
     render(this._tripInfoContainer, this._emptyTripInfoComponent, RenderPosition.AFTERBEGIN);
-    render(this._datesContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderAllPoints() {
@@ -273,6 +265,7 @@ export default class Trip {
   }
 
   renderStats() {
+    this._statsComponent = new StatsView(this._pointsModel.get());
     render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }
 
