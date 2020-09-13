@@ -54,6 +54,9 @@ export default class Points extends Observer {
     }, 0);
   }
 
+  checkLength() {
+    return this._points.length > 0;
+  }
   update(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 

@@ -2,17 +2,17 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart.js";
 import {getPointByTypePrice, getTravelTypeByRepeats, countTimeSpend} from '../utils/statistics.js';
-import {Stat} from '../const.js';
+import {BAR_HEIGHT, StatsType} from '../const.js';
 
-const renderMoneyChart = (moneyCtx, points) => {
+const renderMoneyChart = (moneyCtx, typeToPrice) => {
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points),
+      labels: Object.keys(typeToPrice),
       datasets: [{
-        data: Object.values(points),
+        data: Object.values(typeToPrice),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#158deb`,
         anchor: `start`
@@ -72,15 +72,15 @@ const renderMoneyChart = (moneyCtx, points) => {
   });
 };
 
-const renderTransportChart = (transportCtx, points) => {
+const renderTransportChart = (transportCtx, typeToRepeation) => {
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points),
+      labels: Object.keys(typeToRepeation),
       datasets: [{
-        data: Object.values(points),
+        data: Object.values(typeToRepeation),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#158deb`,
         anchor: `start`
@@ -140,14 +140,14 @@ const renderTransportChart = (transportCtx, points) => {
   });
 };
 
-const renderSpendChart = (timeSpendCtx, points) => {
+const renderSpendChart = (timeSpendCtx, typeToDuration) => {
   return new Chart(timeSpendCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(points),
+      labels: Object.keys(typeToDuration),
       datasets: [{
-        data: Object.values(points),
+        data: Object.values(typeToDuration),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -243,7 +243,7 @@ export default class Stats extends SmartView {
 
   getTemplate() {
 
-    return createStatisticsTemplate(this._data);
+    return createStatisticsTemplate(StatsType);
   }
 
   _setCharts() {
@@ -258,9 +258,9 @@ export default class Stats extends SmartView {
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
 
 
-    moneyCtx.height = Stat.BAR_HEIGHT * 6;
-    transportCtx.height = Stat.BAR_HEIGHT * 4;
-    timeSpendCtx.height = Stat.BAR_HEIGHT * 4;
+    moneyCtx.height = BAR_HEIGHT * 6;
+    transportCtx.height = BAR_HEIGHT * 4;
+    timeSpendCtx.height = BAR_HEIGHT * 4;
 
     this._moneyCart = renderMoneyChart(moneyCtx, getPointByTypePrice(this._data));
     this._transportCart = renderTransportChart(transportCtx, getTravelTypeByRepeats(this._data));
