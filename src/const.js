@@ -19,7 +19,6 @@ export const FilterType = {
 export const MenuItem = {
   TABLE: `Table`,
   STATS: `Stats`,
-  NEW_EVENT: document.querySelector(`.trip-main__event-add-btn`)
 };
 
 export const StatsType = {
@@ -34,9 +33,8 @@ export const NonTravelPoint = {
   RESTAURANT: `Restaurant`
 };
 
-export const Stat = {
-  BAR_HEIGHT: 55
-};
+
+export const BAR_HEIGHT = 55;
 
 export const ActionIcon = {
   'Taxi': `🚕 TAXI`,

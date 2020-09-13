@@ -154,17 +154,17 @@ export default class Trip {
 
     const daysContainer = this._daysListComponent.getElement();
     const filterType = this._filterModel.getFilter();
-
+    // debugger
     this._pointsModel.getStartDates()
     .forEach((date, index) => {
       switch (filterType) {
-        case FilterType.FUTURE:
-          if (isPointExpired(date)) {
+        case FilterType.PAST:
+          if (!isPointExpired(date)) {
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;
-        case FilterType.PAST:
-          if (!isPointExpired(date)) {
+        case FilterType.FUTURE:
+          if (isPointExpired(date)) {
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;
