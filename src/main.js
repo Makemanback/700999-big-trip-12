@@ -5,10 +5,7 @@ import FilterModel from './model/filter.js';
 import PointsModel from './model/points.js';
 
 import PageMenuView from './view/page-menu.js';
-import NoPointsView from './view/no-points.js';
-import EmptyTripInfoView from './view/empty-trip-info.js';
 import NewEventView from './view/new-event-button.js';
-// import StatsView from './view/statistics.js';
 
 import {generateTripPoint} from './mock/trip-day.js';
 
@@ -18,7 +15,6 @@ import {MenuItem} from "./const.js";
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
-const pageTripEvents = document.querySelector(`.trip-events`);
 const pageTripMain = pageHeader.querySelector(`.trip-main`);
 const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
@@ -32,7 +28,7 @@ render(pageTripMain, newEventComponent, RenderPosition.BEFOREEND);
 
 const filterModel = new FilterModel();
 
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 2;
 
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 
@@ -52,33 +48,29 @@ const handlePointNewFormClose = (presenter) => {
   });
 };
 
-if (pointsModel.areExist()) {
-  render(pageTripMain, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
-  render(pageTripEvents, new NoPointsView(), RenderPosition.BEFOREEND);
-} else {
-  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent);
+const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent);
 
-  const handlePageMenuClick = (menuItem) => {
+const handlePageMenuClick = (menuItem) => {
 
-    switch (menuItem) {
-      case MenuItem.TABLE:
-        remove(statsComponent);
-        pageMenuComponent.setMenuItem(menuItem);
-        tripPresenter.clearStats();
-        tripPresenter.init();
-        break;
-      case MenuItem.STATS:
-        pageMenuComponent.setMenuItem(menuItem);
-        tripPresenter.destroy();
-        tripPresenter.renderStats();
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      remove(statsComponent);
+      pageMenuComponent.setMenuItem(menuItem);
+      tripPresenter.clearStats();
+      tripPresenter.init();
+      break;
+    case MenuItem.STATS:
+      pageMenuComponent.setMenuItem(menuItem);
+      tripPresenter.destroy();
+      tripPresenter.renderStats();
 
-        break;
-    }
-  };
+      break;
+  }
+};
 
-  pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
+pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
 
-  handlePointNewFormClose(tripPresenter);
-  tripPresenter.init();
-}
+handlePointNewFormClose(tripPresenter);
+tripPresenter.init();
+
 

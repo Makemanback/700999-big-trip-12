@@ -183,9 +183,11 @@ export default class Trip {
   }
 
   _initTripInfo() {
-    const startDate = getTripStart(this._getStartDates[0]);
-    const endDate = getTripEnd(this._getStartDates[this._getStartDates.length - 1]);
-    this._tripInfoComponent = new TripInfoView(this._pointsModel.getCities(), startDate, endDate, this._pointsModel.getPrice());
+    if (this._pointsModel.get().length >= 1) {
+      const startDate = getTripStart(this._getStartDates[0]);
+      const endDate = getTripEnd(this._getStartDates[this._getStartDates.length - 1]);
+      this._tripInfoComponent = new TripInfoView(this._pointsModel.getCities(), startDate, endDate, this._pointsModel.getPrice());
+    }
   }
 
   _renderTripInfo() {
@@ -193,8 +195,8 @@ export default class Trip {
       remove(this._tripInfoComponent);
     }
 
-    this._initTripInfo();
     if (this._pointsModel.get().length >= 1) {
+      this._initTripInfo();
       render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     }
 
@@ -274,6 +276,13 @@ export default class Trip {
   }
 
   _renderTrip() {
+
+    if (this._pointsModel.get().length < 1) {
+      render(this._tripInfoContainer, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
+      render(this._tripContainer, new NoPointsView(), RenderPosition.BEFOREEND);
+      return;
+    }
+
     this._renderPageSorting();
     this._renderDaysList();
     this._renderTripInfo();
