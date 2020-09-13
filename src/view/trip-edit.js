@@ -1,17 +1,13 @@
 import SmartView from "./smart.js";
-import {CITIES, generateRandomDescription, getAdditionalsByType, getRandomSchedule, Type} from '../mock/trip-day.js';
+import {DESTINATIONS, getPictures, getDescription, getAdditionalsByType, getRandomSchedule, Type} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export const BLANK_POINT = {
+  destination: DESTINATIONS[1],
   type: Type.TAXI,
-  city: `Amsterdam`,
   additionals: getAdditionalsByType(Type.TAXI),
-  pointInfo: {
-    description: generateRandomDescription(),
-    photo: `http://picsum.photos/248/152?r`
-  },
   schedule: getRandomSchedule(),
   price: ``,
 };
@@ -28,42 +24,45 @@ export const createTypeItemsTemplate = (type) => {
 };
 
 export const createAdditionals = (additionals) => {
-  return additionals.map(({isChecked, offer, cost}, index) => {
+  return additionals.map(({isChecked, title, price}, index) => {
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
-          <span class="event__offer-title">${offer}</span>
+          <span class="event__offer-title">${title}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${cost}</span>
+          &euro;&nbsp;<span class="event__offer-price">${price}</span>
         </label>
       </div>`
     );
   }).join(``);
 };
 
-export const createCities = (cities) => {
-  return cities.map((item) => {
+const createCities = (names) => {
+  return names.map((item) => {
     return (
       `<option value="${item}"></option>`
     );
   }).join(``);
 };
 
-export const createDescription = (city, description) => {
-  // в будущем поставить фотографии в блок, передать photo аргументом в этой функции
+const createPhotos = (pictures) => {
+  return pictures.map((item) => {
+    return (
+      `<img class="event__photo" src="${item.src}" alt="${item.description}">`
+    );
+  }).join(``);
+};
+export const createDescription = ({description, pictures}) => {
+
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${city} ${description}</p>
+      <p class="event__destination-description">${description}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+        ${createPhotos(pictures)}
         </div>
       </div>
       </section>
@@ -71,7 +70,8 @@ export const createDescription = (city, description) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite, start, end, description, photo}) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}) => {
+
   return (
     `<div>
     <form class="trip-events__item event event--edit" action="#" method="post">
@@ -103,9 +103,9 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type} to
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${createCities(CITIES)}
+            ${createCities(DESTINATIONS.map((destination) => destination.name))}
           </datalist>
         </div>
 
@@ -152,7 +152,7 @@ const createPageTripEditTemplate = ({additionals, price, type, city, isFavorite,
           </div>
         </section>
 
-        ${createDescription(city, description, photo)}
+        ${createDescription({description, pictures})}
       </section>
 
     </form>
@@ -227,11 +227,11 @@ export default class TripEdit extends SmartView {
 
 
   _eventDestinationHandler(evt) {
-
-
+    const city = evt.target.value;
     this.updateData({
-      city: evt.target.value,
-      description: generateRandomDescription()
+      name: evt.target.value,
+      description: getDescription(city),
+      pictures: getPictures(city)
     });
   }
 
@@ -319,7 +319,7 @@ export default class TripEdit extends SmartView {
   _setDestinationCheck() {
 
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
-    const validationValue = CITIES.some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
+    const validationValue = DESTINATIONS.map((destination) => destination.name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
   }
 
@@ -331,11 +331,11 @@ export default class TripEdit extends SmartView {
           isFavorite: point.isFavorite ? `checked` : ``,
           type: point.type,
           additionals: point.additionals,
-          city: point.city,
-          description: point.pointInfo.description,
-          photo: point.pointInfo.photo,
           price: point.price,
-          schedule: point.schedule
+          schedule: point.schedule,
+          name: point.destination.name,
+          description: point.destination.description,
+          pictures: point.destination.pictures
         }
     );
   }

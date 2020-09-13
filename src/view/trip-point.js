@@ -33,8 +33,8 @@ export const getTimeGap = (start, end) => {
 
 };
 
-const createTripPointTemplate = ({type, city, price, additionals, schedule}) => {
-
+const createTripPointTemplate = ({type, price, additionals, schedule, destination}) => {
+  const {name} = destination;
   const {start, end} = schedule;
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
   return (
@@ -43,7 +43,7 @@ const createTripPointTemplate = ({type, city, price, additionals, schedule}) => 
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="${type} icon">
           </div>
-          <h3 class="event__title">${type} to ${city}</h3>
+          <h3 class="event__title">${type} to ${name}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
@@ -102,7 +102,7 @@ export default class TripPoint extends SmartView {
         {
           type: point.type,
           additionals: point.additionals,
-          city: point.city,
+          name: point.destination.name,
           price: point.price,
           schedule: point.schedule
         }

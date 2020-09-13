@@ -6,6 +6,8 @@ import EmptyTripInfoView from '../view/empty-trip-info.js';
 import NoPointsView from '../view/no-points.js';
 import PageSortingView from '../view/page-sorting.js';
 import StatsView from '../view/statistics.js';
+import LoadingView from "../view/loading.js";
+
 import {SortType} from '../view/page-sorting.js';
 
 import {UpdateType, UserAction, FilterType} from '../const.js';
@@ -19,7 +21,7 @@ import PointPresenter from './point.js';
 import PointNewPresenter from "./point-new.js";
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel, newEventButton) {
+  constructor(tripContainer, pointsModel, filterModel, newEventButton, api) {
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
@@ -28,13 +30,15 @@ export default class Trip {
     this._tripContainer = tripContainer.querySelector(`.trip-events`);
 
     this._pointPresenter = {};
-
+    this._isLoading = true;
+    this._api = api;
 
     this._currentSortType = SortType.DEFAULT;
 
     this._daysListComponent = new TripDaysListView();
     this._emptyDayComponent = new EmptyDayView();
     this._pageSortingComponent = null;
+    this._loadingComponent = new LoadingView();
 
     this._getStartDates = this._pointsModel.getStartDates();
 
@@ -72,6 +76,7 @@ export default class Trip {
     this._pointNewPresenter.destroy();
 
     remove(this._daysListComponent);
+    remove(this._loadingComponent);
   }
 
   clearStats() {
@@ -116,14 +121,20 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.update(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.update(updateType, response);
+        });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.add(updateType, update);
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.delete(updateType, update);
-        this._pointsModel.get().length > 0 ? this._renderTripInfo() : this._renderEmptyTripInfo();
+        if (this._pointsModel.get().length > 0) {
+          this._renderTripInfo();
+        } else {
+          this._renderEmptyTripInfo();
+        }
         break;
     }
   }
@@ -137,9 +148,18 @@ export default class Trip {
         this._updatePointsList();
         break;
       case UpdateType.MAJOR:
-
+        // this._updatePointsList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
         break;
     }
+  }
+
+  _renderLoading() {
+    render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderDaysList() {
@@ -270,6 +290,12 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
+
     this._renderPageSorting();
     this._renderDaysList();
     this._renderTripInfo();

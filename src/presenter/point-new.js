@@ -1,5 +1,5 @@
 import TripEditView from '../view/trip-edit.js';
-import {generateId} from "../mock/trip-day.js";
+import {generateId} from "../utils/common.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 

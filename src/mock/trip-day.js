@@ -1,7 +1,6 @@
-import {getRandomInteger, shuffleArray, getRandomArrayElement, generateRandomBoolean, getAnyRandomInteger} from '../utils/common.js';
+import {getRandomInteger, getRandomArrayElement, generateRandomBoolean, getAnyRandomInteger} from '../utils/common.js';
 
 
-export const CITIES = [`Amsterdam`, `Dublin`, `London`, `Rome`, `Paris`, `Berlin`];
 export const Type = {
   TAXI: `Taxi`,
   BUS: `Bus`,
@@ -16,205 +15,259 @@ export const Type = {
 };
 export const ADDITIONALS = [
   {
-    offer: `Order Uber`,
-    cost: 20,
+    title: `Order Uber`,
+    price: 20,
     type: Type.TAXI,
     isChecked: false
   },
   {
-    offer: `Turn off music`,
-    cost: 10,
+    title: `Turn off music`,
+    price: 10,
     type: Type.TAXI,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 40,
+    title: `Switch to comfort`,
+    price: 40,
     type: Type.TAXI,
     isChecked: false
   },
   {
-    offer: `Add luggage`,
-    cost: 20,
+    title: `Add luggage`,
+    price: 20,
     type: Type.BUS,
     isChecked: false
   },
   {
-    offer: `Switch on conditioner`,
-    cost: 55,
+    title: `Switch on conditioner`,
+    price: 55,
     type: Type.BUS,
     isChecked: false
   },
   {
-    offer: `Open the window`,
-    cost: 7,
+    title: `Open the window`,
+    price: 7,
     type: Type.BUS,
     isChecked: false
   },
   {
-    offer: `Add breakfast`,
-    cost: 70,
+    title: `Add breakfast`,
+    price: 70,
     type: Type.TRAIN,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 45,
+    title: `Switch to comfort`,
+    price: 45,
     type: Type.TRAIN,
     isChecked: false
   },
   {
-    offer: `Pass the station`,
-    cost: 15,
+    title: `Pass the station`,
+    price: 15,
     type: Type.BUS,
     isChecked: false
   },
   {
-    offer: `Add luggage`,
-    cost: 40,
+    title: `Add luggage`,
+    price: 40,
     type: Type.SHIP,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 30,
+    title: `Switch to comfort`,
+    price: 30,
     type: Type.SHIP,
     isChecked: false
   },
   {
-    offer: `Turn off internet`,
-    cost: 1,
+    title: `Turn off internet`,
+    price: 1,
     type: Type.SHIP,
     isChecked: false
   },
   {
-    offer: `Use the horn`,
-    cost: 430,
+    title: `Use the horn`,
+    price: 430,
     type: Type.SHIP,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 40,
+    title: `Switch to comfort`,
+    price: 40,
     type: Type.TRANSPORT,
     isChecked: false
   },
   {
-    offer: `Use helicopter`,
-    cost: 500,
+    title: `Use helicopter`,
+    price: 500,
     type: Type.TRANSPORT,
     isChecked: false
   },
   {
-    offer: `Rent a car`,
-    cost: 140,
+    title: `Rent a car`,
+    price: 140,
     type: Type.DRIVE,
     isChecked: false
   },
   {
-    offer: `Add luggage`,
-    cost: 50,
+    title: `Add luggage`,
+    price: 50,
     type: Type.FLIGHT,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 80,
+    title: `Switch to comfort`,
+    price: 80,
     type: Type.FLIGHT,
     isChecked: false
   },
   {
-    offer: `Add meal`,
-    cost: 15,
+    title: `Add meal`,
+    price: 15,
     type: Type.FLIGHT,
     isChecked: false
   },
   {
-    offer: `Choose seats`,
-    cost: 5,
+    title: `Choose seats`,
+    price: 5,
     type: Type.FLIGHT,
     isChecked: false
   },
   {
-    offer: `Travel by train`,
-    cost: 40,
+    title: `Travel by train`,
+    price: 40,
     type: Type.FLIGHT,
     isChecked: false
   },
   {
-    offer: `Add breakfast`,
-    cost: 50,
+    title: `Add breakfast`,
+    price: 50,
     type: Type.CHECK_IN,
     isChecked: false
   },
   {
-    offer: `Switch to comfort`,
-    cost: 80,
+    title: `Switch to comfort`,
+    price: 80,
     type: Type.CHECK_IN,
     isChecked: false
   },
   {
-    offer: `Breakfast to the bed`,
-    cost: 60,
+    title: `Breakfast to the bed`,
+    price: 60,
     type: Type.CHECK_IN,
     isChecked: false
   },
   {
-    offer: `Book tickets`,
-    cost: 40,
+    title: `Book tickets`,
+    price: 40,
     type: Type.SIGHTSEEING,
     isChecked: false
   },
   {
-    offer: `Lunch in city`,
-    cost: 30,
+    title: `Lunch in city`,
+    price: 30,
     type: Type.SIGHTSEEING,
     isChecked: false
   },
   {
-    offer: `Add breakfast`,
-    cost: 40,
+    title: `Add breakfast`,
+    price: 40,
     type: Type.RESTAURANT,
     isChecked: false
   },
   {
-    offer: `Taste the best dish`,
-    cost: 250,
+    title: `Taste the best dish`,
+    price: 250,
     type: Type.RESTAURANT,
     isChecked: false
   },
   {
-    offer: `Add dinner`,
-    cost: 77,
+    title: `Add dinner`,
+    price: 77,
     type: Type.RESTAURANT,
     isChecked: false
   },
 ];
 
-const DESCRIPTIONS = [
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-  `Fusce tristique felis at fermentum pharetra.`,
-  `Aliquam id orci ut lectus varius viverra.`,
-  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-  `Aliquam erat volutpat.`,
-  `Nunc fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus.`
-];
+export const DESTINATIONS = [
+  {
+    description: `Amsterdam Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+    name: `Amsterdam`,
+    pictures: [
+      {
+        description: `Cafe`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Park`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Town`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+    ]
+  },
 
+  {
+    description: `Dublin Cras aliquet varius magna, non porta ligula feugiat eget.`,
+    name: `Dublin`,
+    pictures: [
+      {
+        description: `Museum`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Bar`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+    ]
+  },
+
+  {
+    description: `Paris Fusce tristique felis at fermentum pharetra.`,
+    name: `Paris`,
+    pictures: [
+      {
+        description: `River`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Beach`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Concert Hall`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Jail`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+    ]
+  },
+
+  {
+    description: `Rome Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+    name: `Rome`,
+    pictures: [
+      {
+        description: `Coliseum`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Big Theatre`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+      {
+        description: `Pigeon`,
+        src: `http://picsum.photos/248/152?r`,
+      },
+    ]
+  },
+];
 const generateType = () => getRandomArrayElement(Object.values(Type));
-
-export const generateCity = () => getRandomArrayElement(CITIES);
-
-export const generateRandomDescription = () => {
-  return shuffleArray(DESCRIPTIONS)
-  .slice(0, 5)
-  .slice(0, Math.random() * DESCRIPTIONS.length + 1)
-  .join(``);
-};
 
 export const Time = {
   DAY_GAP: 10,
@@ -250,21 +303,19 @@ export const getAdditionalsByType = (type) => {
     });
 };
 
+export const getDescription = (description) => DESTINATIONS.find((item) => item.name === description).description;
+export const getPictures = (photos) => DESTINATIONS.find((item) => item.name === photos).pictures;
+
 export const generateTripPoint = () => {
   const generateTypes = generateType();
   return {
     id: generateId(),
     type: generateTypes,
-    city: generateCity(),
     additionals: getAdditionalsByType(generateTypes),
-    pointInfo: {
-      description: generateRandomDescription(),
-      photo: `http://picsum.photos/248/152?r`
-    },
     schedule: getRandomSchedule(),
     price: getRandomInteger(Price.MIN, Price.MAX),
     isFavorite: false,
-
+    destination: getRandomArrayElement(DESTINATIONS)
   };
 };
 

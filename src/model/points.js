@@ -6,8 +6,10 @@ export default class Points extends Observer {
     this._points = [];
   }
 
-  set(points) {
+  set(updateType, points) {
     this._points = points.slice();
+
+    this._notify(updateType);
   }
 
   get() {
@@ -39,7 +41,7 @@ export default class Points extends Observer {
   }
 
   getCities() {
-    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
+    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.destination.name);
   }
 
   getPrice() {
@@ -90,5 +92,52 @@ export default class Points extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptToClient(point) {
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          price: point.base_price,
+          schedule: {
+            start: point.date_from = new Date(point.date_from),
+            end: point.date_to = new Date(point.date_to)
+          },
+          isFavorite: point.is_favorite,
+          additionals: point.offers,
+        }
+    );
+
+    // Ненужные ключи мы удаляем
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
+    delete adaptedPoint.offers;
+
+    return adaptedPoint;
+  }
+
+  static adaptToServer(point) {
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          'base_price': point.price,
+          'date_from': point.schedule.start instanceof Date ? point.schedule.start.toISOString() : null,
+          'date_to': point.schedule.end instanceof Date ? point.schedule.end.toISOString() : null,
+          "is_favorite": point.isFavorite,
+          'offers': point.additionals,
+        }
+    );
+
+    delete adaptedPoint.price;
+    delete adaptedPoint.schedule.start;
+    delete adaptedPoint.schedule.end;
+    delete adaptedPoint.isFavorite;
+    delete adaptedPoint.schedule.additionals;
+
+    return adaptedPoint;
   }
 }
