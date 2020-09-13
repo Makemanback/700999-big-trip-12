@@ -5,8 +5,6 @@ import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 
 import PageMenuView from './view/page-menu.js';
-import NoPointsView from './view/no-points.js';
-import EmptyTripInfoView from './view/empty-trip-info.js';
 import NewEventView from './view/new-event-button.js';
 
 import {render, RenderPosition, remove} from './utils/render.js';
@@ -19,7 +17,6 @@ const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageHeader = document.querySelector(`.page-header`);
-const pageTripEvents = document.querySelector(`.trip-events`);
 const pageTripMain = pageHeader.querySelector(`.trip-main`);
 const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
@@ -48,58 +45,48 @@ const handlePointNewFormClose = (presenter) => {
   });
 };
 
+
+// api.getPoints()
+// .then((points) => {
+//   pointsModel.set(UpdateType.INIT, points);
+//   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
+//   tripPresenter.init();
+//   remove(noPointsComponent);
+//   remove(emptyTripInfoComponent);
+// })
+// .catch(() => {
+//   pointsModel.set(UpdateType.INIT, []);
+// });
+
+const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
+
+const handlePageMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      remove(statsComponent);
+      pageMenuComponent.setMenuItem(menuItem);
+      tripPresenter.clearStats();
+      tripPresenter.init();
+      break;
+    case MenuItem.STATS:
+      pageMenuComponent.setMenuItem(menuItem);
+      tripPresenter.destroy();
+      tripPresenter.renderStats();
+      break;
+  }
+};
+
+pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
+
+handlePointNewFormClose(tripPresenter);
+
+tripPresenter.init();
+
 api.getPoints()
-.then((points) => {
-  pointsModel.set(UpdateType.INIT, points);
-})
-.catch(() => {
-  pointsModel.set(UpdateType.INIT, []);
-});
-
-
-if (pointsModel.areExist()) {
-  const emptyTripInfoComponent = new EmptyTripInfoView();
-  const noPointsComponent = new NoPointsView();
-  render(pageTripMain, emptyTripInfoComponent, RenderPosition.AFTERBEGIN);
-  render(pageTripEvents, noPointsComponent, RenderPosition.BEFOREEND);
-
-  api.getPoints()
   .then((points) => {
     pointsModel.set(UpdateType.INIT, points);
-    const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
-    tripPresenter.init();
-    remove(noPointsComponent);
-    remove(emptyTripInfoComponent);
   })
   .catch(() => {
     pointsModel.set(UpdateType.INIT, []);
   });
 
-} else {
-
-  const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
-
-  const handlePageMenuClick = (menuItem) => {
-
-    switch (menuItem) {
-      case MenuItem.TABLE:
-        remove(statsComponent);
-        pageMenuComponent.setMenuItem(menuItem);
-        tripPresenter.clearStats();
-        tripPresenter.init();
-        break;
-      case MenuItem.STATS:
-        pageMenuComponent.setMenuItem(menuItem);
-        tripPresenter.destroy();
-        tripPresenter.renderStats();
-        break;
-    }
-  };
-
-  pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
-
-  handlePointNewFormClose(tripPresenter);
-
-  tripPresenter.init();
-
-}

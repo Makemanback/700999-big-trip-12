@@ -39,10 +39,6 @@ export default class Trip {
     this._emptyDayComponent = new EmptyDayView();
     this._pageSortingComponent = null;
     this._loadingComponent = new LoadingView();
-
-    this._getStartDates = this._pointsModel.getStartDates();
-
-    this._initTripInfo();
     this._emptyDayComponent = new EmptyDayView();
     this._emptyTripInfoComponent = new EmptyTripInfoView();
     this._noPointsComponent = new NoPointsView();
@@ -151,6 +147,7 @@ export default class Trip {
         // this._updatePointsList();
         break;
       case UpdateType.INIT:
+
         this._isLoading = false;
         remove(this._loadingComponent);
         this._renderTrip();
@@ -170,7 +167,6 @@ export default class Trip {
 
     const daysContainer = this._daysListComponent.getElement();
     const filterType = this._filterModel.getFilter();
-    // debugger
     this._pointsModel.getStartDates()
     .forEach((date, index) => {
       switch (filterType) {
@@ -199,6 +195,7 @@ export default class Trip {
   }
 
   _initTripInfo() {
+    this._getStartDates = this._pointsModel.getStartDates();
     const startDate = getTripStart(this._getStartDates[0]);
     const endDate = getTripEnd(this._getStartDates[this._getStartDates.length - 1]);
     this._tripInfoComponent = new TripInfoView(this._pointsModel.getCities(), startDate, endDate, this._pointsModel.getPrice());
@@ -209,8 +206,8 @@ export default class Trip {
       remove(this._tripInfoComponent);
     }
 
-    this._initTripInfo();
     if (this._pointsModel.get().length >= 1) {
+      this._initTripInfo();
       render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     }
 
@@ -295,9 +292,17 @@ export default class Trip {
       return;
     }
 
+    const points = this._pointsModel.get();
+
+    if (points.length === 0) {
+      render(this._tripInfoContainer, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
+      render(this._tripContainer, new NoPointsView(), RenderPosition.BEFOREEND);
+      return;
+    }
 
     this._renderPageSorting();
     this._renderDaysList();
+    this._initTripInfo();
     this._renderTripInfo();
     this._renderDays();
     this._renderAllPoints();
