@@ -46,18 +46,6 @@ const handlePointNewFormClose = (presenter) => {
 };
 
 
-// api.getPoints()
-// .then((points) => {
-//   pointsModel.set(UpdateType.INIT, points);
-//   const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
-//   tripPresenter.init();
-//   remove(noPointsComponent);
-//   remove(emptyTripInfoComponent);
-// })
-// .catch(() => {
-//   pointsModel.set(UpdateType.INIT, []);
-// });
-
 const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
 
 const handlePageMenuClick = (menuItem) => {
@@ -84,17 +72,11 @@ tripPresenter.init();
 
 Promise.all([api.getPoints(), api.getDestinations()])
   .then(([points, destinations]) => {
-
     pointsModel.setDestinations(destinations);
+    console.log(destinations)
     pointsModel.set(UpdateType.INIT, points);
-
   })
   .catch((error) => {
     console.log(error)
     pointsModel.set(UpdateType.INIT, []);
   });
-
-// api.getDestinations()
-//   .then((destinations) => {
-//     pointsModel.setDestinations(destinations);
-//   });

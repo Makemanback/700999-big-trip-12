@@ -123,6 +123,7 @@ export default class Trip {
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.add(updateType, update);
+        this._renderTripInfo();
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.delete(updateType, update);
@@ -167,6 +168,7 @@ export default class Trip {
 
     const daysContainer = this._daysListComponent.getElement();
     const filterType = this._filterModel.getFilter();
+
     this._pointsModel.getStartDates()
     .forEach((date, index) => {
       switch (filterType) {
@@ -204,6 +206,10 @@ export default class Trip {
   _renderTripInfo() {
     if (this._tripInfoComponent !== null) {
       remove(this._tripInfoComponent);
+    }
+
+    if (this._emptyTripInfoComponent !== null) {
+      remove(this._emptyTripInfoComponent);
     }
 
     if (this._pointsModel.get().length >= 1) {
@@ -293,7 +299,7 @@ export default class Trip {
     }
 
     const points = this._pointsModel.get();
-    console.log(points)
+
     if (points.length === 0) {
       render(this._tripInfoContainer, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
       render(this._tripContainer, new NoPointsView(), RenderPosition.BEFOREEND);

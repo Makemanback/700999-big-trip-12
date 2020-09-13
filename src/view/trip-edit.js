@@ -71,7 +71,8 @@ export const createDescription = ({description, pictures}) => {
 };
 
 const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}, destinations) => {
-
+console.log(name)
+// console.log(destinations.map((destination) => destination.name))
   return (
     `<div>
     <form class="trip-events__item event event--edit" action="#" method="post">
@@ -242,7 +243,7 @@ export default class TripEdit extends SmartView {
 
     evt.preventDefault();
     this.updateData({
-      price: evt.target.value
+      price: +evt.target.value
     }, true);
   }
 

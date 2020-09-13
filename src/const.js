@@ -28,12 +28,7 @@ export const StatsType = {
   TIME_SPEND: `time-spend`
 };
 
-export const NonTravelPoint = {
-  CHECK_IN: `Check-in`,
-  SIGHTSEEING: `Sightseeing`,
-  RESTAURANT: `Restaurant`
-};
-
+export const NonTravelPoints = [`Check-in`, `Sightseeing`, `Restaurant`];
 
 export const BAR_HEIGHT = 55;
 
