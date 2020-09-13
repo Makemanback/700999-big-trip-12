@@ -85,8 +85,8 @@ tripPresenter.init();
 Promise.all([api.getPoints(), api.getDestinations()])
   .then(([points, destinations]) => {
 
-    pointsModel.set(UpdateType.INIT, points);
     pointsModel.setDestinations(destinations);
+    pointsModel.set(UpdateType.INIT, points);
 
   })
   .catch((error) => {
