@@ -28,7 +28,7 @@ render(pageTripMain, newEventComponent, RenderPosition.BEFOREEND);
 
 const filterModel = new FilterModel();
 
-const POINTS_COUNT = 2;
+const POINTS_COUNT = 10;
 
 const points = new Array(POINTS_COUNT).fill(``).map(generateTripPoint);
 

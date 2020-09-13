@@ -239,7 +239,7 @@ export default class TripEdit extends SmartView {
 
     evt.preventDefault();
     this.updateData({
-      price: evt.target.value
+      price: +evt.target.value
     }, true);
   }
 
