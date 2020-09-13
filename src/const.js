@@ -44,3 +44,16 @@ export const ActionIcon = {
   'Sightseeing': `🏛 SIGHTSEEING`,
   'Restaurant': `🍴 RESTAURANT`
 };
+
+export const Type = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`
+};

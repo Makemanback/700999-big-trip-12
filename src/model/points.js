@@ -5,6 +5,7 @@ export default class Points extends Observer {
     super();
     this._points = [];
     this._destinations = [];
+    this._offers = [];
   }
 
   set(updateType, points) {
@@ -18,12 +19,19 @@ export default class Points extends Observer {
   }
 
   setDestinations(destinations) {
-
     this._destinations = destinations.slice();
   }
 
   getDestinations() {
     return this._destinations;
+  }
+
+  setOffers(offers) {
+    this._offers = offers.slice();
+  }
+
+  getOffers() {
+    return this._offers;
   }
 
   areExist() {
@@ -67,6 +75,7 @@ export default class Points extends Observer {
   checkLength() {
     return this._points.length > 0;
   }
+
   update(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
@@ -114,8 +123,8 @@ export default class Points extends Observer {
         {
           price: point.base_price,
           schedule: {
-            start: point.date_from = new Date(point.date_from),
-            end: point.date_to = new Date(point.date_to)
+            start: point[`date_from`] = new Date(point.date_from),
+            end: point[`date_to`] = new Date(point.date_to)
           },
           isFavorite: point.is_favorite,
           additionals: point.offers,
@@ -133,6 +142,7 @@ export default class Points extends Observer {
   }
 
   static adaptToServer(point) {
+
     const adaptedPoint = Object.assign(
         {},
         point,
@@ -149,7 +159,7 @@ export default class Points extends Observer {
     delete adaptedPoint.schedule.start;
     delete adaptedPoint.schedule.end;
     delete adaptedPoint.isFavorite;
-    delete adaptedPoint.schedule.additionals;
+    delete adaptedPoint.additionals;
 
     return adaptedPoint;
   }

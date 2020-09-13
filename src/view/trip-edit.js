@@ -1,6 +1,7 @@
 import SmartView from "./smart.js";
-import {DESTINATIONS, getPictures, getDescription, getAdditionalsByType, getRandomSchedule, Type} from '../mock/trip-day.js';
+import {DESTINATIONS, getAdditionalsByType, getRandomSchedule} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
+import {Type} from '../const.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -24,11 +25,12 @@ export const createTypeItemsTemplate = (type) => {
 };
 
 export const createAdditionals = (additionals) => {
-  return additionals.map(({isChecked, title, price}, index) => {
+
+  return additionals.map(({title, price}, index) => {
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${index + 1}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-${index + 1}" type="checkbox" name="event-offer-${title}" >
+        <label class="event__offer-label" for="event-offer-${title}-${index + 1}">
           <span class="event__offer-title">${title}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${price}</span>
@@ -71,8 +73,7 @@ export const createDescription = ({description, pictures}) => {
 };
 
 const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}, destinations) => {
-console.log(name)
-// console.log(destinations.map((destination) => destination.name))
+
   return (
     `<div>
     <form class="trip-events__item event event--edit" action="#" method="post">
@@ -163,12 +164,12 @@ console.log(name)
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point = BLANK_POINT, destinations) {
-
+  constructor(point = BLANK_POINT, destinations, offers) {
     super();
     this._data = TripEdit.parsePointToData(point);
     this._datepicker = null;
     this._destinations = destinations;
+    this._offers = offers;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
 
@@ -185,15 +186,17 @@ export default class TripEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPageTripEditTemplate(this._data, this._destinations);
+    return createPageTripEditTemplate(this._data, this._destinations, this._offers);
   }
 
   _eventTypeHandler(evt) {
 
     const type = evt.target.innerText;
+
+    const offers = this._offers.filter((offer) => offer.type === type);
     this.updateData({
       type: evt.target.innerText,
-      additionals: getAdditionalsByType(type),
+      additionals: offers[0].offers,
     });
   }
 
@@ -232,10 +235,12 @@ export default class TripEdit extends SmartView {
 
   _eventDestinationHandler(evt) {
     const city = evt.target.value;
+    const destinationPoint = this._destinations.filter((destination) => destination.name === city);
+
     this.updateData({
       name: evt.target.value,
-      description: getDescription(city),
-      pictures: getPictures(city)
+      description: destinationPoint[0].description,
+      pictures: destinationPoint[0].pictures
     });
   }
 

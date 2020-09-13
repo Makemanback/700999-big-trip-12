@@ -117,6 +117,7 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.update(updateType, response);
         });
@@ -190,8 +191,7 @@ export default class Trip {
   }
 
   _renderPoint(daysList, point) {
-
-    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange, this._pointsModel.getDestinations());
+    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange, this._pointsModel.getDestinations(), this._pointsModel.getOffers());
     pointPresenter.init(daysList, point);
     this._pointPresenter[point.id] = pointPresenter;
   }
