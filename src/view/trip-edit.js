@@ -70,7 +70,7 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}, destinations) => {
 
   return (
     `<div>
@@ -105,7 +105,8 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${createCities(DESTINATIONS.map((destination) => destination.name))}
+            ${createCities(destinations.map((destination) => destination.name))}
+
           </datalist>
         </div>
 
@@ -161,10 +162,12 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, destinations) {
+
     super();
     this._data = TripEdit.parsePointToData(point);
     this._datepicker = null;
+    this._destinations = destinations;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
 
@@ -181,7 +184,7 @@ export default class TripEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPageTripEditTemplate(this._data);
+    return createPageTripEditTemplate(this._data, this._destinations);
   }
 
   _eventTypeHandler(evt) {
@@ -319,7 +322,7 @@ export default class TripEdit extends SmartView {
   _setDestinationCheck() {
 
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
-    const validationValue = DESTINATIONS.map((destination) => destination.name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
+    const validationValue = this._destinations.map((item) => item.name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
   }
 

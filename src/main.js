@@ -82,11 +82,19 @@ handlePointNewFormClose(tripPresenter);
 
 tripPresenter.init();
 
-api.getPoints()
-  .then((points) => {
+Promise.all([api.getPoints(), api.getDestinations()])
+  .then(([points, destinations]) => {
+
     pointsModel.set(UpdateType.INIT, points);
+    pointsModel.setDestinations(destinations);
+
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log(error)
     pointsModel.set(UpdateType.INIT, []);
   });
 
+// api.getDestinations()
+//   .then((destinations) => {
+//     pointsModel.setDestinations(destinations);
+//   });

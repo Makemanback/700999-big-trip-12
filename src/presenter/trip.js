@@ -189,7 +189,7 @@ export default class Trip {
 
   _renderPoint(daysList, point) {
 
-    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange, this._pointsModel.getDestinations());
     pointPresenter.init(daysList, point);
     this._pointPresenter[point.id] = pointPresenter;
   }
@@ -293,7 +293,7 @@ export default class Trip {
     }
 
     const points = this._pointsModel.get();
-
+    console.log(points)
     if (points.length === 0) {
       render(this._tripInfoContainer, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);
       render(this._tripContainer, new NoPointsView(), RenderPosition.BEFOREEND);
