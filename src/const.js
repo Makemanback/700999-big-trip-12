@@ -1,3 +1,16 @@
+export const Type = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`
+};
+
 export const UserAction = {
   UPDATE_POINT: `UPDATE_POINT`,
   ADD_POINT: `ADD_POINT`,
@@ -28,8 +41,8 @@ export const StatsType = {
   TIME_SPEND: `time-spend`
 };
 
-export const NonTravelPoints = [`Check-in`, `Sightseeing`, `Restaurant`];
 
+export const NonTravelPoints = [Type.CHECK_IN, Type.SIGHTSEEING, Type.RESTAURANT];
 export const BAR_HEIGHT = 55;
 
 export const ActionIcon = {
@@ -45,15 +58,4 @@ export const ActionIcon = {
   'Restaurant': `🍴 RESTAURANT`
 };
 
-export const Type = {
-  TAXI: `taxi`,
-  BUS: `bus`,
-  TRAIN: `train`,
-  SHIP: `ship`,
-  TRANSPORT: `transport`,
-  DRIVE: `drive`,
-  FLIGHT: `flight`,
-  CHECK_IN: `check-in`,
-  SIGHTSEEING: `sightseeing`,
-  RESTAURANT: `restaurant`
-};
+

@@ -72,7 +72,9 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, description, name, pictures}, destinations) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, name, end, description, pictures}, destinations) => {
+  // const {name} = destinations;
+  // debugger
 
   return (
     `<div>
@@ -135,7 +137,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite}>
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -192,11 +194,11 @@ export default class TripEdit extends SmartView {
   _eventTypeHandler(evt) {
 
     const type = evt.target.innerText;
+    const offers = this._offers.find((offer) => offer.type === type);
 
-    const offers = this._offers.filter((offer) => offer.type === type);
     this.updateData({
-      type: evt.target.innerText,
-      additionals: offers[0].offers,
+      type,
+      additionals: offers.offers,
     });
   }
 
@@ -235,12 +237,12 @@ export default class TripEdit extends SmartView {
 
   _eventDestinationHandler(evt) {
     const city = evt.target.value;
-    const destinationPoint = this._destinations.filter((destination) => destination.name === city);
+    const destinationPoint = this._destinations.find(({name}) => name === city);
 
     this.updateData({
-      name: evt.target.value,
-      description: destinationPoint[0].description,
-      pictures: destinationPoint[0].pictures
+      name: city,
+      description: destinationPoint.description,
+      pictures: destinationPoint.pictures
     });
   }
 
@@ -266,7 +268,7 @@ export default class TripEdit extends SmartView {
 
   _favoriteClickHandler() {
     this.updateData({
-      isFavorite: !this._data.isFavorite ? `checked` : ``
+      isFavorite: !this._data.isFavorite
     });
   }
 
@@ -326,9 +328,9 @@ export default class TripEdit extends SmartView {
   }
 
   _setDestinationCheck() {
-
+    // бросает ошибку при пустомм инпуте
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
-    const validationValue = this._destinations.map((item) => item.name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
+    const validationValue = this._destinations.map(({name}) => name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
   }
 
@@ -337,12 +339,13 @@ export default class TripEdit extends SmartView {
         {},
         point,
         {
-          isFavorite: point.isFavorite ? `checked` : ``,
+          isFavorite: point.isFavorite,
           type: point.type,
           additionals: point.additionals,
           price: point.price,
           schedule: point.schedule,
           name: point.destination.name,
+          destination: point.destination,
           description: point.destination.description,
           pictures: point.destination.pictures
         }
@@ -350,7 +353,7 @@ export default class TripEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
-
+    // console.log(data);
     return Object.assign({}, data);
   }
 

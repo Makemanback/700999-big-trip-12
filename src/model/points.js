@@ -59,7 +59,7 @@ export default class Points extends Observer {
   }
 
   getCities() {
-    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.destination.name);
+    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map(({destination}) => destination.name);
   }
 
   getPrice() {
