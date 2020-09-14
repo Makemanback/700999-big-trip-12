@@ -18,5 +18,28 @@ export const FilterType = {
 
 export const MenuItem = {
   TABLE: `Table`,
-  STATS: `Stats`
+  STATS: `Stats`,
+};
+
+export const StatsType = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPEND: `time-spend`
+};
+
+export const NonTravelPoints = [`Check-in`, `Sightseeing`, `Restaurant`];
+
+export const BAR_HEIGHT = 55;
+
+export const ActionIcon = {
+  'Taxi': `🚕 TAXI`,
+  'Bus': `🚌 BUS`,
+  'Train': `🚂 TRAIN`,
+  'Ship': `🚢 SHIP`,
+  'Transport': `🚙 TRANSPORT`,
+  'Drive': `🚗 DRIVE`,
+  'Flight': `✈️ FLIGHT`,
+  'Check-in': `🏨 CHECK-IN`,
+  'Sightseeing': `🏛 SIGHTSEEING`,
+  'Restaurant': `🍴 RESTAURANT`
 };
