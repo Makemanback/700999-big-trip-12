@@ -4,14 +4,19 @@ import {Type} from '../const.js';
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export const BLANK_POINT = {
-  type: Type.TAXI,
-  city: `Amsterdam`,
-  additionals: getAdditionalsByType(Type.TAXI),
-  pointInfo: {
-    description: generateRandomDescription(),
-    photo: `http://picsum.photos/248/152?r`
+  isFavorite: false,
+  type: `taxi`,
+  destination: {
+    name: `Amsterdam`
   },
-  schedule: getRandomSchedule(),
+  // pointInfo: {
+  //   description: null,
+  //   photo: `http://picsum.photos/248/152?r`
+  // },
+  schedule: {
+    start: new Date(),
+    end: new Date()
+  },
   price: ``,
 };
 
@@ -154,7 +159,8 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point = BLANK_POINT, destinations, offers) {
+  constructor(point = getBlankPoint(), destinations, offers) {
+
     super();
     this._data = TripEdit.parsePointToData(point);
     this._datepicker = null;

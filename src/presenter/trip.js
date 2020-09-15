@@ -325,3 +325,4 @@ export default class Trip {
     this._renderAllPoints();
   }
 }
+
