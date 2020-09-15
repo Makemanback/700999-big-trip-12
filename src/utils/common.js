@@ -55,4 +55,3 @@ export const getAnyRandomInteger = (a = 0, b = 1) => {
   return generateRandomBoolean() ? value : -value;
 };
 
-export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
