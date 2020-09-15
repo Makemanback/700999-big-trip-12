@@ -238,13 +238,19 @@ export default class TripEdit extends SmartView {
     const city = evt.target.value;
     const destinationPoint = this._destinations.find(({name}) => name === city);
 
-    this.updateData({
-      destination: {
-        name: city,
-        description: destinationPoint.description,
-        pictures: destinationPoint.pictures
-      }
-    });
+    const cityInput = this.getElement().querySelector(`.event__input--destination`);
+    const validationValue = this._destinations.map(({name}) => name).some((item) => item === cityInput.value) && cityInput.value !== `` ? `` : `Please choose city from the list`;
+    cityInput.setCustomValidity(validationValue);
+
+    if (validationValue === ``) {
+      this.updateData({
+        destination: {
+          name: city,
+          description: destinationPoint.description,
+          pictures: destinationPoint.pictures
+        }
+      });
+    }
   }
 
   _eventPriceHandler(evt) {
@@ -283,7 +289,6 @@ export default class TripEdit extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelectorAll(`.event__type-label`).forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationHandler);
-    this._setDestinationCheck();
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
@@ -326,14 +331,6 @@ export default class TripEdit extends SmartView {
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
-  _setDestinationCheck() {
-    // бросает ошибку при пустомм инпуте
-    const cityInput = this.getElement().querySelector(`.event__input--destination`);
-    // console.log(this._destinations.map(({name}) => name).some((item) => item === cityInput.value) !== ``)
-    const validationValue = this._destinations.map(({name}) => name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
-    cityInput.setCustomValidity(validationValue);
   }
 
   static parsePointToData(point) {

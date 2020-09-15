@@ -129,8 +129,7 @@ export default class Points extends Observer {
           },
           isFavorite: point.is_favorite,
           additionals: point.offers,
-        }
-    );
+        });
 
     // Ненужные ключи мы удаляем
     delete adaptedPoint.base_price;
