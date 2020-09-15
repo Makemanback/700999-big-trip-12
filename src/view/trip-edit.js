@@ -1,17 +1,8 @@
 import SmartView from "./smart.js";
-import {DESTINATIONS, getAdditionalsByType, getRandomSchedule} from '../mock/trip-day.js';
 import flatpickr from "flatpickr";
 import {Type} from '../const.js';
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-
-export const BLANK_POINT = {
-  destination: DESTINATIONS[1],
-  type: Type.TAXI,
-  additionals: getAdditionalsByType(Type.TAXI),
-  schedule: getRandomSchedule(),
-  price: ``,
-};
 
 export const createTypeItemsTemplate = (type) => {
   return type.map((pointType) => {

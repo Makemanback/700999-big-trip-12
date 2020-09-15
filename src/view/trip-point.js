@@ -1,5 +1,5 @@
 import SmartView from "./smart.js";
-import {Time} from '../mock/trip-day.js';
+import {Time} from '../const.js';
 
 export const createAdditionals = (arr) => {
   return arr

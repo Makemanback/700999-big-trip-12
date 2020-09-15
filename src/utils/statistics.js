@@ -1,5 +1,4 @@
-import {NonTravelPoints, ActionIcon} from '../const.js';
-import {Time} from '../mock/trip-day.js';
+import {NonTravelPoints, ActionIcon, Time} from '../const.js';
 
 const getTime = (start, end) => Math.round((end - start) / Time.MILLISECONDS / Time.SECONDS / Time.MINUTES);
 
