@@ -77,11 +77,10 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
     pointsModel.setOffers(offers);
     pointsModel.setDestinations(destinations);
     pointsModel.set(UpdateType.INIT, points);
-    // console.log(pointsModel.get());
   })
   .catch((
-      error
+      // error
   ) => {
-    console.log(error);
+    // console.log(error);
     pointsModel.set(UpdateType.INIT, []);
   });

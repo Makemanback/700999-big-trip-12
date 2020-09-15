@@ -329,7 +329,6 @@ export default class TripEdit extends SmartView {
   }
 
 
-
   _eventPriceHandler(evt) {
 
     evt.preventDefault();

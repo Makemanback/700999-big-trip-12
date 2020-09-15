@@ -120,12 +120,13 @@ export default class Trip {
 
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.update(updateType, response);
+          this._renderTripInfo();
         });
 
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.add(updateType, update);
-        this._renderTripInfo();
+
         break;
       case UserAction.DELETE_POINT:
         this._pointsModel.delete(updateType, update);

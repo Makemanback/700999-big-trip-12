@@ -101,7 +101,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${createCities(destinations.map((destination) => destination.name))}
+            ${createCities(destinations.map(({name: city}) => city))}
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
@@ -189,7 +189,7 @@ export default class TripEdit extends SmartView {
   }
 
   _offersChangeHandler(evt) {
-    const offerTarget = evt.target
+    const offerTarget = evt.target;
     const currentOffer = this._getAllOffersByType(this._data.type).find(({title}) => title === offerTarget.name);
 
     if (offerTarget.checked) {
@@ -198,7 +198,7 @@ export default class TripEdit extends SmartView {
         additionals: [...this._data.additionals, currentOffer],
       });
     } else {
-      this._uncheckedOffers = [...this._uncheckedOffers, currentOffer]
+      this._uncheckedOffers = [...this._uncheckedOffers, currentOffer];
       this.updateData({
         additionals: this._data.additionals.filter(({title}) => title !== offerTarget.name)
       });
@@ -312,7 +312,7 @@ export default class TripEdit extends SmartView {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
     this.getElement().querySelectorAll(`.event__offer-checkbox`)
-      .forEach((item) => item.addEventListener(`click`, this._offersChangeHandler))
+      .forEach((item) => item.addEventListener(`click`, this._offersChangeHandler));
   }
 
   removeElement() {
