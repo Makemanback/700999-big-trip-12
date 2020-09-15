@@ -1,8 +1,20 @@
 import SmartView from "./smart.js";
 import flatpickr from "flatpickr";
 import {Type} from '../const.js';
-
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
+export const BLANK_POINT = {
+  type: Type.TAXI,
+  city: ``,
+  additionals: [],
+  pointInfo: {
+    description: ``,
+    photo: `http://picsum.photos/248/152?r`
+  },
+  schedule: ``,
+  price: ``,
+};
+
 
 export const createTypeItemsTemplate = (type) => {
   return type.map((pointType) => {
