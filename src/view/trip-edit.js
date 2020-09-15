@@ -331,6 +331,7 @@ export default class TripEdit extends SmartView {
   _setDestinationCheck() {
     // бросает ошибку при пустомм инпуте
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
+    // console.log(this._destinations.map(({name}) => name).some((item) => item === cityInput.value) !== ``)
     const validationValue = this._destinations.map(({name}) => name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
   }

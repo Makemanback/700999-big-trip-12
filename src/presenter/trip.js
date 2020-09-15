@@ -197,6 +197,11 @@ export default class Trip {
   }
 
   _initTripInfo() {
+
+    if (this._tripInfoComponent) {
+      remove(this._tripInfoComponent);
+    }
+
     const startDates = this._pointsModel.getStartDates();
     const startDate = getTripStart(startDates[0]);
     const endDate = getTripEnd(startDates[startDates.length - 1]);
@@ -216,7 +221,6 @@ export default class Trip {
       this._initTripInfo();
       render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     }
-
   }
 
 
@@ -297,6 +301,7 @@ export default class Trip {
       this._renderLoading();
       return;
     }
+
 
     if (this._pointsModel.areExist()) {
       render(this._tripInfoContainer, new EmptyTripInfoView(), RenderPosition.AFTERBEGIN);

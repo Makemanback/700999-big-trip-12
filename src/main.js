@@ -52,6 +52,7 @@ const handlePageMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
       remove(statsComponent);
+
       pageMenuComponent.setMenuItem(menuItem);
       tripPresenter.clearStats();
       tripPresenter.init();
@@ -76,7 +77,7 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
     pointsModel.setOffers(offers);
     pointsModel.setDestinations(destinations);
     pointsModel.set(UpdateType.INIT, points);
-    console.log(pointsModel.get());
+    // console.log(pointsModel.get());
   })
   .catch((
       // error
