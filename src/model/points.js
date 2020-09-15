@@ -117,6 +117,7 @@ export default class Points extends Observer {
   }
 
   static adaptToClient(point) {
+
     const adaptedPoint = Object.assign(
         {},
         point,
@@ -137,6 +138,7 @@ export default class Points extends Observer {
     delete adaptedPoint.date_to;
     delete adaptedPoint.is_favorite;
     delete adaptedPoint.offers;
+    delete adaptedPoint.pictures;
 
     return adaptedPoint;
   }
@@ -160,6 +162,9 @@ export default class Points extends Observer {
     delete adaptedPoint.schedule.end;
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.additionals;
+    delete adaptedPoint.pictures;
+    delete adaptedPoint.description;
+    delete adaptedPoint.name;
 
     return adaptedPoint;
   }

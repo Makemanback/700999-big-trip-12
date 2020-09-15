@@ -72,9 +72,8 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, name, end, description, pictures}, destinations) => {
-  // const {name} = destinations;
-  // debugger
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, destination}, destinations) => {
+  const {name, description, pictures} = destination;
 
   return (
     `<div>
@@ -240,9 +239,11 @@ export default class TripEdit extends SmartView {
     const destinationPoint = this._destinations.find(({name}) => name === city);
 
     this.updateData({
-      name: city,
-      description: destinationPoint.description,
-      pictures: destinationPoint.pictures
+      destination: {
+        name: city,
+        description: destinationPoint.description,
+        pictures: destinationPoint.pictures
+      }
     });
   }
 

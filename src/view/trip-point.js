@@ -101,13 +101,13 @@ export default class TripPoint extends SmartView {
         {},
         point,
         {
-          // type: point.type,
-          // additionals: point.additionals,
-          // // name: point.destination.name,
-          // price: point.price,
-          // schedule: point.schedule,
+          type: point.type,
+          additionals: point.additionals,
+          // name: point.destination.name,
+          price: point.price,
+          schedule: point.schedule,
 
-          // destination: point.destination,
+          destination: point.destination,
 
 
         }
