@@ -5,13 +5,13 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export const BLANK_POINT = {
   type: Type.TAXI,
-  city: ``,
-  additionals: [],
+  city: `Amsterdam`,
+  additionals: getAdditionalsByType(Type.TAXI),
   pointInfo: {
-    description: ``,
+    description: generateRandomDescription(),
     photo: `http://picsum.photos/248/152?r`
   },
-  schedule: ``,
+  schedule: getRandomSchedule(),
   price: ``,
 };
 
