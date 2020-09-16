@@ -159,7 +159,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point = getBlankPoint(), destinations, offers) {
+  constructor(point = BLANK_POINT, destinations, offers) {
 
     super();
     this._data = TripEdit.parsePointToData(point);
