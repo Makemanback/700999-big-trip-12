@@ -1,3 +1,25 @@
+export const Time = {
+  DAY_GAP: 10,
+  HOUR_GAP: 20,
+  HOURS: 24,
+  MINUTES: 60,
+  SECONDS: 60,
+  MILLISECONDS: 1000
+};
+
+export const Type = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`
+};
+
 export const UserAction = {
   UPDATE_POINT: `UPDATE_POINT`,
   ADD_POINT: `ADD_POINT`,
@@ -7,7 +29,8 @@ export const UserAction = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 export const FilterType = {
@@ -27,19 +50,19 @@ export const StatsType = {
   TIME_SPEND: `time-spend`
 };
 
-export const NonTravelPoints = [`Check-in`, `Sightseeing`, `Restaurant`];
 
+export const NonTravelPoints = [Type.CHECK_IN, Type.SIGHTSEEING, Type.RESTAURANT];
 export const BAR_HEIGHT = 55;
 
 export const ActionIcon = {
-  'Taxi': `🚕 TAXI`,
-  'Bus': `🚌 BUS`,
-  'Train': `🚂 TRAIN`,
-  'Ship': `🚢 SHIP`,
-  'Transport': `🚙 TRANSPORT`,
-  'Drive': `🚗 DRIVE`,
-  'Flight': `✈️ FLIGHT`,
-  'Check-in': `🏨 CHECK-IN`,
-  'Sightseeing': `🏛 SIGHTSEEING`,
-  'Restaurant': `🍴 RESTAURANT`
+  'taxi': `🚕 TAXI`,
+  'bus': `🚌 BUS`,
+  'train': `🚂 TRAIN`,
+  'ship': `🚢 SHIP`,
+  'transport': `🚙 TRANSPORT`,
+  'drive': `🚗 DRIVE`,
+  'flight': `✈️ FLIGHT`,
+  'check-in': `🏨 CHECK-IN`,
+  'sightseeing': `🏛 SIGHTSEEING`,
+  'restaurant': `🍴 RESTAURANT`
 };

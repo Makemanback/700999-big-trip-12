@@ -4,14 +4,34 @@ export default class Points extends Observer {
   constructor() {
     super();
     this._points = [];
+    this._destinations = [];
+    this._offers = [];
   }
 
-  set(points) {
+  set(updateType, points) {
     this._points = points.slice();
+
+    this._notify(updateType);
   }
 
   get() {
     return this._points;
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations.slice();
+  }
+
+  getDestinations() {
+    return this._destinations;
+  }
+
+  setOffers(offers) {
+    this._offers = offers.slice();
+  }
+
+  getOffers() {
+    return this._offers;
   }
 
   areExist() {
@@ -39,7 +59,7 @@ export default class Points extends Observer {
   }
 
   getCities() {
-    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map((item) => item.city);
+    return this._points.slice().sort((a, b) => a.schedule.start - b.schedule.start).map(({destination}) => destination.name);
   }
 
   getPrice() {
@@ -50,6 +70,10 @@ export default class Points extends Observer {
 
       return offersTotalPrice + accumulator + price;
     }, 0);
+  }
+
+  checkLength() {
+    return this._points.length > 0;
   }
 
   update(updateType, update) {
@@ -90,5 +114,57 @@ export default class Points extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptToClient(point) {
+
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          price: point.base_price,
+          schedule: {
+            start: point[`date_from`] = new Date(point.date_from),
+            end: point[`date_to`] = new Date(point.date_to)
+          },
+          isFavorite: point.is_favorite,
+          additionals: point.offers,
+        });
+
+    // Ненужные ключи мы удаляем
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
+    delete adaptedPoint.offers;
+    delete adaptedPoint.pictures;
+
+    return adaptedPoint;
+  }
+
+  static adaptToServer(point) {
+
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          'base_price': point.price,
+          'date_from': point.schedule.start instanceof Date ? point.schedule.start.toISOString() : null,
+          'date_to': point.schedule.end instanceof Date ? point.schedule.end.toISOString() : null,
+          "is_favorite": point.isFavorite,
+          'offers': point.additionals,
+        }
+    );
+
+    delete adaptedPoint.price;
+    delete adaptedPoint.schedule.start;
+    delete adaptedPoint.schedule.end;
+    delete adaptedPoint.isFavorite;
+    delete adaptedPoint.additionals;
+    delete adaptedPoint.pictures;
+    delete adaptedPoint.description;
+    delete adaptedPoint.name;
+
+    return adaptedPoint;
   }
 }

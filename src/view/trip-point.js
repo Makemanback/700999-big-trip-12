@@ -1,16 +1,15 @@
 import SmartView from "./smart.js";
-import {Time} from '../mock/trip-day.js';
+import {Time} from '../const.js';
 
 export const createAdditionals = (arr) => {
   return arr
   .slice(0, 3)
-  .filter(({isChecked}) => isChecked === true)
-  .map(({offer, cost}) => {
+  .map(({title, price}) => {
     return (
       `<li class="event__offer">
-        <span class="event__offer-title">${offer}</span>
+        <span class="event__offer-title">${title}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${cost}</span>
+        &euro;&nbsp;<span class="event__offer-price">${price}</span>
       </li>`
     );
   }).join(``);
@@ -33,7 +32,8 @@ export const getTimeGap = (start, end) => {
 
 };
 
-const createTripPointTemplate = ({type, city, price, additionals, schedule}) => {
+const createTripPointTemplate = ({type, price, additionals, schedule, destination}) => {
+  const {name} = destination;
 
   const {start, end} = schedule;
   const formatDate = (day) => day.toLocaleString(`ru-RU`, {hour: `numeric`, minute: `numeric`});
@@ -43,7 +43,7 @@ const createTripPointTemplate = ({type, city, price, additionals, schedule}) => 
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="${type} icon">
           </div>
-          <h3 class="event__title">${type} to ${city}</h3>
+          <h3 class="event__title">${type} to ${name}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
@@ -102,9 +102,13 @@ export default class TripPoint extends SmartView {
         {
           type: point.type,
           additionals: point.additionals,
-          city: point.city,
+          // name: point.destination.name,
           price: point.price,
-          schedule: point.schedule
+          schedule: point.schedule,
+
+          destination: point.destination,
+
+
         }
     );
   }
