@@ -7,15 +7,14 @@ export const BLANK_POINT = {
   isFavorite: false,
   type: `taxi`,
   destination: {
-    name: `Amsterdam`
+    name: ``,
+    description: ``,
+    pictures: []
   },
-  // pointInfo: {
-  //   description: null,
-  //   photo: `http://picsum.photos/248/152?r`
-  // },
+  additionals: [],
   schedule: {
-    start: new Date(),
-    end: new Date()
+    start: Date.now(),
+    end: Date.now()
   },
   price: ``,
 };
@@ -79,7 +78,7 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, destination}, destinations, uncheckedOffers) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, destination, isDisabled, isDeleting, isSaving}, destinations, uncheckedOffers) => {
   const {name, description, pictures} = destination;
 
   return (
@@ -130,8 +129,8 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
           </label>
           <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
         </div>
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? `disabled` : ``}>${isSaving ? `saving` : `Save`}</button>
+        <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${isDeleting ? `deleting...` : `Delete`}</button>
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
@@ -159,7 +158,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
 };
 
 export default class TripEdit extends SmartView {
-  constructor(point = BLANK_POINT, destinations, offers) {
+  constructor(destinations, offers, point = BLANK_POINT) {
 
     super();
     this._data = TripEdit.parsePointToData(point);
@@ -377,13 +376,19 @@ export default class TripEdit extends SmartView {
           name: point.destination.name,
           destination: point.destination,
           description: point.destination.description,
-          pictures: point.destination.pictures
+          pictures: point.destination.pictures,
+          isDeleting: false,
+          isSaving: false,
+          isDisabled: false
         }
     );
   }
 
   static parseDataToPoint(data) {
-    // console.log(data);
+    delete data.isDeleting;
+    delete data.isSaving;
+    delete data.isDisabled;
+
     return Object.assign({}, data);
   }
 

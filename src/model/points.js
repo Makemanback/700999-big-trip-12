@@ -157,8 +157,6 @@ export default class Points extends Observer {
     );
 
     delete adaptedPoint.price;
-    delete adaptedPoint.schedule.start;
-    delete adaptedPoint.schedule.end;
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.additionals;
     delete adaptedPoint.pictures;

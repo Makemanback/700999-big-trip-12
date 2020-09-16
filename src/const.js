@@ -55,14 +55,14 @@ export const NonTravelPoints = [Type.CHECK_IN, Type.SIGHTSEEING, Type.RESTAURANT
 export const BAR_HEIGHT = 55;
 
 export const ActionIcon = {
-  'taxi': `🚕 TAXI`,
-  'bus': `🚌 BUS`,
-  'train': `🚂 TRAIN`,
-  'ship': `🚢 SHIP`,
-  'transport': `🚙 TRANSPORT`,
-  'drive': `🚗 DRIVE`,
-  'flight': `✈️ FLIGHT`,
-  'check-in': `🏨 CHECK-IN`,
-  'sightseeing': `🏛 SIGHTSEEING`,
-  'restaurant': `🍴 RESTAURANT`
+  [Type.TAXI]: `🚕 TAXI`,
+  [Type.BUS]: `🚌 BUS`,
+  [Type.TRAIN]: `🚂 TRAIN`,
+  [Type.SHIP]: `🚢 SHIP`,
+  [Type.TRANSPORT]: `🚙 TRANSPORT`,
+  [Type.DRIVE]: `🚗 DRIVE`,
+  [Type.FLIGHT]: `✈️ FLIGHT`,
+  [Type.CHECK_IN]: `🏨 CHECK-IN`,
+  [Type.SIGHTSEEING]: `🏛 SIGHTSEEING`,
+  [Type.RESTAURANT]: `🍴 RESTAURANT`
 };
