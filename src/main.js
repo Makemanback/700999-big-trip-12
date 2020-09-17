@@ -10,7 +10,7 @@ import NewEventView from './view/new-event-button.js';
 import {render, RenderPosition, remove} from './utils/render.js';
 import {MenuItem, UpdateType} from "./const.js";
 
-import Api from './api.js';
+import Api from './api/index.js';
 
 const AUTHORIZATION = `Basic wferfw323fwferidwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -83,4 +83,15 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
   ) => {
     // console.log(error);
     pointsModel.set(UpdateType.INIT, []);
+  });
+
+  window.addEventListener(`load`, () => {
+    navigator.serviceWorker.register(`/sw.js`)
+      .then(() => {
+        // Действие, в случае успешной регистрации ServiceWorker
+        console.log(`ServiceWorker available`); // eslint-disable-line
+      }).catch(() => {
+        // Действие, в случае ошибки при регистрации ServiceWorker
+        console.error(`ServiceWorker isn't available`); // eslint-disable-line
+      });
   });
