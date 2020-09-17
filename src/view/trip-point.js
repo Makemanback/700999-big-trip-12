@@ -95,6 +95,14 @@ export default class TripPoint extends SmartView {
     this.getElement().addEventListener(`click`, this._clickHandler);
   }
 
+  shake(callback) {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
   static parseDataToPoint(point) {
     return Object.assign(
         {},
@@ -102,13 +110,9 @@ export default class TripPoint extends SmartView {
         {
           type: point.type,
           additionals: point.additionals,
-          // name: point.destination.name,
           price: point.price,
           schedule: point.schedule,
-
           destination: point.destination,
-
-
         }
     );
   }
