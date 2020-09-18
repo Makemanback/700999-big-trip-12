@@ -107,7 +107,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, sched
           <label class='event__label  event__type-output' for='event-destination-1'>
             ${type} to
           </label>
-          <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${name}' list='destination-list-1'>
+          <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${name}' list='destination-list-1' required>
           <datalist id='destination-list-1'>
             ${createCities(destinations.map(({name: city}) => city))}
           </datalist>
@@ -128,7 +128,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, sched
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${price}'>
+          <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${price}' required>
         </div>
         <button class='event__save-btn  btn  btn--blue' type='submit' ${isSaving ? `disabled` : ``}>${isSaving ? `saving` : `Save`}</button>
         <button class='event__reset-btn' type='reset' ${isDisabled ? `disabled` : ``}>${isDeleting ? `deleting...` : `Delete`}</button>
@@ -267,6 +267,7 @@ export default class TripEdit extends SmartView {
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
     const validationValue = cityInput.value !== `` && this._destinations.map(({name}) => name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
+    cityInput.reportValidity();
 
     if (validationValue === ``) {
       const city = evt.target.value;
@@ -297,6 +298,7 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationEndHandler(selectedDates) {
+    // добавить проверку на то что end не может быть меньше start
     this.updateData({
       schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
     });
@@ -341,7 +343,6 @@ export default class TripEdit extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-
     evt.preventDefault();
     this._callback.formSubmit(TripEdit.parseDataToPoint(this._data));
   }
