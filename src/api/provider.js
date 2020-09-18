@@ -6,6 +6,16 @@ const getSyncedPoints = (items) => {
     .map(({payload}) => payload.point);
 };
 
+const getSyncedDestinations = (items) => {
+  return items.filter(({success}) => success)
+  .map(({payload}) => payload.destination);
+}
+
+const getSyncedOffers = (items) => {
+  return items.filter(({success}) => success)
+  .map(({payload}) => payload.offers);
+}
+
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
@@ -33,6 +43,36 @@ export default class Provider {
     const storePoints = Object.values(this._store.getItems());
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
+  }
+
+  getDestinations() {
+    if (Provider.isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          const items = createStoreStructure(destinations.map(PointsModel.adaptToServer));
+          this._store.setItems(items);
+          return destinations;
+        });
+    }
+
+    const storeDestinations = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeDestinations.map(PointsModel.adaptToClient));
+  }
+
+  getOffers() {
+    if (Provider.isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          const items = createStoreStructure(offers.map(PointsModel.adaptToServer));
+          this._store.setItems(items);
+          return offers;
+        });
+    }
+
+    const storeOffers = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeOffers.map(PointsModel.adaptToClient));
   }
 
   updatePoint(point) {
@@ -77,6 +117,8 @@ export default class Provider {
     return Promise.resolve();
   }
 
+
+
   sync() {
     if (Provider.isOnline()) {
       const storePoints = Object.values(this._store.getItems());
@@ -87,7 +129,13 @@ export default class Provider {
           const createdPoints = getSyncedPoints(response.created);
           const updatedPoints = getSyncedPoints(response.updated);
 
-          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+          const createdDestinations = getSyncedDestinations(response.created);
+          const updatedDestinations = getSyncedDestinations(response.updated);
+
+          const createdOffers = getSyncedOffers(response.created);
+          const updatedOffers = getSyncedOffers(response.updated);
+
+          const items = createStoreStructure([...createdPoints, ...updatedPoints, ...createdDestinations, ...updatedDestinations, ...createdOffers, ...updatedOffers]);
 
           this._store.setItems(items);
         });
