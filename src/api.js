@@ -12,6 +12,12 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
+const UrlType = {
+  POINTS: `points`,
+  DESTINATIONS: `destinations`,
+  OFFERS: `offers`
+};
+
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -19,24 +25,24 @@ export default class Api {
   }
 
   getPoints() {
-    return this._load({url: `points`})
+    return this._load({url: UrlType.POINTS})
       .then(Api.toJSON)
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   getDestinations() {
-    return this._load({url: `destinations`})
+    return this._load({url: UrlType.DESTINATIONS})
       .then(Api.toJSON);
   }
 
   getOffers() {
-    return this._load({url: `offers`})
+    return this._load({url: UrlType.OFFERS})
       .then(Api.toJSON);
   }
 
   updatePoint(point) {
     return this._load({
-      url: `points/${point.id}`,
+      url: `${UrlType.POINTS}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({"Content-Type": `application/json`})
@@ -47,7 +53,7 @@ export default class Api {
 
   addPoint(point) {
     return this._load({
-      url: `points`,
+      url: UrlType.POINTS,
       method: Method.POST,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({"Content-Type": `application/json`})
@@ -58,7 +64,7 @@ export default class Api {
 
   deletePoint(point) {
     return this._load({
-      url: `points/${point.id}`,
+      url: `${UrlType.POINTS}/${point.id}`,
       method: Method.DELETE
     });
   }
