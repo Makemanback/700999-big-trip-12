@@ -135,12 +135,10 @@ export default class Point {
 
 
   _handleFormSubmit(point) {
-
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         point);
-    this._replaceFormToPoint();
   }
 
   _handleDeleteClick(point) {

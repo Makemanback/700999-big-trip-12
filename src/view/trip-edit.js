@@ -1,6 +1,6 @@
 import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
-import {Type} from '../const.js';
+import {Type, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 export const BLANK_POINT = {
@@ -78,8 +78,9 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, destination, isDisabled, isDeleting, isSaving}, destinations, uncheckedOffers) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, schedule, destination, isDisabled, isDeleting, isSaving}, destinations, uncheckedOffers) => {
   const {name, description, pictures} = destination;
+  const {start, end} = schedule;
 
   return (
     `<div>
@@ -106,7 +107,7 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
           <label class='event__label  event__type-output' for='event-destination-1'>
             ${type} to
           </label>
-          <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${name}' list='destination-list-1'>
+          <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${name}' list='destination-list-1' required>
           <datalist id='destination-list-1'>
             ${createCities(destinations.map(({name: city}) => city))}
           </datalist>
@@ -127,10 +128,10 @@ const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${price}'>
+          <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${price}' required>
         </div>
-        <button class='event__save-btn  btn  btn--blue' type='submit' ${isSaving ? `disabled` : ``}>${isSaving ? `saving` : `Save`}</button>
-        <button class='event__reset-btn' type='reset' ${isDisabled ? `disabled` : ``}>${isDeleting ? `deleting...` : `Delete`}</button>
+        <button class='event__save-btn  btn  btn--blue' type='submit' ${isSaving ? `disabled` : ``}>${isSaving ? `Saving` : `Save`}</button>
+        <button class='event__reset-btn' type='reset' ${isDisabled ? `disabled` : ``}>${isDeleting ? `Deleting...` : `Delete`}</button>
         <input id='event-favorite-1' class='event__favorite-checkbox  visually-hidden' type='checkbox' name='event-favorite' ${isFavorite ? `checked` : ``}>
         <label class='event__favorite-btn' for='event-favorite-1'>
           <span class='visually-hidden'>Add to favorite</span>
@@ -186,6 +187,7 @@ export default class TripEdit extends SmartView {
     return createPageTripEditTemplate(this._data, this._destinations, this._uncheckedOffers);
   }
 
+
   _eventTypeHandler(evt) {
     const type = evt.target.innerText;
 
@@ -230,7 +232,6 @@ export default class TripEdit extends SmartView {
   }
 
   _setDatepicker() {
-
     if (this._datepicker) {
       this._datepicker.destroy();
       this._datepicker = null;
@@ -265,6 +266,7 @@ export default class TripEdit extends SmartView {
     const cityInput = this.getElement().querySelector(`.event__input--destination`);
     const validationValue = cityInput.value !== `` && this._destinations.map(({name}) => name).some((item) => item === cityInput.value) ? `` : `Please choose city from the list`;
     cityInput.setCustomValidity(validationValue);
+    cityInput.reportValidity();
 
     if (validationValue === ``) {
       const city = evt.target.value;
@@ -295,9 +297,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationEndHandler(selectedDates) {
-    this.updateData({
-      schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
-    });
+    const startDate = this.getElement().querySelector(`#event-start-time-1`);
+    const endDate = this.getElement().querySelector(`#event-end-time-1`);
+    const validationValue = endDate.value < startDate.value ? `End date could not be less than start date` : ``;
+    endDate.setCustomValidity(validationValue);
+    if (validationValue === ``) {
+      this.updateData({
+        schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
+      });
+    }
   }
 
   _favoriteClickHandler() {
@@ -339,7 +347,6 @@ export default class TripEdit extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-
     evt.preventDefault();
     this._callback.formSubmit(TripEdit.parseDataToPoint(this._data));
   }

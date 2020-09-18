@@ -66,3 +66,5 @@ export const ActionIcon = {
   [Type.SIGHTSEEING]: `🏛 SIGHTSEEING`,
   [Type.RESTAURANT]: `🍴 RESTAURANT`
 };
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
