@@ -78,8 +78,9 @@ export const createDescription = ({description, pictures}) => {
   );
 };
 
-const createPageTripEditTemplate = ({additionals, price, type, isFavorite, start, end, destination, isDisabled, isDeleting, isSaving}, destinations, uncheckedOffers) => {
+const createPageTripEditTemplate = ({additionals, price, type, isFavorite, schedule, destination, isDisabled, isDeleting, isSaving}, destinations, uncheckedOffers) => {
   const {name, description, pictures} = destination;
+  const {start, end} = schedule;
 
   return (
     `<div>
@@ -185,6 +186,7 @@ export default class TripEdit extends SmartView {
   getTemplate() {
     return createPageTripEditTemplate(this._data, this._destinations, this._uncheckedOffers);
   }
+
 
   _eventTypeHandler(evt) {
     const type = evt.target.innerText;
