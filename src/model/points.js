@@ -35,7 +35,7 @@ export default class Points extends Observer {
   }
 
   areExist() {
-    return this._points.length === 0;
+    return this._points.length > 0;
   }
 
   getStartDates() {
@@ -64,8 +64,8 @@ export default class Points extends Observer {
 
   getPrice() {
     return this._points.reduce((accumulator, {additionals, price}) => {
-      const offersTotalPrice = additionals.reduce((accumulatorInner, {cost, isChecked}) => {
-        return isChecked ? cost + accumulatorInner : accumulatorInner;
+      const offersTotalPrice = additionals.reduce((accumulatorInner, {price: offerPrice}) => {
+        return offerPrice + accumulatorInner;
       }, 0);
 
       return offersTotalPrice + accumulator + price;

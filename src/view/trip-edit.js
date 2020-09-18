@@ -232,7 +232,6 @@ export default class TripEdit extends SmartView {
   }
 
   _setDatepicker() {
-
     if (this._datepicker) {
       this._datepicker.destroy();
       this._datepicker = null;
@@ -298,10 +297,15 @@ export default class TripEdit extends SmartView {
   }
 
   _eventDurationEndHandler(selectedDates) {
-    // добавить проверку на то что end не может быть меньше start
-    this.updateData({
-      schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
-    });
+    const startDate = this.getElement().querySelector(`#event-start-time-1`);
+    const endDate = this.getElement().querySelector(`#event-end-time-1`);
+    const validationValue = endDate.value < startDate.value ? `End date could not be less than start date` : ``;
+    endDate.setCustomValidity(validationValue);
+    if (validationValue === ``) {
+      this.updateData({
+        schedule: Object.assign({}, this._data.schedule, {end: selectedDates[0]})
+      });
+    }
   }
 
   _favoriteClickHandler() {
