@@ -1,6 +1,6 @@
 import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
-import {Type} from '../const.js';
+import {Type, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 export const BLANK_POINT = {

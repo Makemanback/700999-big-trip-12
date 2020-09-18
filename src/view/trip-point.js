@@ -1,5 +1,5 @@
 import SmartView from "./smart.js";
-import {Time} from '../const.js';
+import {Time, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 
 export const createAdditionals = (arr) => {
   return arr
