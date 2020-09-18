@@ -131,7 +131,6 @@ export default class Points extends Observer {
           additionals: point.offers,
         });
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.base_price;
     delete adaptedPoint.date_from;
     delete adaptedPoint.date_to;
