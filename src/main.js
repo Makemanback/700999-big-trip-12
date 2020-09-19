@@ -10,8 +10,13 @@ import NewEventView from './view/new-event-button.js';
 import {render, RenderPosition, remove} from './utils/render.js';
 import {MenuItem, UpdateType} from "./const.js";
 
-import Api from './api.js';
+import Api from './api/index.js';
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic wferfw323fwferidwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
@@ -22,6 +27,8 @@ const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const pageMenuComponent = new PageMenuView();
 render(pageTripControlsMenu, pageMenuComponent, RenderPosition.BEFOREEND);
@@ -46,7 +53,7 @@ const handlePointNewFormClose = (presenter) => {
 };
 
 
-const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, api);
+const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, apiWithProvider);
 
 const handlePageMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -71,7 +78,7 @@ handlePointNewFormClose(tripPresenter);
 
 tripPresenter.init();
 
-Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
+Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()])
   .then(([points, destinations, offers]) => {
 
     pointsModel.setOffers(offers);
@@ -81,3 +88,12 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
   .catch(() => {
     pointsModel.set(UpdateType.INIT, []);
   });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
