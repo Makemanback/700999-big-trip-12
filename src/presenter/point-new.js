@@ -1,15 +1,16 @@
 import TripEditView from '../view/trip-edit.js';
-import {generateId} from "../utils/common.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class PointNew {
-  constructor(tripContainer, changeData, newEventButton) {
+  constructor(tripContainer, changeData, newEventButton, destinations, offers) {
     this._tripContainer = tripContainer;
     this._changeData = changeData;
     this._newEventButton = newEventButton;
     this._tripEditComponent = null;
     this._destroyCallback = null;
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
@@ -22,7 +23,7 @@ export default class PointNew {
       return;
     }
 
-    this._tripEditComponent = new TripEditView();
+    this._tripEditComponent = new TripEditView(this._destinations, this._offers);
     this._tripEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._tripEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
@@ -32,7 +33,6 @@ export default class PointNew {
   }
 
   destroy() {
-
     if (this._tripEditComponent === null) {
       return;
     }
@@ -44,12 +44,33 @@ export default class PointNew {
     this._newEventButton.getElement().disabled = false;
   }
 
+  setSaving() {
+    this._tripEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._tripEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    if (this._tripEditComponent) {
+      this._tripEditComponent.shake(resetFormState);
+    }
+  }
+
   _handleFormSubmit(point) {
 
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign({id: generateId()}, point)
+        point
     );
     this.destroy();
   }

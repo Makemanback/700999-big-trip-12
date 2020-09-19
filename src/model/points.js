@@ -35,7 +35,7 @@ export default class Points extends Observer {
   }
 
   areExist() {
-    return this._points.length === 0;
+    return this._points.length > 0;
   }
 
   getStartDates() {
@@ -64,8 +64,8 @@ export default class Points extends Observer {
 
   getPrice() {
     return this._points.reduce((accumulator, {additionals, price}) => {
-      const offersTotalPrice = additionals.reduce((accumulatorInner, {cost, isChecked}) => {
-        return isChecked ? cost + accumulatorInner : accumulatorInner;
+      const offersTotalPrice = additionals.reduce((accumulatorInner, {price: offerPrice}) => {
+        return offerPrice + accumulatorInner;
       }, 0);
 
       return offersTotalPrice + accumulator + price;
@@ -131,7 +131,6 @@ export default class Points extends Observer {
           additionals: point.offers,
         });
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.base_price;
     delete adaptedPoint.date_from;
     delete adaptedPoint.date_to;
@@ -157,8 +156,6 @@ export default class Points extends Observer {
     );
 
     delete adaptedPoint.price;
-    delete adaptedPoint.schedule.start;
-    delete adaptedPoint.schedule.end;
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.additionals;
     delete adaptedPoint.pictures;

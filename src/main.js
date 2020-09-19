@@ -12,7 +12,7 @@ import {MenuItem, UpdateType} from "./const.js";
 
 import Api from './api.js';
 
-const AUTHORIZATION = `Basic wferfwwferidwdwe`;
+const AUTHORIZATION = `Basic wferfw323fwferidwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -78,9 +78,6 @@ Promise.all([api.getPoints(), api.getDestinations(), api.getOffers()])
     pointsModel.setDestinations(destinations);
     pointsModel.set(UpdateType.INIT, points);
   })
-  .catch((
-      // error
-  ) => {
-    // console.log(error);
+  .catch(() => {
     pointsModel.set(UpdateType.INIT, []);
   });
