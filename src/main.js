@@ -8,7 +8,7 @@ import PageMenuView from './view/page-menu.js';
 import NewEventView from './view/new-event-button.js';
 
 import {render, RenderPosition, remove} from './utils/render.js';
-import {MenuItem, UpdateType} from "./const.js";
+import {MenuItem, UpdateType, FilterType} from "./const.js";
 
 import Api from './api/index.js';
 import Store from "./api/store.js";
@@ -17,7 +17,7 @@ import Provider from "./api/provider.js";
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic wferfw323fwferidwdwe`;
+const AUTHORIZATION = `Basic 3fwferidwefewwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -58,13 +58,13 @@ const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterMode
 const handlePageMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      remove(statsComponent);
-
-      pageMenuComponent.setMenuItem(menuItem);
-      tripPresenter.clearStats();
-      tripPresenter.init();
+        remove(statsComponent);
+        pageMenuComponent.setMenuItem(menuItem);
+        tripPresenter.clearStats();
+        tripPresenter.init();
       break;
     case MenuItem.STATS:
+
       pageMenuComponent.setMenuItem(menuItem);
       tripPresenter.destroy();
       tripPresenter.renderStats();
@@ -78,12 +78,13 @@ handlePointNewFormClose(tripPresenter);
 
 tripPresenter.init();
 
-Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()])
+Promise.all([apiWithProvider.getPoints(), api.getDestinations(), api.getOffers()])
   .then(([points, destinations, offers]) => {
 
     pointsModel.setOffers(offers);
     pointsModel.setDestinations(destinations);
     pointsModel.set(UpdateType.INIT, points);
+    console.log(pointsModel.get())
   })
   .catch((
       // error
@@ -100,3 +101,4 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
 });
+

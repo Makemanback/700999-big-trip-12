@@ -33,6 +33,8 @@ export default class PageMenu extends AbstractView {
     this.getElement()
     .querySelectorAll(`.trip-tabs__btn`)
     .forEach((item) => item.addEventListener(`click`, this._menuClickHandler));
+
+    this.getElement().querySelector(`#${MenuItem.STATS}`).addEventListener(`click`, this._menuClickHandler);
   }
 
   setMenuItem(menuItem) {
@@ -45,11 +47,15 @@ export default class PageMenu extends AbstractView {
     switch (item) {
       case tableItem:
         item.classList.add(activeClass);
+        // item.removeEventListener(`click`, this._menuClickHandler);
         statsItem.classList.remove(activeClass);
+        // statsItem.addEventListener(`click`, this._menuClickHandler);
         break;
       case statsItem:
         item.classList.add(activeClass);
+        // item.removeEventListener(`click`, this._menuClickHandler);
         tableItem.classList.remove(activeClass);
+        // tableItem.addEventListener(`click`, this._menuClickHandler);
     }
 
   }
