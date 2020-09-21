@@ -2,6 +2,7 @@ import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
 import {Type, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+// import he from "he";
 
 export const BLANK_POINT = {
   isFavorite: false,

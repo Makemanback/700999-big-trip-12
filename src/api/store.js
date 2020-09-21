@@ -13,11 +13,13 @@ export default class Store {
   }
 
   setItems(items) {
+    debugger
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(items)
     );
   }
+
 
   setItem(key, value) {
     const store = this.getItems();
