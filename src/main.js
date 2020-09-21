@@ -17,7 +17,7 @@ import Provider from "./api/provider.js";
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic 3fwferidwefewwdwe`;
+const AUTHORIZATION = `Basic 3ffewwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -78,7 +78,7 @@ handlePointNewFormClose(tripPresenter);
 
 tripPresenter.init();
 
-Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api.getOffers()])
+Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()])
   .then(([points, destinations, offers]) => {
 
     pointsModel.setOffers(offers);
@@ -86,7 +86,8 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
     pointsModel.set(UpdateType.INIT, points);
 
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err)
     pointsModel.set(UpdateType.INIT, []);
   });
 

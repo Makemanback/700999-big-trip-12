@@ -17,6 +17,7 @@ const getSyncedOffers = (items) => {
 }
 
 const createStoreStructure = (items) => {
+  debugger
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
@@ -30,13 +31,15 @@ export default class Provider {
     this._store = store;
   }
 
+
   getPoints() {
     if (Provider.isOnline()) {
       return this._api.getPoints()
         .then((points) => {
 
           const items = createStoreStructure(points.map(PointsModel.adaptToServer));
-          this._store.setItems(items);
+          this._store.setItem(`points`, items);
+
           return points;
         });
     }
@@ -50,11 +53,10 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
         .then((destinations) => {
-          const items = createStoreStructure(destinations.map(PointsModel.adaptToServer));
-          this._store.setItems(items);
+          this._store.setItem(`destinations`, destinations.slice());
           return destinations;
         });
-    }
+      }
 
     const storeDestinations = Object.values(this._store.getItems());
 
@@ -65,8 +67,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const items = createStoreStructure(offers.map(PointsModel.adaptToServer));
-          this._store.setItems(items);
+          this._store.setItem(`offers`, offers.slice());
           return offers;
         });
     }

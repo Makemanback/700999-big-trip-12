@@ -13,7 +13,6 @@ export default class Store {
   }
 
   setItems(items) {
-    debugger
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(items)

@@ -2,7 +2,7 @@ import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
 import {Type, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-// import he from "he";
+import he from "he";
 
 export const BLANK_POINT = {
   isFavorite: false,
@@ -37,7 +37,7 @@ export const createAdditionals = (additionals, isChecked) => {
   return additionals.map(({title, price}, index) => {
     return (
       `<div class='event__offer-selector'>
-        <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-${index + 1}' type='checkbox' name='${title}' ${isChecked ? `checked` : ``} >
+        <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-${index + 1}' type='checkbox' name='${he.encode(title)}' ${isChecked ? `checked` : ``} >
         <label class='event__offer-label' for='event-offer-${title}-${index + 1}'>
           <span class='event__offer-title'>${title}</span>
           &plus;
@@ -288,7 +288,7 @@ export default class TripEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       price: +evt.target.value
-    }, true);
+    });
   }
 
   _eventDurationStartHandler(selectedDates) {
