@@ -180,6 +180,10 @@ export default class Trip {
       case UpdateType.MINOR:
         this._updatePointsList();
         break;
+      case: UpdateType.MAJOR:
+        this._currentSortType = SortType.DEFAULT;
+        this._updatePointsList();
+        break
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
