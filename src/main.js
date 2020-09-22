@@ -8,16 +8,18 @@ import PageMenuView from './view/page-menu.js';
 import NewEventView from './view/new-event-button.js';
 
 import {render, RenderPosition, remove} from './utils/render.js';
-import {MenuItem, UpdateType, FilterType} from "./const.js";
+import {MenuItem, UpdateType} from "./const.js";
 
 import Api from './api/index.js';
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_PREFIX = `bigtrip-localstorage-common`;
+const STORE_PREFIX_POINTS = `bigtrip-localstorage-points`;
 const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic 3ffewwdwe`;
+const STORE_POINTS = `${STORE_PREFIX_POINTS}-${STORE_VER}`;
+const AUTHORIZATION = `Basic dswewffwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -27,8 +29,9 @@ const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const storeCommon = new Store(STORE_NAME, window.localStorage);
+const storePoints = new Store(STORE_POINTS, window.localStorage);
+const apiWithProvider = new Provider(api, storeCommon, storePoints);
 
 const pageMenuComponent = new PageMenuView();
 render(pageTripControlsMenu, pageMenuComponent, RenderPosition.BEFOREEND);
@@ -90,6 +93,17 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
     console.log(err)
     pointsModel.set(UpdateType.INIT, []);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+
+      console.log(`ServiceWorker available`);
+    }).catch(() => {
+
+      console.error(`ServiceWorker isn't available`);
+    });
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);

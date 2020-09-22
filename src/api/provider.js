@@ -6,18 +6,7 @@ const getSyncedPoints = (items) => {
     .map(({payload}) => payload.point);
 };
 
-const getSyncedDestinations = (items) => {
-  return items.filter(({success}) => success)
-  .map(({payload}) => payload.destination);
-}
-
-const getSyncedOffers = (items) => {
-  return items.filter(({success}) => success)
-  .map(({payload}) => payload.offers);
-}
-
 const createStoreStructure = (items) => {
-  debugger
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
@@ -26,9 +15,10 @@ const createStoreStructure = (items) => {
 };
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, storeCommon, pointsStore) {
     this._api = api;
-    this._store = store;
+    this._storeCommon = storeCommon;
+    this._pointsStore = pointsStore;
   }
 
 
@@ -38,13 +28,13 @@ export default class Provider {
         .then((points) => {
 
           const items = createStoreStructure(points.map(PointsModel.adaptToServer));
-          this._store.setItem(`points`, items);
+          this._pointsStore.setItems(items);
 
           return points;
         });
     }
 
-    const storePoints = Object.values(this._store.getItems());
+    const storePoints = Object.values(this._pointsStore.getItems());
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
@@ -53,12 +43,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
         .then((destinations) => {
-          this._store.setItem(`destinations`, destinations.slice());
+          this._storeCommon.setItem(`destinations`, destinations.slice());
           return destinations;
         });
       }
 
-    const storeDestinations = Object.values(this._store.getItems());
+    const storeDestinations = Object.values(this._storeCommon.getItems());
 
     return Promise.resolve(storeDestinations.map(PointsModel.adaptToClient));
   }
@@ -67,12 +57,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          this._store.setItem(`offers`, offers.slice());
+          this._storeCommon.setItem(`offers`, offers.slice());
           return offers;
         });
     }
 
-    const storeOffers = Object.values(this._store.getItems());
+    const storeOffers = Object.values(this._storeCommon.getItems());
 
     return Promise.resolve(storeOffers.map(PointsModel.adaptToClient));
   }
@@ -81,12 +71,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
-          this._store.setItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
+          this._pointsStore.setItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
           return updatedPoint;
         });
     }
 
-    this._store.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._pointsStore.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
 
     return Promise.resolve(point);
   }
@@ -95,7 +85,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.addPoint(point)
         .then((newPoint) => {
-          this._store.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          this._pointsStore.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
           return newPoint;
         });
     }
@@ -103,7 +93,7 @@ export default class Provider {
     const localNewPointId = nanoid();
     const localNewPoint = Object.assign({}, point, {id: localNewPointId});
 
-    this._store.setItem(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
+    this._pointsStore.setItem(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
 
     return Promise.resolve(localNewPoint);
   }
@@ -111,10 +101,10 @@ export default class Provider {
   deletePoint(point) {
     if (Provider.isOnline()) {
       return this._api.deletePoint(point)
-        .then(() => this._store.removeItem(point.id));
+        .then(() => this._pointsStore.removeItem(point.id));
     }
 
-    this._store.removeItem(point.id);
+    this._pointsStore.removeItem(point.id);
 
     return Promise.resolve();
   }
@@ -123,7 +113,7 @@ export default class Provider {
 
   sync() {
     if (Provider.isOnline()) {
-      const storePoints = Object.values(this._store.getItems());
+      const storePoints = Object.values(this._pointsStore.getItems());
 
       return this._api.sync(storePoints)
         .then((response) => {
@@ -131,15 +121,9 @@ export default class Provider {
           const createdPoints = getSyncedPoints(response.created);
           const updatedPoints = getSyncedPoints(response.updated);
 
-          const createdDestinations = getSyncedDestinations(response.created);
-          const updatedDestinations = getSyncedDestinations(response.updated);
+          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
-          const createdOffers = getSyncedOffers(response.created);
-          const updatedOffers = getSyncedOffers(response.updated);
-
-          const items = createStoreStructure([...createdPoints, ...updatedPoints, ...createdDestinations, ...updatedDestinations, ...createdOffers, ...updatedOffers]);
-
-          this._store.setItems(items);
+          this._pointsStore.setItems(items);
         });
     }
 
