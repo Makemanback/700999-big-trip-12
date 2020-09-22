@@ -48,9 +48,9 @@ export default class Provider {
         });
       }
 
-    const storeDestinations = Object.values(this._storeCommon.getItems());
+    const storeDestinations = Object.values(this._storeCommon.getItem(`destinations`));
 
-    return Promise.resolve(storeDestinations.map(PointsModel.adaptToClient));
+    return Promise.resolve(storeDestinations);
   }
 
   getOffers() {
@@ -62,9 +62,9 @@ export default class Provider {
         });
     }
 
-    const storeOffers = Object.values(this._storeCommon.getItems());
+    const storeOffers = Object.values(this._storeCommon.getItem(`offers`));
 
-    return Promise.resolve(storeOffers.map(PointsModel.adaptToClient));
+    return Promise.resolve(storeOffers);
   }
 
   updatePoint(point) {

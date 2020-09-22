@@ -8,7 +8,6 @@ export default class PointNew {
     this._changeData = changeData;
     this._newEventButton = newEventButton;
     this._tripEditComponent = null;
-    this._destroyCallback = null;
     this._destinations = destinations;
     this._offers = offers;
 

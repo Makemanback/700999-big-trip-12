@@ -284,13 +284,13 @@ export default class TripEdit extends SmartView {
   }
 
   _eventPriceHandler(evt) {
-    const priceInput = this.getElement().querySelector(`.event__input--price`);
-    const validationValue = priceInput < 0 ? `Price must be more than 0 euros` : ``;
-    priceInput.setCustomValidity(validationValue);
+    const price = +evt.target.value;
+    const validationValue = price < 0 ? `Price must be more than 0 euros` : ``;
+    evt.target.setCustomValidity(validationValue);
     if (validationValue === ``) {
       evt.preventDefault();
       this.updateData({
-        price: +evt.target.value
+        price
       });
     }
   }

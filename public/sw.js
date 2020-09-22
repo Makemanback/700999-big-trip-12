@@ -13,7 +13,6 @@ self.addEventListener(`install`, (evt) => {
             `/`,
             `/index.html`,
             `/bundle.js`,
-            `/css/normalize.css`,
             `/css/style.css`,
             `/img/icons/bus.png`,
             `/img/icons/check-in.png`,
@@ -71,9 +70,6 @@ const handleFetch = (evt) => {
                 .then((cache) => cache.put(request, clonedResponse));
               return response;
             })
-            .catch((err) => {
-              console.log(err)
-            });
         })
   );
 };

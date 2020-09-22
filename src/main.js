@@ -17,7 +17,7 @@ import Provider from "./api/provider.js";
 const STORE_PREFIX = `bigtrip-localstorage-common`;
 const STORE_PREFIX_POINTS = `bigtrip-localstorage-points`;
 const STORE_VER = `v12`;
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_COMMON = `${STORE_PREFIX}-${STORE_VER}`;
 const STORE_POINTS = `${STORE_PREFIX_POINTS}-${STORE_VER}`;
 const AUTHORIZATION = `Basic dswewffwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -29,9 +29,7 @@ const pageTripControls = pageTripMain.querySelector(`.trip-controls`);
 const pageTripControlsMenu = pageTripMain.querySelector(`.trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
-const storeCommon = new Store(STORE_NAME, window.localStorage);
-const storePoints = new Store(STORE_POINTS, window.localStorage);
-const apiWithProvider = new Provider(api, storeCommon, storePoints);
+const apiWithProvider = new Provider(api, new Store(STORE_COMMON, window.localStorage), new Store(STORE_POINTS, window.localStorage));
 
 const pageMenuComponent = new PageMenuView();
 render(pageTripControlsMenu, pageMenuComponent, RenderPosition.BEFOREEND);
@@ -45,8 +43,6 @@ const pointsModel = new PointsModel();
 
 new FilterPresenter(pageTripControls, filterModel, pointsModel).init();
 
-let statsComponent = null;
-
 const handlePointNewFormClose = (presenter) => {
   newEventComponent.getElement().addEventListener(`click`, (evt) => {
     evt.preventDefault();
@@ -55,19 +51,16 @@ const handlePointNewFormClose = (presenter) => {
   });
 };
 
-
 const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, apiWithProvider);
 
 const handlePageMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-        remove(statsComponent);
         pageMenuComponent.setMenuItem(menuItem);
         tripPresenter.clearStats();
         tripPresenter.init();
       break;
     case MenuItem.STATS:
-
       pageMenuComponent.setMenuItem(menuItem);
       tripPresenter.destroy();
       tripPresenter.renderStats();
@@ -76,6 +69,9 @@ const handlePageMenuClick = (menuItem) => {
 };
 
 pageMenuComponent.setMenuClickHandler(handlePageMenuClick);
+newEventComponent.setButtonClickHandler(() => {
+  tripPresenter.createPoint();
+});
 
 handlePointNewFormClose(tripPresenter);
 
@@ -95,14 +91,7 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-
-      console.log(`ServiceWorker available`);
-    }).catch(() => {
-
-      console.error(`ServiceWorker isn't available`);
-    });
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {

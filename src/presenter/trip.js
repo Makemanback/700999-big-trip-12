@@ -69,16 +69,6 @@ export default class Trip {
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
-  _clearTrip() {
-    this._restoreSortType();
-    this._deletePageSorting();
-    if (this._pointNewPresenter) {
-      this._pointNewPresenter.destroy();
-    }
-
-    remove(this._daysListComponent);
-    remove(this._loadingComponent);
-  }
 
   clearStats() {
     remove(this._statsComponent);
@@ -92,13 +82,29 @@ export default class Trip {
     this._updatePointsList();
   }
 
+  renderStats() {
+    this._statsComponent = new StatsView(this._pointsModel.get());
+    render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND);
+  }
+
+  _clearTrip() {
+    this._restoreSortType();
+    this._deletePageSorting();
+    if (this._pointNewPresenter) {
+      this._pointNewPresenter.destroy();
+    }
+
+    remove(this._daysListComponent);
+    remove(this._loadingComponent);
+  }
+
   _restoreSortType() {
     this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
     const points = this._pointsModel.get();
     const filtredPoints = filter[filterType](points);
 
@@ -193,7 +199,7 @@ export default class Trip {
   _renderDays() {
 
     const daysContainer = this._daysListComponent.getElement();
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
 
     this._pointsModel.getStartDates()
     .forEach((date, index) => {
@@ -216,7 +222,7 @@ export default class Trip {
   }
 
   _renderPoint(daysList, point) {
-    const pointPresenter = new PointPresenter(this._daysListComponent, this._handleViewAction, this._handleModeChange, this._pointsModel.getDestinations(), this._pointsModel.getOffers());
+    const pointPresenter = new PointPresenter(this._handleViewAction, this._handleModeChange, this._pointsModel.getDestinations(), this._pointsModel.getOffers());
     pointPresenter.init(daysList, point);
     this._pointPresenter[point.id] = pointPresenter;
   }
@@ -237,7 +243,6 @@ export default class Trip {
 
     render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
-
 
   _renderEmptyTripInfo() {
     if (this._tripInfoComponent !== null) {
@@ -304,11 +309,6 @@ export default class Trip {
     } else {
       this._renderSortedPoints();
     }
-  }
-
-  renderStats() {
-    this._statsComponent = new StatsView(this._pointsModel.get());
-    render(this._tripContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {

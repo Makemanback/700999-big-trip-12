@@ -20,9 +20,9 @@ export default class Filter {
   }
 
   init() {
-    this._currentFilter = this._filterModel.getFilter();
+    this._currentFilter = this._filterModel.get();
 
-    const filters = this._getFilters();
+    const filters = this._get();
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
@@ -46,10 +46,10 @@ export default class Filter {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MINOR, filterType);
+    this._filterModel.set(UpdateType.MINOR, filterType);
   }
 
-  _getFilters() {
+  _get() {
 
     const points = this._pointsModel.get();
     return [
