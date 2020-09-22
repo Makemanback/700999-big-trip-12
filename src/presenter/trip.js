@@ -100,7 +100,7 @@ export default class Trip {
 
   _restoreSortType() {
     this._currentSortType = SortType.DEFAULT;
-    this._filterModel.set(UpdateType.MINOR, FilterType.EVERYTHING);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
   _getPoints() {
@@ -221,7 +221,6 @@ export default class Trip {
           }
           break;
         default:
-          this._restorePageSorting();
           render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           break;
       }
@@ -277,16 +276,6 @@ export default class Trip {
     }
 
     this._pageSortingComponent = new PageSortingView(this._currentSortType);
-    this._pageSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    render(this._tripContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
-  }
-
-  _restorePageSorting() {
-    if (this._pageSortingComponent !== null) {
-      remove(this._pageSortingComponent);
-    }
-
-    this._pageSortingComponent = new PageSortingView(SortType.DEFAULT);
     this._pageSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._tripContainer, this._pageSortingComponent, RenderPosition.AFTERBEGIN);
   }
