@@ -1,6 +1,6 @@
 import AbstractView from './abstract.js';
 
-export default class EventButton extends AbstractView {
+export default class newEventButton extends AbstractView {
   constructor() {
     super();
     this._buttonClickHandler = this._buttonClickHandler.bind(this);
