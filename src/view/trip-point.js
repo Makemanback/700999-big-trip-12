@@ -28,7 +28,7 @@ export const getTimeGap = (start, end) => {
     return `${gapDays}D ${gapHours % Time.HOURS}H ${Math.round(gapMinutes)}M`;
   }
 
-   return `${gapHours}H ${Math.round(gapMinutes)}M`;
+  return `${gapHours}H ${Math.round(gapMinutes)}M`;
 };
 
 const createTripPointTemplate = ({type, price, additionals, schedule, destination}) => {

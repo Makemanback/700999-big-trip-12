@@ -82,7 +82,7 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   });
 
 window.addEventListener(`load`, () => {
-   navigator.serviceWorker.register(`/sw.js`);
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {

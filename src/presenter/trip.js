@@ -180,10 +180,10 @@ export default class Trip {
       case UpdateType.MINOR:
         this._updatePointsList();
         break;
-      case: UpdateType.MAJOR:
+      case UpdateType.MAJOR:
         this._currentSortType = SortType.DEFAULT;
         this._updatePointsList();
-        break
+        break;
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
@@ -210,13 +210,13 @@ export default class Trip {
       switch (filterType) {
         case FilterType.PAST:
           if (!isPointExpired(date)) {
-            this._renderPageSorting()
+            this._renderPageSorting();
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;
         case FilterType.FUTURE:
           if (isPointExpired(date)) {
-            this._renderPageSorting()
+            this._renderPageSorting();
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;

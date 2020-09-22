@@ -44,18 +44,11 @@ export default class Points extends Observer {
     const pointDates = this._points.map((point) => point.schedule.start);
     pointDates.forEach((start) => {
       let isExist = false;
-      for (let i = 0; i < startDates.length; i++) {
-        if (startDates[i].getDate() === start.getDate()) {
+      for (let startDate of startDates) {
+        if (startDate.getDate() === start.getDate()) {
+
           isExist = true;
         }
-      }
-/*
-for (startDate of startDates) {
-if(startDate.getDate() === start.getDate()) {
-
-isExist = true;
-        }
-*/
       }
       if (!isExist) {
         startDates.push(start);
