@@ -46,7 +46,7 @@ export default class Filter {
       return;
     }
 
-    this._filterModel.set(UpdateType.MINOR, filterType);
+    this._filterModel.set(UpdateType.MAJOR, filterType);
   }
 
   _get() {
