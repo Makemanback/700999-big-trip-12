@@ -15,8 +15,7 @@ export const State = {
 };
 
 export default class Point {
-  constructor(pointsContainer, changeData, changeMode, destinations, offers) {
-    this._pointsContainer = pointsContainer;
+  constructor(changeData, changeMode, destinations, offers) {
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._destinations = destinations;
@@ -48,7 +47,6 @@ export default class Point {
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this._daysList, this._pointComponent, RenderPosition.BEFOREEND);

@@ -1,3 +1,6 @@
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const BAR_HEIGHT = 55;
+
 export const Time = {
   DAY_GAP: 10,
   HOUR_GAP: 20,
@@ -29,7 +32,6 @@ export const UserAction = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`,
   INIT: `INIT`
 };
 
@@ -50,9 +52,7 @@ export const StatsType = {
   TIME_SPEND: `time-spend`
 };
 
-
 export const NonTravelPoints = [Type.CHECK_IN, Type.SIGHTSEEING, Type.RESTAURANT];
-export const BAR_HEIGHT = 55;
 
 export const ActionIcon = {
   [Type.TAXI]: `🚕 TAXI`,
@@ -67,4 +67,4 @@ export const ActionIcon = {
   [Type.RESTAURANT]: `🍴 RESTAURANT`
 };
 
-export const SHAKE_ANIMATION_TIMEOUT = 600;
+

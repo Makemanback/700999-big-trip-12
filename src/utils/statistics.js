@@ -5,7 +5,7 @@ const getTime = (start, end) => Math.round((end - start) / Time.MILLISECONDS / T
 export const getPointByTypePrice = (points) => {
   const obj = {};
   points.forEach(({type, price}) => {
-    if (obj[type]) {
+    if (obj[ActionIcon[type]]) {
       obj[ActionIcon[type]] += price;
     } else {
       obj[ActionIcon[type]] = price;
@@ -20,7 +20,7 @@ export const countTimeSpend = (points) => {
 
   points.forEach(({type, schedule}) => {
 
-    if (obj[type]) {
+    if (obj[ActionIcon[type]]) {
       obj[ActionIcon[type]] += getTime(schedule.start, schedule.end);
     } else {
       obj[ActionIcon[type]] = getTime(schedule.start, schedule.end);

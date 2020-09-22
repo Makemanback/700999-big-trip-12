@@ -232,7 +232,6 @@ export default class Stats extends SmartView {
   constructor(points) {
 
     super();
-
     this._data = points;
 
     this._moneyCart = null;
