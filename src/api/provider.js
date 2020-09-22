@@ -46,7 +46,7 @@ export default class Provider {
           this._storeCommon.setItem(`destinations`, destinations.slice());
           return destinations;
         });
-      }
+    }
 
     const storeDestinations = Object.values(this._storeCommon.getItem(`destinations`));
 
@@ -108,7 +108,6 @@ export default class Provider {
 
     return Promise.resolve();
   }
-
 
 
   sync() {

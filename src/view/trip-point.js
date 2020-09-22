@@ -85,10 +85,6 @@ export default class TripPoint extends SmartView {
     return createTripPointTemplate(this._data);
   }
 
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
-  }
 
   setClickHandler(callback) {
     this._callback.click = callback;
@@ -101,6 +97,11 @@ export default class TripPoint extends SmartView {
       this.getElement().style.animation = ``;
       callback();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
   static parseDataToPoint(point) {

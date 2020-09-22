@@ -52,14 +52,6 @@ export default class PageSorting extends AbstractView {
     return createPageSortingTemplate();
   }
 
-  _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== `LABEL`) {
-      return;
-    }
-
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
-  }
-
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
@@ -67,5 +59,13 @@ export default class PageSorting extends AbstractView {
 
   clearContent() {
     this.getElement().innerHTML = ``;
+  }
+
+  _sortTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 }

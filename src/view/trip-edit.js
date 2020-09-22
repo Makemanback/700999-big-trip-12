@@ -188,6 +188,49 @@ export default class TripEdit extends SmartView {
     return createPageTripEditTemplate(this._data, this._destinations, this._uncheckedOffers);
   }
 
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`.trip-events__item`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setDatepicker();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+  }
+
+  reset(point) {
+    this.updateData(
+        TripEdit.parsePointToData(point)
+    );
+  }
+
+  shake(callback) {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 
   _eventTypeHandler(evt) {
     const type = evt.target.innerText;
@@ -319,13 +362,6 @@ export default class TripEdit extends SmartView {
     });
   }
 
-  restoreHandlers() {
-    this._setInnerHandlers();
-    this._setDatepicker();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
-  }
-
   _setInnerHandlers() {
     this.getElement().querySelectorAll(`.event__type-label`)
       .forEach((item) => item.addEventListener(`click`, this._eventTypeHandler));
@@ -336,51 +372,14 @@ export default class TripEdit extends SmartView {
       .forEach((item) => item.addEventListener(`click`, this._offersChangeHandler));
   }
 
-  removeElement() {
-    super.removeElement();
-
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
-    }
-  }
-
-  reset(point) {
-    this.updateData(
-        TripEdit.parsePointToData(point)
-    );
-  }
-
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(TripEdit.parseDataToPoint(this._data));
   }
 
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().querySelector(`.trip-events__item`).addEventListener(`submit`, this._formSubmitHandler);
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-  }
-
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(TripEdit.parseDataToPoint(this._data));
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
-  shake(callback) {
-    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      this.getElement().style.animation = ``;
-      callback();
-    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   static parsePointToData(point) {

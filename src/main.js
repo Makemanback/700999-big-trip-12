@@ -7,19 +7,22 @@ import FilterPresenter from './presenter/filter.js';
 import PageMenuView from './view/page-menu.js';
 import NewEventView from './view/new-event-button.js';
 
-import {render, RenderPosition, remove} from './utils/render.js';
+import {render, RenderPosition} from './utils/render.js';
 import {MenuItem, UpdateType} from "./const.js";
 
 import Api from './api/index.js';
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const STORE_PREFIX = `bigtrip-localstorage-common`;
-const STORE_PREFIX_POINTS = `bigtrip-localstorage-points`;
-const STORE_VER = `v12`;
-const STORE_COMMON = `${STORE_PREFIX}-${STORE_VER}`;
-const STORE_POINTS = `${STORE_PREFIX_POINTS}-${STORE_VER}`;
-const AUTHORIZATION = `Basic dswewffwdwe`;
+const Storage = {
+  PREFIX: `bigtrip-localstorage-common`,
+  PREFIX_POINTS: `bigtrip-localstorage-points`,
+  VER: `v12`,
+};
+
+const STORE_COMMON = `${Storage.PREFIX}-${Storage.VER}`;
+const STORE_POINTS = `${Storage.PREFIX_POINTS}-${Storage.VER}`;
+const AUTHORIZATION = `Basic dswewffsfweewfwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -40,25 +43,16 @@ render(pageTripMain, newEventComponent, RenderPosition.BEFOREEND);
 const filterModel = new FilterModel();
 const pointsModel = new PointsModel();
 
-
 new FilterPresenter(pageTripControls, filterModel, pointsModel).init();
-
-const handlePointNewFormClose = (presenter) => {
-  newEventComponent.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    presenter.createPoint();
-    newEventComponent.getElement().disabled = true;
-  });
-};
 
 const tripPresenter = new TripPresenter(pageBodyElement, pointsModel, filterModel, newEventComponent, apiWithProvider);
 
 const handlePageMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-        pageMenuComponent.setMenuItem(menuItem);
-        tripPresenter.clearStats();
-        tripPresenter.init();
+      pageMenuComponent.setMenuItem(menuItem);
+      tripPresenter.clearStats();
+      tripPresenter.init();
       break;
     case MenuItem.STATS:
       pageMenuComponent.setMenuItem(menuItem);
@@ -73,8 +67,6 @@ newEventComponent.setButtonClickHandler(() => {
   tripPresenter.createPoint();
 });
 
-handlePointNewFormClose(tripPresenter);
-
 tripPresenter.init();
 
 Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()])
@@ -85,8 +77,7 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
     pointsModel.set(UpdateType.INIT, points);
 
   })
-  .catch((err) => {
-    console.log(err)
+  .catch(() => {
     pointsModel.set(UpdateType.INIT, []);
   });
 

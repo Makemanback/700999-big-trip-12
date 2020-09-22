@@ -21,11 +21,6 @@ export default class PageMenu extends AbstractView {
     return createPageMenuTemplate();
   }
 
-  _menuClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.menuClick(evt.target.id);
-  }
-
   setMenuClickHandler(callback) {
 
     this._callback.menuClick = callback;
@@ -54,5 +49,10 @@ export default class PageMenu extends AbstractView {
         tableItem.addEventListener(`click`, this._menuClickHandler);
     }
 
+  }
+
+  _menuClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.menuClick(evt.target.id);
   }
 }
