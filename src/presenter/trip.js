@@ -253,7 +253,7 @@ export default class Trip {
   }
 
   _renderAllPoints() {
-    let pageTripDayViews = this._tripContainer.querySelectorAll(`.trip-days__item`);
+    const pageTripDayViews = this._tripContainer.querySelectorAll(`.trip-days__item`);
 
     this._getPoints().forEach((point) => {
       pageTripDayViews.forEach((pageTripDayView) => {
