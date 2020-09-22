@@ -22,7 +22,7 @@ const Storage = {
 
 const STORE_COMMON = `${Storage.PREFIX}-${Storage.VER}`;
 const STORE_POINTS = `${Storage.PREFIX_POINTS}-${Storage.VER}`;
-const AUTHORIZATION = `Basic dswewffsfweewfwdwe`;
+const AUTHORIZATION = `Basic dswewffsfwggeewfwdwe`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -81,9 +81,9 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
     pointsModel.set(UpdateType.INIT, []);
   });
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`);
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`);
+// });
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
