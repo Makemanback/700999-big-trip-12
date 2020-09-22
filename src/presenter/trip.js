@@ -210,15 +210,13 @@ export default class Trip {
       switch (filterType) {
         case FilterType.PAST:
           if (!isPointExpired(date)) {
-            this._restorePageSorting();
-            // this._renderPageSorting()
+            this._renderPageSorting()
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;
         case FilterType.FUTURE:
           if (isPointExpired(date)) {
-            this._restorePageSorting();
-            // this._renderPageSorting()
+            this._renderPageSorting()
             render(daysContainer, new TripDayView(date, index + 1), RenderPosition.BEFOREEND);
           }
           break;
