@@ -1,8 +1,8 @@
 import SmartView from "./smart.js";
 import {Time, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 
-export const createAdditionals = (arr) => {
-  return arr
+export const createAdditionals = (additionals) => {
+  return additionals
   .slice(0, 3)
   .map(({title, price}) => {
     return (
