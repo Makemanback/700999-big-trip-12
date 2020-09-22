@@ -49,6 +49,14 @@ export default class Points extends Observer {
           isExist = true;
         }
       }
+/*
+for (startDate of startDates) {
+if(startDate.getDate() === start.getDate()) {
+
+isExist = true;
+        }
+*/
+      }
       if (!isExist) {
         startDates.push(start);
       }
