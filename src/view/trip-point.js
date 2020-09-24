@@ -1,8 +1,8 @@
 import SmartView from "./smart.js";
 import {Time, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 
-export const createAdditionals = (arr) => {
-  return arr
+export const createAdditionals = (additionals) => {
+  return additionals
   .slice(0, 3)
   .map(({title, price}) => {
     return (
@@ -26,10 +26,9 @@ export const getTimeGap = (start, end) => {
 
   if (gapHours >= Time.HOURS) {
     return `${gapDays}D ${gapHours % Time.HOURS}H ${Math.round(gapMinutes)}M`;
-  } else {
-    return `${gapHours}H ${Math.round(gapMinutes)}M`;
   }
 
+  return `${gapHours}H ${Math.round(gapMinutes)}M`;
 };
 
 const createTripPointTemplate = ({type, price, additionals, schedule, destination}) => {

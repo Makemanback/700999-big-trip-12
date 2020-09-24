@@ -228,7 +228,7 @@ const createStatisticsTemplate = ({MONEY, TRANSPORT, TIME_SPEND}) => {
   );
 };
 
-export default class Stats extends SmartView {
+export default class Statistics extends SmartView {
   constructor(points) {
 
     super();
