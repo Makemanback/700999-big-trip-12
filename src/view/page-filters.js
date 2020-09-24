@@ -1,7 +1,6 @@
 import AbstractView from "./abstract.js";
 
-const createFilterItemTemplate = ({type}, currentFilterType) => {
-
+const createFilterItemTemplate = ({type, count}, currentFilterType) => {
   return (
     `<div class="trip-filters__filter">
       <input
@@ -11,12 +10,14 @@ const createFilterItemTemplate = ({type}, currentFilterType) => {
         name="trip-filter"
         value="${type}"
         ${type === currentFilterType ? `checked` : ``}
+        ${count === 0 ? ` disabled` : ``}
       />
       <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
     </div>`
   );
 };
 const createPageFiltersTemplate = (filterItems, currentFilterType) => {
+
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
     .join(``);
