@@ -108,7 +108,7 @@ export default class Trip {
 
     const points = this._pointsModel.get();
     const filtredPoints = filter[filterType](points);
-    render();
+
     switch (this._currentSortType) {
       case SortType.DURATION:
         return sortPointsByDuration(filtredPoints);
